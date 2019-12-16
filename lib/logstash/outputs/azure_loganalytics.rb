@@ -65,6 +65,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
     ## Start 
     @client=Azure::Loganalytics::Datacollectorapi::Client::new(@workspace_id,@shared_key,@endpoint)
+    @client2=logAnalyticsClient::new(@workspace_id,@shared_key,@endpoint)
 
     buffer_initialize(
       :max_items => @flush_items,
