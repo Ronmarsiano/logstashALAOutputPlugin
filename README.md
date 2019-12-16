@@ -16,7 +16,7 @@ Please see [Logstash reference](https://www.elastic.co/guide/en/logstash/current
 ```
 output {
     azure_loganalytics {
-        customer_id => "<OMS WORKSPACE ID>"
+        workspace_id => "<OMS WORKSPACE ID>"
         shared_key => "<CLIENT AUTH KEY>"
         log_type => "<LOG TYPE NAME>"
         key_names  => ['key1','key2','key3'..] ## list of Key names
@@ -70,7 +70,7 @@ filter {
 
 output {
     azure_loganalytics {
-        customer_id => "818f7bbc-8034-4cc3-b97d-f068dd4cd659"
+        workspace_id => "818f7bbc-8034-4cc3-b97d-f068dd4cd659"
         shared_key => "ppC5500KzCcDsOKwM1yWUvZydCuC3m+ds/2xci0byeQr1G3E0Jkygn1N0Rxx/yVBUrDE2ok3vf4ksXxcBmQQHw==(dummy)"
         log_type => "ApacheAccessLog"
         key_names  => ['logid','date','processing_time','remote','user','method','status','agent']

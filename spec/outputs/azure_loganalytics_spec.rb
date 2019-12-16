@@ -6,7 +6,7 @@ require "logstash/event"
 
 describe LogStash::Outputs::AzureLogAnalytics do
 
-  let(:customer_id) { '<Customer ID aka WorkspaceID String>' }
+  let(:workspace_id) { '<Workspaec ID identifing your workspace>' }
   let(:shared_key) { '<Primary Key String>' }
   let(:log_type) { 'ApacheAccessLog' }
   let(:key_names) { ['logid','date','processing_time','remote','user','method','status','agent','eventtime'] }
@@ -14,7 +14,7 @@ describe LogStash::Outputs::AzureLogAnalytics do
 
   let(:azure_loganalytics_config) {
     { 
-      "customer_id" => customer_id, 
+      "workspace_id" => workspace_id, 
       "shared_key" => shared_key,
       "log_type" => log_type,
       "key_names" => key_names,

@@ -10,7 +10,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   config_name "azure_loganalytics"
 
   # Your Operations Management Suite workspace ID
-  config :customer_id, :validate => :string, :required => true
+  config :workspace_id, :validate => :string, :required => true
 
   # The primary or the secondary Connected Sources client authentication key
   config :shared_key, :validate => :string, :required => true
@@ -63,7 +63,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     }
 
     ## Start 
-    @client=Azure::Loganalytics::Datacollectorapi::Client::new(@customer_id,@shared_key,@endpoint)
+    @client=Azure::Loganalytics::Datacollectorapi::Client::new(@workspace_id,@shared_key,@endpoint)
 
     buffer_initialize(
       :max_items => @flush_items,
@@ -77,6 +77,8 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   def receive(event)
     # Simply save an event for later delivery
     buffer_receive(event)
+    print "Ron --> recive Event\n"
+    print event
   end # def receive
 
   # called from Stud::Buffer#buffer_flush when there are events to flush
