@@ -3,6 +3,7 @@
 require "logstash/outputs/base"
 require "logstash/namespace"
 require "stud/buffer"
+require "logstash/logAnalyticsClient/logAnalyticsClient"
 
 class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   include Stud::Buffer
