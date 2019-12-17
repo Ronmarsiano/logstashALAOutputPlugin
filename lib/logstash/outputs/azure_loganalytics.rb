@@ -78,11 +78,11 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def multi_receive(event)
-    print "Recive event to handle " + Thread.current.object_id.to_s
+    print "**********************************************************************************************Recive event to handle " + Thread.current.object_id.to_s
     print event
     # Simply save an event for later delivery
     buffer_receive(event)
-    print "End handle " + Thread.current.object_id.to_s
+    print "**********************************************************************************************End handle " + Thread.current.object_id.to_s
 
     
   end # def receive
@@ -90,7 +90,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # called from Stud::Buffer#buffer_flush when there are events to flush
   public
   def flush (events, close=false)
-  
+    print "Trying to flussh **********************************************************************************************"
     documents = []  #this is the array of hashes to add Azure Log Analytics
     events.each do |event|
       document = {}
