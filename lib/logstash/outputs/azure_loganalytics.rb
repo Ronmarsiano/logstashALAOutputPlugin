@@ -78,7 +78,8 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def multi_receive(event)
-    print "Recive event to handle " + Thread.current.object_id.to_s
+    print "Recive event to handle " + Thread.current.object_id
+    print event
     # Simply save an event for later delivery
     buffer_receive(event)
     print "End handle " + Thread.current.object_id.to_s
