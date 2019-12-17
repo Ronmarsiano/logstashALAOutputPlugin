@@ -1,14 +1,14 @@
 class LogAnalyticsClient
   API_VERSION = '2016-04-01'.freeze
 
-  def initialize (customer_id, shared_key,endpoint ='ods.opinsights.azure.com')
+  def initialize (workspace_id, shared_key,endpoint ='ods.opinsights.azure.com')
     require 'rest-client'
     require 'json'
     require 'openssl'
     require 'base64'
     require 'time'
 
-    @customer_id = customer_id
+    @workspace_id = workspace_id
     @shared_key = shared_key
     @endpoint = endpoint
   end
@@ -19,7 +19,7 @@ class LogAnalyticsClient
     raise ConfigError, 'no json_records' if json_records.empty?
     body =  json_records.to_json
     uri = sprintf("https://%s.%s/api/logs?api-version=%s",
-                  @customer_id, @endpoint, API_VERSION)
+                  @workspace_id, @endpoint, API_VERSION)
     date = rfc1123date()
     sig = signature(date, body.bytesize)
 
@@ -50,8 +50,8 @@ class LogAnalyticsClient
   end
 
   def rfc1123date()
-    t = Time.now
-    t.httpdate()
+    current_time = Time.now
+    current_time.httpdate()
   end
 
   def signature(date, content_length)
@@ -61,8 +61,7 @@ class LogAnalyticsClient
     decoded_shared_key = Base64.decode64(@shared_key)
     hmac_sha256_sigs = OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha256'), decoded_shared_key, utf8_sigs)
     encoded_hash = Base64.encode64(hmac_sha256_sigs)
-    authorization = sprintf("SharedKey %s:%s", @customer_id,encoded_hash)
-    authorization
+    authorization = sprintf("SharedKey %s:%s", @workspace_id,encoded_hash)
   end
 
 end # end of class

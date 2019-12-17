@@ -49,7 +49,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def register
-    require 'azure/loganalytics/datacollectorapi/client'
 
     ## Configure
     if not @log_type.match(/^[[:alpha:]]+$/)
@@ -64,8 +63,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     }
 
     ## Start 
-    @client=Azure::Loganalytics::Datacollectorapi::Client::new(@workspace_id,@shared_key,@endpoint)
-    @client2=LogAnalyticsClient::new(@workspace_id,@shared_key,@endpoint)
+    @client=LogAnalyticsClient::new(@workspace_id,@shared_key,@endpoint)
 
     buffer_initialize(
       :max_items => @flush_items,
