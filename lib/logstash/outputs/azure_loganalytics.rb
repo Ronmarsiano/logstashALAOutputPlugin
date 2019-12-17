@@ -9,6 +9,8 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   include Stud::Buffer
 
   config_name "azure_loganalytics"
+  
+  concurrency : shared
 
   # Your Operations Management Suite workspace ID
   config :workspace_id, :validate => :string, :required => true
