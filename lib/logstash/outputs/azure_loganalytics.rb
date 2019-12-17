@@ -74,7 +74,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   end # def register
 
   public
-  def receive(event)
+  def multi_receive(event)
     print "going to sleep\n"
     sleep 3000
     print "Woke up\n"
