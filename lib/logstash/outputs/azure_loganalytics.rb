@@ -77,8 +77,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   def receive(event)
     # Simply save an event for later delivery
     buffer_receive(event)
-    print "Ron --> recive Event\n"
+    print "\nRon --> recive Event\n"
     print event
+    sleep 3000
   end # def receive
 
   # called from Stud::Buffer#buffer_flush when there are events to flush
