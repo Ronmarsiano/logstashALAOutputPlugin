@@ -3,17 +3,14 @@
 require "logstash/outputs/base"
 require "logstash/namespace"
 require "stud/buffer"
-require "logstash/logAnalyticsClient/logAnalyticsClient"
 
 class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   include Stud::Buffer
 
   config_name "azure_loganalytics"
-  
-  concurrency :single
 
   # Your Operations Management Suite workspace ID
-  config :workspace_id, :validate => :string, :required => true
+  config :customer_id, :validate => :string, :required => true
 
   # The primary or the secondary Connected Sources client authentication key
   config :shared_key, :validate => :string, :required => true
@@ -51,7 +48,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def register
-    print "Register " + Thread.current.object_id.to_s
+    require 'azure/loganalytics/datacollectorapi/client'
 
     ## Configure
     if not @log_type.match(/^[[:alpha:]]+$/)
@@ -66,7 +63,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     }
 
     ## Start 
-    @client=LogAnalyticsClient::new(@workspace_id,@shared_key,@endpoint)
+    @client=Azure::Loganalytics::Datacollectorapi::Client::new(@customer_id,@shared_key,@endpoint)
 
     buffer_initialize(
       :max_items => @flush_items,
@@ -77,13 +74,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   end # def register
 
   public
-  def multi_receive(event)
-    print "Recive event to handle " + Thread.current.object_id.to_s
+  def receive(event)
     # Simply save an event for later delivery
     buffer_receive(event)
-    print "End handle " + Thread.current.object_id.to_s
-
-    
   end # def receive
 
   # called from Stud::Buffer#buffer_flush when there are events to flush
