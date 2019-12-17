@@ -51,7 +51,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def register
-    print "Register " + Thread.current.object_id
+    print "Register " + Thread.current.object_id.to_s
 
     ## Configure
     if not @log_type.match(/^[[:alpha:]]+$/)
@@ -78,10 +78,10 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def multi_receive(event)
-    print "Recive event to handle " + Thread.current.object_id
+    print "Recive event to handle " + Thread.current.object_id.to_s
     # Simply save an event for later delivery
     buffer_receive(event)
-    print "End handle " + Thread.current.object_id
+    print "End handle " + Thread.current.object_id.to_s
 
     
   end # def receive
