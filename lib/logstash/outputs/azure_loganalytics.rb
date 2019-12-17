@@ -90,6 +90,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # called from Stud::Buffer#buffer_flush when there are events to flush
   public
   def flush (events, close=false)
+    if events.length ==1 and events[0].length == 0
+      return 
+      
     print "\nTrying to flussh **********************************************************************************************\n"
     print events
     print "\nTrying to flussh **********************************************************************************************\n"
