@@ -87,7 +87,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # called from Stud::Buffer#buffer_flush when there are events to flush
   public
   def flush (events, close=false)
-  
+    print "\n *******************************************Going to print events flush \n"
+    print events
+    print "\n**************************** Done Going to print events flush \n"
     documents = []  #this is the array of hashes to add Azure Log Analytics
     events.each do |event|
       document = {}
