@@ -78,11 +78,10 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
 
   public 
-  def handle_single_event(event)
-    print "\n\nhandling single event:\n\n"
+  def handle_single_event(event, documents)
+    print "\n\n\n **************************hanlde single event \n\n\n"
     print event
-    print "\n\ndone\n\n"
-
+    print "\n\n\n ********************************************************hanlde single event \n\n\n"
     document = {}
     event_hash = event.to_hash()
     if @key_names.length > 0
@@ -104,7 +103,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     documents.push(document)
   end
 
-
   public
   def multi_receive(event)
     if event.length > 0
@@ -116,7 +114,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     end
   end # def receive
 
-
   # called from Stud::Buffer#buffer_flush when there are events to flush
   public
   def flush (events, close=false)
@@ -125,7 +122,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     print "\n**************************** Done Going to print events flush \n"
     documents = []  #this is the array of hashes to add Azure Log Analytics
     events.each do |event|
-      handle_single_event(event)
+      handle_single_event(event, documents)
     end
 
     # Skip in case there are no candidate documents to deliver
