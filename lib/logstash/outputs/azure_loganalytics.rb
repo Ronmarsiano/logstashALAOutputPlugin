@@ -103,8 +103,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   public
   def multi_receive(event)
     if event.length > 0
-      print "\n\nAdding event:\n"
+      print "\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$Adding event:\n"
       print event
+      print "\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$Done Adding event:\n"
       # Simply save an event for later delivery
       buffer_receive(event)
       # buffer_receive(event) if event.length > 0
