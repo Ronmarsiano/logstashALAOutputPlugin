@@ -76,6 +76,35 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   end # def register
 
+
+  public 
+  def handle_single_event(event)
+    print "\n\nhandling single event:\n\n"
+    print event
+    print "\n\ndone\n\n"
+
+    document = {}
+    event_hash = event.to_hash()
+    if @key_names.length > 0
+      # Get the intersection of key_names and keys of event_hash
+      keys_intersection = @key_names & event_hash.keys
+      keys_intersection.each do |key|
+        if @key_types.include?(key)
+          document[key] = convert_value(@key_types[key], event_hash[key])
+        else
+          document[key] = event_hash[key]
+        end
+      end
+    else
+      document = event_hash
+    end
+    # Skip if document doesn't contain any items
+    next if (document.keys).length < 1
+
+    documents.push(document)
+  end
+
+
   public
   def multi_receive(event)
     if event.length > 0
@@ -87,6 +116,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     end
   end # def receive
 
+
   # called from Stud::Buffer#buffer_flush when there are events to flush
   public
   def flush (events, close=false)
@@ -95,25 +125,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     print "\n**************************** Done Going to print events flush \n"
     documents = []  #this is the array of hashes to add Azure Log Analytics
     events.each do |event|
-      document = {}
-      event_hash = event.to_hash()
-      if @key_names.length > 0
-        # Get the intersection of key_names and keys of event_hash
-        keys_intersection = @key_names & event_hash.keys
-        keys_intersection.each do |key|
-          if @key_types.include?(key)
-            document[key] = convert_value(@key_types[key], event_hash[key])
-          else
-            document[key] = event_hash[key]
-          end
-        end
-      else
-        document = event_hash
-      end
-      # Skip if document doesn't contain any items
-      next if (document.keys).length < 1
-
-      documents.push(document)
+      handle_single_event(event)
     end
 
     # Skip in case there are no candidate documents to deliver
