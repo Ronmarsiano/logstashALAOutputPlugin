@@ -78,10 +78,10 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
 
   public 
-  def handle_single_event(event, documents)
-    print "\n\n\n **************************hanlde single event \n\n\n"
+  def handle_single_event(event)
+    print "\n\n**************************************handle single event:\n"
     print event
-    print "\n\n\n ********************************************************hanlde single event \n\n\n"
+    print "\n\n**************************************end -- handle single event:\n"
     document = {}
     event_hash = event.to_hash()
     if @key_names.length > 0
@@ -97,10 +97,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     else
       document = event_hash
     end
-    # Skip if document doesn't contain any items
-    next if (document.keys).length < 1
-
-    documents.push(document)
+    return document
   end
 
   public
@@ -122,7 +119,12 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     print "\n**************************** Done Going to print events flush \n"
     documents = []  #this is the array of hashes to add Azure Log Analytics
     events.each do |event|
-      handle_single_event(event, documents)
+      
+      document = handle_single_event(event)
+      # Skip if document doesn't contain any items
+      next if (document.keys).length < 1
+
+      documents.push(document)
     end
 
     # Skip in case there are no candidate documents to deliver
