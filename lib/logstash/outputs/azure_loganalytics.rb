@@ -78,67 +78,55 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def multi_receive(event)
-    print "\n\n**********************************************************************************************Recive event to handle " + Thread.current.object_id.to_s
-    # Empty events - continue 
-    if event.length ==0 
-      return
-    else
-      print event
+    if event.length > 0
       # Simply save an event for later delivery
       buffer_receive(event)
-      print "\n\n**********************************************************************************************End handle " + Thread.current.object_id.to_s
     end
   end # def receive
 
   # called from Stud::Buffer#buffer_flush when there are events to flush
   public
   def flush (events, close=false)
-    if events.length ==1 and events[0].length == 0
-      return 
-  else
-      print "\nTrying to flussh **********************************************************************************************\n"
-      print events
-      print "\nTrying to flussh **********************************************************************************************\n"
-      documents = []  #this is the array of hashes to add Azure Log Analytics
-      events.each do |event|
-        document = {}
-        event_hash = event.to_hash()
-        if @key_names.length > 0
-          # Get the intersection of key_names and keys of event_hash
-          keys_intersection = @key_names & event_hash.keys
-          keys_intersection.each do |key|
-            if @key_types.include?(key)
-              document[key] = convert_value(@key_types[key], event_hash[key])
-            else
-              document[key] = event_hash[key]
-            end
+  
+    documents = []  #this is the array of hashes to add Azure Log Analytics
+    events.each do |event|
+      document = {}
+      event_hash = event.to_hash()
+      if @key_names.length > 0
+        # Get the intersection of key_names and keys of event_hash
+        keys_intersection = @key_names & event_hash.keys
+        keys_intersection.each do |key|
+          if @key_types.include?(key)
+            document[key] = convert_value(@key_types[key], event_hash[key])
+          else
+            document[key] = event_hash[key]
           end
-        else
-          document = event_hash
         end
-        # Skip if document doesn't contain any items
-        next if (document.keys).length < 1
-
-        documents.push(document)
+      else
+        document = event_hash
       end
+      # Skip if document doesn't contain any items
+      next if (document.keys).length < 1
 
-      # Skip in case there are no candidate documents to deliver
-      if documents.length < 1
-        @logger.debug("No documents in batch for log type #{@log_type}. Skipping")
-        return
-      end
+      documents.push(document)
+    end
 
-      begin
-        @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@log_type} to DataCollector API. First log: " + (documents[0].to_json).to_s)
-        res = @client.post_data(@log_type, documents, @time_generated_field)
-        if Azure::Loganalytics::Datacollectorapi::Client.is_success(res)
-          @logger.debug("Successfully posted logs as log type #{@log_type} with result code #{res.code} to DataCollector API")
-        else
-          @logger.error("DataCollector API request failure: error code: #{res.code}, data=>" + (documents.to_json).to_s)
-        end
-      rescue Exception => ex
-        @logger.error("Exception occured in posting to DataCollector API: '#{ex}', data=>" + (documents.to_json).to_s)
+    # Skip in case there are no candidate documents to deliver
+    if documents.length < 1
+      @logger.debug("No documents in batch for log type #{@log_type}. Skipping")
+      return
+    end
+
+    begin
+      @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@log_type} to DataCollector API. First log: " + (documents[0].to_json).to_s)
+      res = @client.post_data(@log_type, documents, @time_generated_field)
+      if Azure::Loganalytics::Datacollectorapi::Client.is_success(res)
+        @logger.debug("Successfully posted logs as log type #{@log_type} with result code #{res.code} to DataCollector API")
+      else
+        @logger.error("DataCollector API request failure: error code: #{res.code}, data=>" + (documents.to_json).to_s)
       end
+    rescue Exception => ex
+      @logger.error("Exception occured in posting to DataCollector API: '#{ex}', data=>" + (documents.to_json).to_s)
     end
   end # def flush
 
@@ -155,5 +143,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       return val
     end
   end
+
 
 end # class LogStash::Outputs::AzureLogAnalytics
