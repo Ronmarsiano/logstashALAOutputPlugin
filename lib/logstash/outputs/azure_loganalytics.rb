@@ -120,7 +120,8 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     print "\n**************************** Done Going to print events flush \n"
     documents = []  #this is the array of hashes to add Azure Log Analytics
     events.each do |event|
-      
+      # empty event should be ignored
+      next if event.length == 0
       document = handle_single_event(event)
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
