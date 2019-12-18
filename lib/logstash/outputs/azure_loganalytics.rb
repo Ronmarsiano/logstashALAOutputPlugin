@@ -84,10 +84,13 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     print "\n\n**************************************end -- handle single event:\n"
     document = {}
     event_hash = event.to_hash()
+    print "111111111111111111111111111111111111111111111"
     if @key_names.length > 0
+      print "22222222222222222222222"
       # Get the intersection of key_names and keys of event_hash
       keys_intersection = @key_names & event_hash.keys
       keys_intersection.each do |key|
+        print "33333333333333333333333333333333333333333"
         if @key_types.include?(key)
           document[key] = convert_value(@key_types[key], event_hash[key])
         else
@@ -95,8 +98,10 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
         end
       end
     else
+      print "44444444444444444444444444444444444"
       document = event_hash
     end
+
     print "returnning document"
     return document
   end
