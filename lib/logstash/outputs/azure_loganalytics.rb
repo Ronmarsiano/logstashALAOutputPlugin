@@ -83,6 +83,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     print event
     print "\n\n**************************************end -- handle single event:\n"
     document = {}
+    print "000000000000000000000000000000000000000000"
     event_hash = event.to_hash()
     print "111111111111111111111111111111111111111111111"
     if @key_names.length > 0
