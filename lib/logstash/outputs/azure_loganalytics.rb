@@ -97,6 +97,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     else
       document = event_hash
     end
+    print "returnning document"
     return document
   end
 
@@ -123,6 +124,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       # empty event should be ignored
       next if event.length == 0
       document = handle_single_event(event)
+      print "\ngot document &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
+      print document
+      print "\nENDDDDDDDDDDDDDDDDD got document &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
 
