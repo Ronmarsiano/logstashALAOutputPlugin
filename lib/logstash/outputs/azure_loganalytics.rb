@@ -68,6 +68,8 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     print "Create MUtex********************************\n\n\n"
     @semaphore = Mutex.new
 
+    @MAX_WINDOW_SIZE = 10000
+
     ## Start 
     @client=LogAnalyticsClient::new(@workspace_id,@shared_key,@endpoint)
 
@@ -100,6 +102,28 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     return document
   end
 
+  public 
+  def handle_window_size(amount_of_documents)
+    # Reduce widow size
+    if amount_of_documents < @flush_items
+      @semaphore.synchronize do
+        buffer_initialize(
+          :max_items => @flush_items / 2,
+          :max_interval => @flush_interval_time,
+          :logger => @logger
+        )
+      end
+    elsif @flush_items < @MAX_WINDOW_SIZE
+      @semaphore.synchronize do
+        buffer_initialize(
+          :max_items => @flush_items * 2 > @MAX_WINDOW_SIZE ? @MAX_WINDOW_SIZE : @flush_items * 2,
+          :max_interval => @flush_interval_time,
+          :logger => @logger
+        )
+      end
+    end
+  end
+  
   public
   def multi_receive(events)
     events.each do |event|
@@ -120,13 +144,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       return
     end
 
-    print "TT*&*(((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((("
-    buffer_initialize(
-      :max_items => @flush_items,
-      :max_interval => @flush_interval_time,
-      :logger => @logger
-    )
-    print "TT88*******************************************************************************"
     begin
       @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@log_type} to DataCollector API. First log: " + (documents[0].to_json).to_s)
       res = @client.post_data(@log_type, documents, @time_generated_field)
