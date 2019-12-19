@@ -113,12 +113,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     events.each do |event|
       # empty event should be ignored
       document = handle_single_event(event)
-      print "Printing Document and Keys\n\n"
-      print document
-      print "\n\n"
-      print document.keys
-      print "\n\n"
-      print "------------> End\n"
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
 
@@ -132,8 +126,13 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     end
 
     begin
+      print "\n***************************************************************************\n"
+      print documents
+      print "\n***************************************************************************\n"
       @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@log_type} to DataCollector API. First log: " + (documents[0].to_json).to_s)
+      print "\n111111111111111111111111111111111111111111"
       res = @client.post_data(@log_type, documents, @time_generated_field)
+      print "\n222222222222222222222222222222222222222222222"
       if Azure::Loganalytics::Datacollectorapi::Client.is_success(res)
         @logger.debug("Successfully posted logs as log type #{@log_type} with result code #{res.code} to DataCollector API")
       else
