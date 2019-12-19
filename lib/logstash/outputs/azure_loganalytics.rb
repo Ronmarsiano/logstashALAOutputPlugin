@@ -115,7 +115,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
         print event
         print "\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$Done Adding event:\n"
         # Simply save an event for later delivery
-        buffer_receive(events)
+        buffer_receive(event)
       end
       # buffer_receive(event) if event.length > 0
     end
