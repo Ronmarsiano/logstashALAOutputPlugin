@@ -131,7 +131,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       document = handle_single_event(event)
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
-      buffer_receive(document)
+      @semaphore.synchronize do
+        buffer_receive(document)
+      end
     end
   end # def receive
 
