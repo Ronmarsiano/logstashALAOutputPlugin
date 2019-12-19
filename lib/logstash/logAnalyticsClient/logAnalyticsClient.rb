@@ -14,7 +14,6 @@ class LogAnalyticsClient
   end
 
   def post_data(log_type, json_records, record_timestamp ='')
-    print "posting dataaaaaaaaaaaaaaa"
     raise ConfigError, 'no log_type' if log_type.empty?
     raise ConfigError, 'log_type must be only alpha characters' if not is_alpha(log_type)
     raise ConfigError, 'no json_records' if json_records.empty?

@@ -100,14 +100,15 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   public
   def multi_receive(events)
     events.each do |event|
-      # empty event should be ignored
+      # Empty event should be ignored 
+      return if event.length==0 
+      # creating document from event
       document = handle_single_event(event)
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
 
       buffer_receive(document)
     end
-    # buffer_receive(event) if event.length > 0
   end # def receive
 
   # called from Stud::Buffer#buffer_flush when there are events to flush
