@@ -115,6 +115,8 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     print self
     print "\n\n*********************\n\n"
 
+    self.flush_items = 3
+
     # Skip in case there are no candidate documents to deliver
     if documents.length < 1
       @logger.debug("No documents in batch for log type #{@log_type}. Skipping")
