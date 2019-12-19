@@ -65,9 +65,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       end
     }
 
-    print "\n\n**************************************************************************\n\n"
-    @buffer=Stud::Buffer::new(:max_items => @flush_items,:max_interval => @flush_interval_time,:logger => @logger)
-
     ## Start 
     @client=LogAnalyticsClient::new(@workspace_id,@shared_key,@endpoint)
 
@@ -120,6 +117,13 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       return
     end
 
+    print "TT*&*(((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((("
+    buffer_initialize(
+      :max_items => @flush_items,
+      :max_interval => @flush_interval_time,
+      :logger => @logger
+    )
+    print "TT88*******************************************************************************"
     begin
       @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@log_type} to DataCollector API. First log: " + (documents[0].to_json).to_s)
       res = @client.post_data(@log_type, documents, @time_generated_field)
