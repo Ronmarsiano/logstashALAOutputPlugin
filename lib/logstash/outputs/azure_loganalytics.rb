@@ -100,15 +100,31 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   public
   def multi_receive(events)
     events.each do |event|
-      # Save the document in the buffer
-      buffer_receive(handle_single_event(event))
+      # Simply save an event for later delivery
+      buffer_receive(event)
     end
     # buffer_receive(event) if event.length > 0
   end # def receive
 
   # called from Stud::Buffer#buffer_flush when there are events to flush
   public
-  def flush (documents, close=false)
+  def flush (events, close=false)
+    documents = []  #this is the array of hashes to add Azure Log Analytics
+    events.each do |event|
+      # empty event should be ignored
+      document = handle_single_event(event)
+      print "Printing Document and Keys\n\n"
+      print document
+      print "\n\n"
+      print document.keys
+      print "\n\n"
+      print "------------> End\n"
+      # Skip if document doesn't contain any items
+      next if (document.keys).length < 1
+
+      documents.push(document)
+    end
+
     # Skip in case there are no candidate documents to deliver
     if documents.length < 1
       @logger.debug("No documents in batch for log type #{@log_type}. Skipping")
