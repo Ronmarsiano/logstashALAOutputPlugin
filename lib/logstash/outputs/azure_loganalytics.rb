@@ -101,6 +101,8 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   def multi_receive(events)
     events.each do |event|
       print "\n1111111111111111111111111\n"
+      print event
+      print "\n*************************************\n\n\n"
       # Empty event should be ignored 
       return if event.length==0 
       print "\n2222222222222222222222\n"
