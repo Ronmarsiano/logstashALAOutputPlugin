@@ -65,6 +65,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       end
     }
 
+    print "\n\n**************************************************************************\n\n"
     @buffer=Stud::Buffer::new(:max_items => @flush_items,:max_interval => @flush_interval_time,:logger => @logger)
 
     ## Start 
