@@ -100,25 +100,19 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   public
   def multi_receive(events)
     events.each do |event|
-      # Simply save an event for later delivery
-      buffer_receive(event)
+      # empty event should be ignored
+      document = handle_single_event(event)
+      # Skip if document doesn't contain any items
+      next if (document.keys).length < 1
+
+      buffer_receive(document)
     end
     # buffer_receive(event) if event.length > 0
   end # def receive
 
   # called from Stud::Buffer#buffer_flush when there are events to flush
   public
-  def flush (events, close=false)
-    documents = []  #this is the array of hashes to add Azure Log Analytics
-    events.each do |event|
-      # empty event should be ignored
-      document = handle_single_event(event)
-      # Skip if document doesn't contain any items
-      next if (document.keys).length < 1
-
-      documents.push(document)
-    end
-
+  def flush (documents, close=false)
     # Skip in case there are no candidate documents to deliver
     if documents.length < 1
       @logger.debug("No documents in batch for log type #{@log_type}. Skipping")
@@ -128,12 +122,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     begin
       @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@log_type} to DataCollector API. First log: " + (documents[0].to_json).to_s)
       res = @client.post_data(@log_type, documents, @time_generated_field)
-      print "\n222222222222222222222222222222222222222222222"
       if is_successfully_posted(res)
-        print "\n33333333333333333333333333333\n"
         @logger.debug("Successfully posted logs as log type #{@log_type} with result code #{res.code} to DataCollector API")
       else
-        print "\n4444444444444444444444444444444444444444444444444444\n"
         @logger.error("DataCollector API request failure: error code: #{res.code}, data=>" + (documents.to_json).to_s)
       end
     rescue Exception => ex
