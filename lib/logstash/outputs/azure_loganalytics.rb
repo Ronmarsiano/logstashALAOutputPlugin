@@ -108,13 +108,15 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   end
 
   public
-  def multi_receive(event)
-    if event.length > 0
+  def multi_receive(events)
+    if events.length > 0
       print "\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$Adding event:\n"
-      print event
-      print "\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$Done Adding event:\n"
-      # Simply save an event for later delivery
-      buffer_receive(event)
+      events.each do |event|
+        print event
+        print "\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$Done Adding event:\n"
+        # Simply save an event for later delivery
+        buffer_receive(events)
+      end
       # buffer_receive(event) if event.length > 0
     end
   end # def receive
@@ -126,7 +128,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     print events
     print "\n**************************** Done Going to print events flush \n"
     documents = []  #this is the array of hashes to add Azure Log Analytics
-    events.each { |event| puts event }
+    events.each do |event|
       # empty event should be ignored
       next if event.length == 0
       print "\n-------------------------------------------->>>>>>>>>>>>>>>>>SINGLE EVENTTTTTT\n\n"
