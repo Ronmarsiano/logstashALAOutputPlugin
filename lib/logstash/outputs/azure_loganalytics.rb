@@ -65,6 +65,8 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       end
     }
 
+    @buffer=Stud::Buffer::new(:max_items => @flush_items,:max_interval => @flush_interval_time,:logger => @logger)
+
     ## Start 
     @client=LogAnalyticsClient::new(@workspace_id,@shared_key,@endpoint)
 
@@ -111,12 +113,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # called from Stud::Buffer#buffer_flush when there are events to flush
   public
   def flush (documents, close=false)
-    print "\n\n*********************\n\n"
-    print self
-    print "\n\n*********************\n\n"
-
-    self.flush_items = 3
-
     # Skip in case there are no candidate documents to deliver
     if documents.length < 1
       @logger.debug("No documents in batch for log type #{@log_type}. Skipping")
