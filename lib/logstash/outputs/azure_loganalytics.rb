@@ -129,6 +129,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     events.each do |event|
       # empty event should be ignored
       next if event.length == 0
+      print "\n-------------------------------------------->>>>>>>>>>>>>>>>>SINGLE EVENTTTTTT\n\n"
+      print event
+      print "\n--------------------------------------------------->>>>>>>>>>>>>>>>>>>SINGLE EVENTTTTTT\n\n"
       document = handle_single_event(event)
       print "\ngot document &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
       print document
