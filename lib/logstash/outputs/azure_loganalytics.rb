@@ -65,6 +65,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       end
     }
 
+    print "Create MUtex********************************\n\n\n"
+    @semaphore = Mutex.new
+
     ## Start 
     @client=LogAnalyticsClient::new(@workspace_id,@shared_key,@endpoint)
 
