@@ -109,34 +109,20 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def multi_receive(events)
-    if events.length > 0
-      events.each do |event|
-        # Simply save an event for later delivery
-        buffer_receive(event)
-      end
-      # buffer_receive(event) if event.length > 0
+    events.each do |event|
+      # Simply save an event for later delivery
+      buffer_receive(event)
     end
+    # buffer_receive(event) if event.length > 0
   end # def receive
 
   # called from Stud::Buffer#buffer_flush when there are events to flush
   public
   def flush (events, close=false)
-    print "\n *******************************************Going to print events flush \n"
-    print events
-    print "\n**************************** Done Going to print events flush \n"
     documents = []  #this is the array of hashes to add Azure Log Analytics
     events.each do |event|
       # empty event should be ignored
-      print "\n-------------------------------------------->>>>>>>>>>>>>>>>>SINGLE EVENTTTTTT\n\n"
-      print "Events\n"
-      print events
-      print "Events\n"
-      print event
-      print "\n--------------------------------------------------->>>>>>>>>>>>>>>>>>>SINGLE EVENTTTTTT\n\n"
       document = handle_single_event(event)
-      print "\ngot document &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
-      print document
-      print "\nENDDDDDDDDDDDDDDDDD got document &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
 
