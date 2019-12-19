@@ -130,6 +130,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       # empty event should be ignored
       next if event.length == 0
       print "\n-------------------------------------------->>>>>>>>>>>>>>>>>SINGLE EVENTTTTTT\n\n"
+      print "Events\n"
+      print events
+      print "Events\n"
       print event
       print "\n--------------------------------------------------->>>>>>>>>>>>>>>>>>>SINGLE EVENTTTTTT\n\n"
       document = handle_single_event(event)
