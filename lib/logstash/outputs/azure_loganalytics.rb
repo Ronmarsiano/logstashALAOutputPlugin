@@ -129,7 +129,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@log_type} to DataCollector API. First log: " + (documents[0].to_json).to_s)
       res = @client.post_data(@log_type, documents, @time_generated_field)
       print "\n222222222222222222222222222222222222222222222"
-      if @client.is_success(res)
+      if is_successfully_posted(res)
         print "\n33333333333333333333333333333\n"
         @logger.debug("Successfully posted logs as log type #{@log_type} with result code #{res.code} to DataCollector API")
       else
@@ -153,6 +153,11 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     else
       return val
     end
+  end
+
+  private 
+  def is_successfully_posted(response)
+    return (response.code == 200) ? true : false
   end
 
 

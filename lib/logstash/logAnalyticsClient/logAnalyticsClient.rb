@@ -40,10 +40,6 @@ class LogAnalyticsClient
     RestClient.proxy = proxy.empty? ? ENV['http_proxy'] : proxy
   end
 
-  def self.is_success(res)
-    return (res.code == 200) ? true : false
-  end
-
   private
 
   def is_alpha(s)
