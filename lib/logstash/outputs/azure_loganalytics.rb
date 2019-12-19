@@ -100,13 +100,16 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   public
   def multi_receive(events)
     events.each do |event|
+      print "\n1111111111111111111111111\n"
       # Empty event should be ignored 
       return if event.length==0 
+      print "\n2222222222222222222222\n"
       # creating document from event
       document = handle_single_event(event)
+      print "\n33333333333333333333333333333333333\n"
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
-
+      print "\n4444444444444444444444444444444\n"
       buffer_receive(document)
     end
   end # def receive
