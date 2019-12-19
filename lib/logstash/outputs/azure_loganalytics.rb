@@ -107,6 +107,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   def handle_window_size(amount_of_documents)
     # Reduce widow size
     if amount_of_documents < @flush_items
+      print "\n\XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n\n"
+      print @semaphore
+      print "\n\YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\n\n"
       @semaphore.synchronize do
         buffer_initialize(
           :max_items => @flush_items / 2,
@@ -115,6 +118,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
         )
       end
     elsif @flush_items < @MAX_WINDOW_SIZE
+      print "\n\XXXXXXXXdddddddXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n\n"
+      print @semaphore
+      print "\n\YYYYYYYYYYdddddddYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\n\n"
       @semaphore.synchronize do
         buffer_initialize(
           :max_items => @flush_items * 2 > @MAX_WINDOW_SIZE ? @MAX_WINDOW_SIZE : @flush_items * 2,
@@ -132,6 +138,10 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       document = handle_single_event(event)
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
+      print "\n\nSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n\n"
+      print @semaphore
+      print "\n\nSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS22222222222222222\n\n"
+
       @semaphore.synchronize do
         buffer_receive(document)
       end
