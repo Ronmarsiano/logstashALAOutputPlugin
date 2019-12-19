@@ -105,9 +105,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public 
   def handle_window_size(amount_of_documents)
-
-    return if RESIZING_WINDOW == true
-
     # Reduce widow size
     if amount_of_documents < @flush_items
       @semaphore.synchronize do
