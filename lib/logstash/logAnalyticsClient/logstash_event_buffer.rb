@@ -29,8 +29,15 @@ class LogStashEventBuffer
         print_message("Add event")
         @semaphore.synchronize do
             print_message("Buffer recive start")
-            buffer_receive(event_document)
-            print_message("Buffer recive End")
+            begin
+                buffer_receive(event_document)    
+            rescue => exception
+                print(exception)
+            else
+                print_message("Buffer recive End")
+            ensure
+                print_message("Buffer recive End -- ensure ")
+            end
         end
         print_message("Add event end")
     end # def receive
@@ -49,7 +56,7 @@ class LogStashEventBuffer
         @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@log_type} to DataCollector API. First log: " + (documents[0].to_json).to_s)
         res = @client.post_data(@log_type, documents, @time_generated_field)
         if is_successfully_posted(res)
-            print "\nMessage sent\n"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s
+            print_message("Message sent")
             @logger.debug("Successfully posted logs as log type #{@log_type} with result code #{res.code} to DataCollector API")
         else
             @logger.error("DataCollector API request failure: error code: #{res.code}, data=>" + (documents.to_json).to_s)
