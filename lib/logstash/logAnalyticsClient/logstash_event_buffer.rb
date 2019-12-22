@@ -52,7 +52,7 @@ class LogStashEventBuffer
         print ("\n*******************************************\n")
         print documents
         print ("\n*******************************************\n")
-        print  @time_generated_field)
+        print  @time_generated_field
         print ("\n*******************************************\n")
         res = @client.post_data(@log_type, documents, @time_generated_field)
         if is_successfully_posted(res)
