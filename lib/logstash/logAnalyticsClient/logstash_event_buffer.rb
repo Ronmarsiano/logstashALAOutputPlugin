@@ -10,6 +10,7 @@ class LogStashEventBuffer
         @flush_items = flush_items
         @semaphore = Mutex.new
         @client=LogAnalyticsClient::new(workspace_id, shared_key, endpoint)
+        @logger = logger
         buffer_initialize(
           :max_items => max_items,
           :max_interval => max_interval,
