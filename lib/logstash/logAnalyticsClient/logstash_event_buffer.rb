@@ -45,6 +45,15 @@ class LogStashEventBuffer
 
         begin
         @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@log_type} to DataCollector API. First log: " + (documents[0].to_json).to_s)
+
+
+        print ("\n*******************************************\n")
+        print @log_type
+        print ("\n*******************************************\n")
+        print documents
+        print ("\n*******************************************\n")
+        print  @time_generated_field)
+        print ("\n*******************************************\n")
         res = @client.post_data(@log_type, documents, @time_generated_field)
         if is_successfully_posted(res)
             print "\nMessage sent\n"+ Thread.current.object_id.to_s
