@@ -36,8 +36,6 @@ class LogStashEventBuffer
         rescue => exception
             print_message("I got exception")
             print(exception)
-        else
-            print_message("Buffer exception ------else")
         ensure
             print_message("Buffer exception ----- ensure ")
         end
