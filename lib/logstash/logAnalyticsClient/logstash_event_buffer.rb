@@ -17,9 +17,9 @@ class LogStashEventBuffer
     end
 
     public
-    def add_event(events)
+    def add_event(event_document)
         @semaphore.synchronize do
-            buffer_receive(document)
+            buffer_receive(event_document)
           end
     end # def receive
 
