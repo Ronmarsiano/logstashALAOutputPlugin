@@ -38,7 +38,7 @@ class LogStashEventBuffer
 
     public 
     def add_event_document(event_doecument)
-        buffer_receive(event_document)    
+        buffer_receive(event_doecument)    
     end
 
     public
