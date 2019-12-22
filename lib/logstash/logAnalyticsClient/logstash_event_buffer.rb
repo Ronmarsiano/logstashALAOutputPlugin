@@ -38,9 +38,9 @@ class LogStashEventBuffer
 
     public 
     def add_event_document(event_document)
-        print "\ngoing to add event doucmnet 111111111\n"
+        print "\ngoing to add event doucmnet 111111111\n\n"
         print event_document
-        print "\ngoing to add event doucmnet 111111111\n"
+        print "\ngoing to add event doucmnet 111111111\n\n"
         buffer_receive(event_document)    
     end
 
