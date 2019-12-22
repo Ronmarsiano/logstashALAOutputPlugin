@@ -29,6 +29,8 @@ sudo /usr/share/logstash/bin/logstash-plugin install logstash-output-azure_logan
 
 echo "Done"
 
+sudo /usr/share/logstash/bin/logstash -f  /etc/logstash/logstash-syslog.conf --path.settings /etc/logstash/
+
 
 
 
