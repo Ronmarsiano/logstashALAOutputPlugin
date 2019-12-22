@@ -79,7 +79,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   public
   def multi_receive(events)
     events.each do |event|
-      @logstash_event_buffer.add_event(document)
+      @logstash_event_buffer.add_event(event)
     end
   end # def receive
 
