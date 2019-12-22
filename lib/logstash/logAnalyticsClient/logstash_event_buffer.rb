@@ -20,7 +20,7 @@ class LogStashEventBuffer
 
     public
     def print_message(message)
-        print(\n + message + "[ThreadId= " + Thread.current.object_id.to_s _ " , semaphore= " +  + @semaphore.locked?.to_s + " ]\n")
+        print(\n + message + "[ThreadId= " + Thread.current.object_id.to_s + " , semaphore= " +  + @semaphore.locked?.to_s + " ]\n")
     end 
 
 
