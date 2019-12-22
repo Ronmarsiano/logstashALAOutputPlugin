@@ -20,20 +20,20 @@ class LogStashEventBuffer
 
     public
     def add_event(event_document)
-        print("\nStart add event" + Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?)
+        print("\nStart add event" + Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
         @semaphore.synchronize do
-            print("\nMutex took"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?)
+            print("\nMutex took"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
             buffer_receive(event_document)
-            print "\nend buffer recive"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?
+            print "\nend buffer recive"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s
         end
-        print("\nMutex release"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?)
-        print("\nEnd add event"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?)
+        print("\nMutex release"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
+        print("\nEnd add event"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
     end # def receive
 
     # called from Stud::Buffer#buffer_flush when there are events to flush
     public
     def flush (documents, close=false)
-        print "\nStarting FLus\n"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?
+        print "\nStarting FLus\n"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
         @logger.debug("No documents in batch for log type #{@log_type}. Skipping")
@@ -44,7 +44,7 @@ class LogStashEventBuffer
         @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@log_type} to DataCollector API. First log: " + (documents[0].to_json).to_s)
         res = @client.post_data(@log_type, documents, @time_generated_field)
         if is_successfully_posted(res)
-            print "\nMessage sent\n"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?
+            print "\nMessage sent\n"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s
             @logger.debug("Successfully posted logs as log type #{@log_type} with result code #{res.code} to DataCollector API")
         else
             @logger.error("DataCollector API request failure: error code: #{res.code}, data=>" + (documents.to_json).to_s)
@@ -54,7 +54,7 @@ class LogStashEventBuffer
         end
 
         handle_window_size(documents.length)
-        print("\nend flushing\n"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?)
+        print("\nend flushing\n"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
 
     end # def flush
 
@@ -65,7 +65,7 @@ class LogStashEventBuffer
 
     public 
     def handle_window_size(amount_of_documents)
-        print("\nStart resize"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?)
+        print("\nStart resize"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
         # Reduce widow size
         if amount_of_documents < @flush_items
             buffer_initialize(
@@ -80,7 +80,7 @@ class LogStashEventBuffer
             :logger => @logger
             )
         end
-        print("\nEnd resize\n"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?)
+        print("\nEnd resize\n"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
     end
 
 end
