@@ -4,11 +4,12 @@ require "logstash/logAnalyticsClient/logstash_event_buffer"
 class LogStashAutoResizeBuffer
     @MAX_WINDOW_SIZE = 10000
 
-    def initialize(max_items, max_interval, logger,workspace_id, shared_key, endpoint, log_type,time_generated_field,flush_items)
+    def initialize(max_items, max_interval, logger,workspace_id, shared_key, endpoint, log_type,time_generated_field,flush_items,key_names)
         @log_type = log_type
         @time_generated_field = time_generated_field
         @flush_items = flush_items
         @semaphore = Mutex.new
+        @key_names = key_names
         @client=LogAnalyticsClient::new(workspace_id, shared_key, endpoint)
         @logger = logger
         @logstash_event_buffer=LogStashEventBuffer::new(@flush_items,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items)
