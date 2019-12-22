@@ -26,7 +26,7 @@ class LogStashAutoResizeBuffer
         print_message("Add event")
         @semaphore.synchronize do
             print "\n\n going to print docuemnt \n"
-            print event_document
+            print(event_document)
             print "\n\n -------------------"
             @logstash_event_buffer.add_event_document(event_document)    
         end
