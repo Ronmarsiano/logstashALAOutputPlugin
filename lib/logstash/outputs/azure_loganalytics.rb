@@ -102,7 +102,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
       
-      @logstash_event_buffer.add_event(document)
+      @logstash_event_buffer.add_event_document(document)
     end
   end # def receive
 
