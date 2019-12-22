@@ -76,7 +76,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     @client=LogAnalyticsClient::new(@workspace_id,@shared_key,@endpoint)
 
     print "try create1111111111111111111111111111111111111111111111111111111111111111"
-    @logstash_event_buffer=LogStashEventBuffer::new(@flush_itemsm,@flush_interval_time,@logger)
+    @logstash_event_buffer=LogStashEventBuffer::new(@flush_itemsm,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field)
     print "try create11111111111111111111111111111111111111111111111111111111111111112222222222222222222222222"
 
     buffer_initialize(
@@ -146,6 +146,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       print "\n\nSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n\n"
       print @semaphore
       print "\n\nSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS22222222222222222\n\n"
+      
 
       @semaphore.synchronize do
         buffer_receive(document)
