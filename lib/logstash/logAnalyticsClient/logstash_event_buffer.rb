@@ -56,23 +56,25 @@ class LogStashEventBuffer
     def handle_window_size(amount_of_documents)
         # Reduce widow size
         if amount_of_documents < @flush_items
-        print @semaphore
-        @semaphore.synchronize do
-            buffer_initialize(
-            :max_items => @flush_items / 2,
-            :max_interval => @flush_interval_time,
-            :logger => @logger
-            )
+            print "\nPrinting semaphore \n"
+            print @semaphore
+            print "\nPrinting semaphore222222222222222222 \n"
+            @semaphore.synchronize do
+                buffer_initialize(
+                :max_items => @flush_items / 2,
+                :max_interval => @flush_interval_time,
+                :logger => @logger
+                )
         end
         elsif @flush_items < @MAX_WINDOW_SIZE
-        print @semaphore
-        @semaphore.synchronize do
-            buffer_initialize(
-            :max_items => @flush_items * 2 > @MAX_WINDOW_SIZE ? @MAX_WINDOW_SIZE : @flush_items * 2,
-            :max_interval => @flush_interval_time,
-            :logger => @logger
-            )
-        end
+            print @semaphore
+            @semaphore.synchronize do
+                buffer_initialize(
+                :max_items => @flush_items * 2 > @MAX_WINDOW_SIZE ? @MAX_WINDOW_SIZE : @flush_items * 2,
+                :max_interval => @flush_interval_time,
+                :logger => @logger
+                )
+            end
         end
     end
 
