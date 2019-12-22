@@ -22,7 +22,7 @@ class LogStashEventBuffer
         @semaphore = Mutex.new
         @client=LogAnalyticsClient::new(workspace_id, shared_key, endpoint)
         @logger = logger
-        @buffer_state = BufferState.NONE
+        @buffer_state = BufferState::NONE
         buffer_initialize(
           :max_items => max_items,
           :max_interval => max_interval,
@@ -76,11 +76,11 @@ class LogStashEventBuffer
     def update_window_state(amount_of_documents)
         # Reduce widow size
         if amount_of_documents < @flush_items
-            @buffer_state = BufferState.TIME_REACHED_WINDOW_RESIZE
+            @buffer_state = BufferState::TIME_REACHED_WINDOW_RESIZE
         elsif @flush_items < @MAX_WINDOW_SIZE
-            @buffer_state = BufferState.FULL_WINDOW_RESIZE
+            @buffer_state = BufferState::FULL_WINDOW_RESIZE
         else
-            @buffer_state = BufferState.NONE
+            @buffer_state = BufferState::NONE
         end
     end
 
