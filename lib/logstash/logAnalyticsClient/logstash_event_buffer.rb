@@ -55,6 +55,7 @@ class LogStashEventBuffer
         print  @time_generated_field
         print ("\n*******************************************\n")
         res = @client.post_data(@log_type, documents, @time_generated_field)
+        print "\n\n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
         if is_successfully_posted(res)
             print "\nMessage sent\n"+ Thread.current.object_id.to_s
             @logger.debug("Successfully posted logs as log type #{@log_type} with result code #{res.code} to DataCollector API")
