@@ -32,11 +32,12 @@ class LogStashEventBuffer
             begin
                 buffer_receive(event_document)    
             rescue => exception
+                print_message("I got exception")
                 print(exception)
             else
-                print_message("Buffer recive End")
+                print_message("Buffer exception ------else")
             ensure
-                print_message("Buffer recive End -- ensure ")
+                print_message("Buffer exception ----- ensure ")
             end
         end
         print_message("Add event end")
