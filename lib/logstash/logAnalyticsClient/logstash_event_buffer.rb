@@ -53,7 +53,7 @@ class LogStashEventBuffer
         end
 
         handle_window_size(documents.length)
-
+        print("\nend flushing\n")
     end # def flush
 
     private 
@@ -78,7 +78,7 @@ class LogStashEventBuffer
             :logger => @logger
             )
         end
-        print("\nEnd resize")
+        print("\nEnd resize\n")
     end
 
 end
