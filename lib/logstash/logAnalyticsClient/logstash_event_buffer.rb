@@ -19,11 +19,13 @@ class LogStashEventBuffer
 
     public
     def add_event(event_document)
+        print("\nStart add event")
         @semaphore.synchronize do
             print("\nMutex took")
             buffer_receive(event_document)
         end
         print("\nMutex release")
+        print("\nEnd add event")
     end # def receive
 
     # called from Stud::Buffer#buffer_flush when there are events to flush
@@ -57,32 +59,22 @@ class LogStashEventBuffer
 
     public 
     def handle_window_size(amount_of_documents)
+        print("\nStart resize")
         # Reduce widow size
         if amount_of_documents < @flush_items
-            print "\nPrinting semaphore \n"
-            print @semaphore
-            print "\nPrinting semaphore222222222222222222 \n"
-            @semaphore.synchronize do
-                print("\nMutex took")
-                buffer_initialize(
-                :max_items => @flush_items / 2,
-                :max_interval => @flush_interval_time,
-                :logger => @logger
-                )
-            end
-            print("\nMutex release")
+            buffer_initialize(
+            :max_items => @flush_items / 2,
+            :max_interval => @flush_interval_time,
+            :logger => @logger
+            )
         elsif @flush_items < @MAX_WINDOW_SIZE
-            print @semaphore
-            @semaphore.synchronize do
-                print("\nMutex took")
-                buffer_initialize(
-                :max_items => @flush_items * 2 > @MAX_WINDOW_SIZE ? @MAX_WINDOW_SIZE : @flush_items * 2,
-                :max_interval => @flush_interval_time,
-                :logger => @logger
-                )
-            end
-            print("\nMutex release")
+            buffer_initialize(
+            :max_items => @flush_items * 2 > @MAX_WINDOW_SIZE ? @MAX_WINDOW_SIZE : @flush_items * 2,
+            :max_interval => @flush_interval_time,
+            :logger => @logger
+            )
         end
+        print("\nEnd resize")
     end
 
 end
