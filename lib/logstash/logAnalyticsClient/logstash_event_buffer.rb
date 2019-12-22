@@ -66,7 +66,7 @@ class LogStashEventBuffer
                 :logger => @logger
                 )
             end
-        end
+            print "Release sempahore "
         elsif @flush_items < @MAX_WINDOW_SIZE
             print @semaphore
             @semaphore.synchronize do
