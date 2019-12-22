@@ -24,6 +24,7 @@ class LogStashEventBuffer
         @semaphore.synchronize do
             print("\nMutex took")
             buffer_receive(event_document)
+            print "\nend buffer recive"
         end
         print("\nMutex release")
         print("\nEnd add event")
