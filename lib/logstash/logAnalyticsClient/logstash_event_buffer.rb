@@ -27,6 +27,9 @@ class LogStashEventBuffer
 
     public
     def add_event_document(event_document)
+        print "\n\n what i got \n\n"
+        print event_document
+        print ("\n\n*************************\n\n")
         buffer_receive(event_document)
     end # def receive
 
