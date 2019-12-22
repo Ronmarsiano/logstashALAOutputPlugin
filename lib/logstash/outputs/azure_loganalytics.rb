@@ -147,6 +147,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       print @semaphore
       print "\n\nSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS22222222222222222\n\n"
       
+      @logstash_event_buffer.add_event(document)
 
       @semaphore.synchronize do
         buffer_receive(document)
