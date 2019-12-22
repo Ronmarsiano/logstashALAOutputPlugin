@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 require "logstash/logAnalyticsClient/logstash_event_buffer"
 
