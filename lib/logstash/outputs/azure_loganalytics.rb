@@ -101,7 +101,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       document = handle_single_event(event)
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
-      
+      print("Adding document \n\n")
+      print document
+      print("*************************Adding document \n\n")
       @logstash_event_buffer.add_event(document)
     end
   end # def receive
