@@ -32,7 +32,6 @@ class LogStashEventBuffer
     public
     def flush (documents, close=false)
         print "\nStarting FLus\n"
-        handle_window_size(documents.length)
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
         @logger.debug("No documents in batch for log type #{@log_type}. Skipping")
@@ -51,6 +50,9 @@ class LogStashEventBuffer
         rescue Exception => ex
         @logger.error("Exception occured in posting to DataCollector API: '#{ex}', data=>" + (documents.to_json).to_s)
         end
+
+        handle_window_size(documents.length)
+
     end # def flush
 
     private 
