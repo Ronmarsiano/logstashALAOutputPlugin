@@ -1,7 +1,6 @@
 # encoding: utf-8
 require "stud/buffer"
 require "logstash/logAnalyticsClient/logAnalyticsClient"
-require "logstash/logAnalyticsClient/logStashAutoResizeBuffer"
 
 class  BufferState
     NONE=1, 
