@@ -27,18 +27,19 @@ class LogStashEventBuffer
     public
     def add_event(event_document)
         print_message("Add event")
-        @semaphore.synchronize do
-            print_message("Buffer recive start")
-            begin
+        begin
+            @semaphore.synchronize do
+                print_message("Buffer recive start")
                 buffer_receive(event_document)    
-            rescue => exception
-                print_message("I got exception")
-                print(exception)
-            else
-                print_message("Buffer exception ------else")
-            ensure
-                print_message("Buffer exception ----- ensure ")
+                print_message("Buffer recive end")
             end
+        rescue => exception
+            print_message("I got exception")
+            print(exception)
+        else
+            print_message("Buffer exception ------else")
+        ensure
+            print_message("Buffer exception ----- ensure ")
         end
         print_message("Add event end")
     end # def receive
