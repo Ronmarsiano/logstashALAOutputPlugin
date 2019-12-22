@@ -1,5 +1,9 @@
 # encoding: utf-8
 require "logstash/logAnalyticsClient/logstash_event_buffer"
+require "logstash/outputs/base"
+require "logstash/namespace"
+require "stud/buffer"
+
 
 class LogStashAutoResizeBuffer
     @MAX_WINDOW_SIZE = 10000
