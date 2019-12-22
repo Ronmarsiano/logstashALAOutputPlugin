@@ -64,8 +64,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       end
     }
 
-    @semaphore = Mutex.new
-
     @MAX_WINDOW_SIZE = 10000
     @RESIZING_WINDOW = false
 

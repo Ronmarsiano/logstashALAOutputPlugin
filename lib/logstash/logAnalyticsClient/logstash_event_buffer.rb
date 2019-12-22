@@ -21,7 +21,7 @@ class LogStashEventBuffer
     def add_event(event_document)
         @semaphore.synchronize do
             buffer_receive(event_document)
-          end
+        end
     end # def receive
 
     # called from Stud::Buffer#buffer_flush when there are events to flush
@@ -65,6 +65,7 @@ class LogStashEventBuffer
                 :max_interval => @flush_interval_time,
                 :logger => @logger
                 )
+            end
         end
         elsif @flush_items < @MAX_WINDOW_SIZE
             print @semaphore
