@@ -73,12 +73,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
     @logstash_event_buffer=LogStashEventBuffer::new(@flush_itemsm,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items)
 
-    buffer_initialize(
-      :max_items => @flush_items,
-      :max_interval => @flush_interval_time,
-      :logger => @logger
-    )
-
   end # def register
 
 
