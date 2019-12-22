@@ -7,7 +7,7 @@ class LogStashEventBuffer
     def initialize(max_items, max_interval, logger,workspace_id, shared_key, endpoint, log_type,time_generated_field,flush_items)
         @log_type = log_type
         @time_generated_field = time_generated_field
-        @flush_items
+        @flush_items = flush_items
         @semaphore = Mutex.new
         @client=LogAnalyticsClient::new(workspace_id, shared_key, endpoint)
         buffer_initialize(
