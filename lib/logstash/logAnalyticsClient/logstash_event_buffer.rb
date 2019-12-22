@@ -29,6 +29,7 @@ class LogStashEventBuffer
     # called from Stud::Buffer#buffer_flush when there are events to flush
     public
     def flush (documents, close=false)
+        print "\nStarting FLus\n"
         handle_window_size(documents.length)
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
