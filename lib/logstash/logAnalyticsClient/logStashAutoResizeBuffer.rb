@@ -12,7 +12,7 @@ class LogStashAutoResizeBuffer
         @semaphore = Mutex.new
         @client=LogAnalyticsClient::new(workspace_id, shared_key, endpoint)
         @logger = logger
-        @logstash_event_buffer=LogStashEventBuffer::new(@flush_itemsm,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items)
+        @logstash_event_buffer=LogStashEventBuffer::new(@flush_items,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items)
         # buffer_initialize(
         #   :max_items => max_items,
         #   :max_interval => max_interval,
