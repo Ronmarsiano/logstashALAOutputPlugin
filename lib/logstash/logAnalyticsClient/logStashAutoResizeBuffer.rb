@@ -30,7 +30,7 @@ class LogStashAutoResizeBuffer
         # creating document from event
         event_document = handle_single_event(event)
         # Skip if document doesn't contain any items
-         if (document.keys).length < 1
+         if (event_document.keys).length < 1
             return
          end
 
