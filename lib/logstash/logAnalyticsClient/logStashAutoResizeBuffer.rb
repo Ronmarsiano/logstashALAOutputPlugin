@@ -26,7 +26,7 @@ class LogStashAutoResizeBuffer
     def add_event(event_document)
         print_message("Add event")
         @semaphore.synchronize do
-            @logstash_event_buffer.buffer_receive(event_document)    
+            @logstash_event_buffer.add_event_document(event_document)    
         end
     end # def receive
 

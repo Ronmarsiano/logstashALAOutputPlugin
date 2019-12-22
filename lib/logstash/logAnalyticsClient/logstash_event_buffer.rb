@@ -36,6 +36,11 @@ class LogStashEventBuffer
     end
 
 
+    public 
+    def add_event_document(event_doecument)
+        buffer_receive(event_document)    
+    end
+
     public
     def get_buffer_status()
         return @buffer_state
