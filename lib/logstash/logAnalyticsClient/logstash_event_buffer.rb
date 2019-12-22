@@ -19,21 +19,26 @@ class LogStashEventBuffer
     end
 
     public
+    def print_message(message)
+        print(\n + message + "[ThreadId= " + Thread.current.object_id.to_s _ " , semaphore= " +  + @semaphore.locked?.to_s + " ]\n")
+    end 
+
+
+    public
     def add_event(event_document)
-        print("\nStart add event" + Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
+        print_message("Add event")
         @semaphore.synchronize do
-            print("\nMutex took"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
+            print_message("Buffer recive start")
             buffer_receive(event_document)
-            print "\nend buffer recive"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s
+            print_message("Buffer recive End")
         end
-        print("\nMutex release"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
-        print("\nEnd add event"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
+        print_message("Add event end")
     end # def receive
 
     # called from Stud::Buffer#buffer_flush when there are events to flush
     public
     def flush (documents, close=false)
-        print "\nStarting FLus\n"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s
+        print_message("Start flush")
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
         @logger.debug("No documents in batch for log type #{@log_type}. Skipping")
@@ -54,7 +59,7 @@ class LogStashEventBuffer
         end
 
         handle_window_size(documents.length)
-        print("\nend flushing\n"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
+        print_message("End flush")
 
     end # def flush
 
@@ -65,7 +70,7 @@ class LogStashEventBuffer
 
     public 
     def handle_window_size(amount_of_documents)
-        print("\nStart resize"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
+        print_message("Start resize")
         # Reduce widow size
         if amount_of_documents < @flush_items
             buffer_initialize(
@@ -80,7 +85,7 @@ class LogStashEventBuffer
             :logger => @logger
             )
         end
-        print("\nEnd resize\n"+ Thread.current.object_id.to_s + " locked= "+ @semaphore.locked?.to_s)
+        print_message("Start resize end ")
     end
 
 end
