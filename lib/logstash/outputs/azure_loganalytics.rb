@@ -4,6 +4,7 @@ require "logstash/outputs/base"
 require "logstash/namespace"
 require "stud/buffer"
 require "logstash/logAnalyticsClient/logAnalyticsClient"
+require "logstash/outputs/logstash_event_buffer"
 
 class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   include Stud::Buffer
@@ -73,6 +74,10 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
     ## Start 
     @client=LogAnalyticsClient::new(@workspace_id,@shared_key,@endpoint)
+
+    print "try create1111111111111111111111111111111111111111111111111111111111111111"
+    @logstash_event_buffer=LogStashEventBuffer::new(@flush_itemsm,@flush_interval_time,@logger)
+    print "try create11111111111111111111111111111111111111111111111111111111111111112222222222222222222222222"
 
     buffer_initialize(
       :max_items => @flush_items,
