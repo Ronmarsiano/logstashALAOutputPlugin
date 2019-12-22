@@ -47,6 +47,11 @@ class LogStashEventBuffer
         end
     end # def flush
 
+    private 
+    def is_successfully_posted(response)
+      return (response.code == 200) ? true : false
+    end
+
     public 
     def handle_window_size(amount_of_documents)
         # Reduce widow size

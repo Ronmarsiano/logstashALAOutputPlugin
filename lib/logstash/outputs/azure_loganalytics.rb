@@ -3,11 +3,9 @@
 require "logstash/outputs/base"
 require "logstash/namespace"
 require "stud/buffer"
-require "logstash/logAnalyticsClient/logAnalyticsClient"
 require "logstash/logAnalyticsClient/logstash_event_buffer"
 
 class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
-  include Stud::Buffer
 
   config_name "azure_loganalytics"
   
@@ -66,18 +64,14 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       end
     }
 
-    print "Create MUtex********************************\n\n\n"
     @semaphore = Mutex.new
 
     @MAX_WINDOW_SIZE = 10000
     @RESIZING_WINDOW = false
 
     ## Start 
-    @client=LogAnalyticsClient::new(@workspace_id,@shared_key,@endpoint)
 
-    print "try create1111111111111111111111111111111111111111111111111111111111111111"
     @logstash_event_buffer=LogStashEventBuffer::new(@flush_itemsm,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items)
-    print "try create11111111111111111111111111111111111111111111111111111111111111112222222222222222222222222"
 
     buffer_initialize(
       :max_items => @flush_items,
@@ -108,34 +102,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     return document
   end
 
-  public 
-  def handle_window_size(amount_of_documents)
-    # Reduce widow size
-    if amount_of_documents < @flush_items
-      print "\n\XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n\n"
-      print @semaphore
-      print "\n\YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\n\n"
-      @semaphore.synchronize do
-        buffer_initialize(
-          :max_items => @flush_items / 2,
-          :max_interval => @flush_interval_time,
-          :logger => @logger
-        )
-      end
-    elsif @flush_items < @MAX_WINDOW_SIZE
-      print "\n\XXXXXXXXdddddddXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n\n"
-      print @semaphore
-      print "\n\YYYYYYYYYYdddddddYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\n\n"
-      @semaphore.synchronize do
-        buffer_initialize(
-          :max_items => @flush_items * 2 > @MAX_WINDOW_SIZE ? @MAX_WINDOW_SIZE : @flush_items * 2,
-          :max_interval => @flush_interval_time,
-          :logger => @logger
-        )
-      end
-    end
-  end
-  
   public
   def multi_receive(events)
     events.each do |event|
@@ -143,40 +109,11 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       document = handle_single_event(event)
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
-      print "\n\nSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n\n"
-      print @semaphore
-      print "\n\nSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS22222222222222222\n\n"
       
       @logstash_event_buffer.add_event(document)
-
-      @semaphore.synchronize do
-        buffer_receive(document)
-      end
     end
   end # def receive
 
-  # called from Stud::Buffer#buffer_flush when there are events to flush
-  public
-  def flush (documents, close=false)
-    handle_window_size(documents.length)
-    # Skip in case there are no candidate documents to deliver
-    if documents.length < 1
-      @logger.debug("No documents in batch for log type #{@log_type}. Skipping")
-      return
-    end
-
-    begin
-      @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@log_type} to DataCollector API. First log: " + (documents[0].to_json).to_s)
-      res = @client.post_data(@log_type, documents, @time_generated_field)
-      if is_successfully_posted(res)
-        @logger.debug("Successfully posted logs as log type #{@log_type} with result code #{res.code} to DataCollector API")
-      else
-        @logger.error("DataCollector API request failure: error code: #{res.code}, data=>" + (documents.to_json).to_s)
-      end
-    rescue Exception => ex
-      @logger.error("Exception occured in posting to DataCollector API: '#{ex}', data=>" + (documents.to_json).to_s)
-    end
-  end # def flush
 
   private
   def convert_value(type, val)
@@ -192,10 +129,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     end
   end
 
-  private 
-  def is_successfully_posted(response)
-    return (response.code == 200) ? true : false
-  end
 
 
 end # class LogStash::Outputs::AzureLogAnalytics
