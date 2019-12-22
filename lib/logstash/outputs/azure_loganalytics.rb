@@ -2,7 +2,6 @@
 
 require "logstash/outputs/base"
 require "logstash/namespace"
-require "stud/buffer"
 require "logstash/logAnalyticsClient/logStashAutoResizeBuffer"
 
 class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
