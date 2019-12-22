@@ -1,11 +1,12 @@
 # encoding: utf-8
-require 'enum'
 require "stud/buffer"
 require "logstash/logAnalyticsClient/logAnalyticsClient"
 require "logstash/logAnalyticsClient/logStashAutoResizeBuffer"
 
-class  BufferState < Enum::Base
-    values :NONE, :FULL_WINDOW_RESIZE, :TIME_REACHED_WINDOW_RESIZE
+class  BufferState
+    NONE=1, 
+    FULL_WINDOW_RESIZE=2
+    TIME_REACHED_WINDOW_RESIZE =3
 end
 
 
@@ -21,7 +22,7 @@ class LogStashEventBuffer
         @semaphore = Mutex.new
         @client=LogAnalyticsClient::new(workspace_id, shared_key, endpoint)
         @logger = logger
-        @buffer_state = BufferState.enum.NONE
+        @buffer_state = BufferState.NONE
         buffer_initialize(
           :max_items => max_items,
           :max_interval => max_interval,
@@ -75,11 +76,11 @@ class LogStashEventBuffer
     def update_window_state(amount_of_documents)
         # Reduce widow size
         if amount_of_documents < @flush_items
-            @buffer_state = BufferState.enum.TIME_REACHED_WINDOW_RESIZE
+            @buffer_state = BufferState.TIME_REACHED_WINDOW_RESIZE
         elsif @flush_items < @MAX_WINDOW_SIZE
-            @buffer_state = BufferState.enum.FULL_WINDOW_RESIZE
+            @buffer_state = BufferState.FULL_WINDOW_RESIZE
         else
-            @buffer_state = BufferState.enum.NONE
+            @buffer_state = BufferState.NONE
         end
     end
 
