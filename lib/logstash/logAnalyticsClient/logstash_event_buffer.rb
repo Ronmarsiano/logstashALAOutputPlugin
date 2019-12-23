@@ -133,6 +133,7 @@ class LogStashEventBuffer
     def change_buffer_size(new_size)
         print_message("Changing buffer size from " + @buffer_config[:max_items].to_s + " to " + new_size.to_s)
         @buffer_config[:max_items] = new_size
+        @logstash_configuration.max_items = new_size
     end
 
 end
