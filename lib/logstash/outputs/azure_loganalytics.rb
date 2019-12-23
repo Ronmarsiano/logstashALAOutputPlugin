@@ -77,7 +77,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     print logstash_configuration.workspace_id
     print "\n\n\n\n###########################################################\n\n\n"
     print "\n\n\n\n###########################################################\n\n\n"
-    @logstash_event_buffer=LogStashAutoResizeBuffer::new(@flush_itemsm,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items,key_names,key_types,@flush_interval_time)
+    @logstash_event_buffer=LogStashAutoResizeBuffer::new(logstash_configuration)
 
   end # def register
 
