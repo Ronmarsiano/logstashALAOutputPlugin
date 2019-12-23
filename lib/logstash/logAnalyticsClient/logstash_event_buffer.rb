@@ -43,7 +43,7 @@ class LogStashEventBuffer
             end
         else
             print_message("Flush sem *not* owned before")
-            handle_window_size(amount_of_documents)
+            handle_window_size(amount_of_documents.length)
         end
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
