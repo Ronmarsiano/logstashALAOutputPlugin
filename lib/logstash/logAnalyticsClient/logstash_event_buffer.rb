@@ -17,23 +17,8 @@ class LogStashEventBuffer
         @log_type = logstash_configuration.log_type
         @time_generated_field = logstash_configuration.time_generated_field
         @flush_items = logstash_configuration.max_items
-        print "\n\n\n\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%1111%%%%%%%%%%%%%%%%\n\n\n\n"
-
-        print logstash_configuration.workspace_id
-
-        print "\n\n\n\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%22222%%%%%%%%%%%%%%%%\n\n\n\n"
-        
-        print logstash_configuration.workspace_key
-
-        print "\n\n\n\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%33333%%%%%%%%%%%%%%%%%%\n\n\n\n"
-
-        print logstash_configuration.endpoint
-
-        print "\n\n\n\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%4444%%%%%%%%%%%%%%%%%%%%%%%\n\n\n\n"
-
-        print "\n\n\n\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5555%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n\n\n"
         @client=LogAnalyticsClient::new(logstash_configuration.workspace_id, logstash_configuration.workspace_key, logstash_configuration.endpoint)
-        @logger = logger
+        @logger = logstash_configuration.logger
         @buffer_state = BufferState::NONE
 
         buffer_initialize(
