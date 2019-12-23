@@ -70,19 +70,57 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
     ## Start 
 
-    @logstash_event_buffer=LogStashAutoResizeBuffer::new(@flush_itemsm,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items,key_names,key_types)
+    @logstash_event_buffer=LogStashEventBuffer::new(@flush_itemsm,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items)
 
   end # def register
 
 
+  public 
+  def handle_single_event(event)
+    document = {}
+    event_hash = event.to_hash()
+    if @key_names.length > 0
+      # Get the intersection of key_names and keys of event_hash
+      keys_intersection = @key_names & event_hash.keys
+      keys_intersection.each do |key|
+        if @key_types.include?(key)
+          document[key] = convert_value(@key_types[key], event_hash[key])
+        else
+          document[key] = event_hash[key]
+        end
+      end
+    else
+      document = event_hash
+    end
+    return document
+  end
 
   public
   def multi_receive(events)
     events.each do |event|
-      @logstash_event_buffer.add_event(event)
+      # creating document from event
+      document = handle_single_event(event)
+      # Skip if document doesn't contain any items
+      next if (document.keys).length < 1
+      
+      @logstash_event_buffer.add_event_document(document)
     end
   end # def receive
 
+
+  private
+  def convert_value(type, val)
+    t = type.downcase
+    case t
+    when "boolean"
+      v = val.downcase
+      return (v.to_s == 'true' ) ? true : false
+    when "double"
+      return Integer(val) rescue Float(val) rescue val
+    else
+      return val
+    end
+  end
 
 
 
