@@ -45,6 +45,7 @@ class LogStashConfiguration
     def max_items
         @max_items
     end
+    
     def max_items=(new_max_items)
         @max_items = new_max_items
     end

@@ -88,6 +88,12 @@ class LogStashEventBuffer
         a = amount_of_documents < @logstash_configuration.max_items
         b =  @logstash_configuration.max_items != [@logstash_configuration.max_items/2,1].max
 
+        c =  @logstash_configuration.max_items
+        d =   amount_of_documents == @logstash_configuration.max_items
+        e = 2*@logstash_configuration.max_items
+        f = @logstash_event_buffer.MAX_WINDOW_SIZE
+        g = [2*@logstash_configuration.max_items, @logstash_event_buffer.MAX_WINDOW_SIZE].min
+        h =  @logstash_configuration.max_items != [2*@logstash_configuration.max_items, @logstash_event_buffer.MAX_WINDOW_SIZE].min
 
         # if window is full and current window!=min(increased size , max size)
         if  amount_of_documents == @logstash_configuration.max_items and  @logstash_configuration.max_items != [2*@logstash_configuration.max_items, @logstash_event_buffer.MAX_WINDOW_SIZE].min
