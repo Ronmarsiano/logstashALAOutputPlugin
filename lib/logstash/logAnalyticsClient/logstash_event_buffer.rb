@@ -66,6 +66,10 @@ class LogStashEventBuffer
             print "\n\nException\n\n"
             print ex
             print "\n\n"
+            print "Documents"
+            print "\n\n"
+            print documents
+            print "\n\n"
             @logger.error("Exception occured in posting to DataCollector API: '#{ex}', data=>" + (documents.to_json).to_s)
         end
     end # def flush
