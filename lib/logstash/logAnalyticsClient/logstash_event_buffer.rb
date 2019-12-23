@@ -36,27 +36,18 @@ class LogStashEventBuffer
     # called from Stud::Buffer#buffer_flush when there are events to flush
     public
     def flush (documents, close=false)
-        print "\n\n\nOwned\n\n\n"
-         print @semaphore.owned?
-        print "\n\n\nOwned\n\n\n"
-
         if @semaphore.owned? == false
+            print_message("Flush sem owned before")
             @semaphore.synchronize do
-                print "\n\nOWWWNNNNNNEEEEDDDDDD\n\n"
-                print "\n\n RRREESSIIZZZEEE\n\n"
-                @buffer_config[:max_items] = @buffer_config[:max_items] * 2
-                print @buffer_config[:max_items]
-                print "\n\n RRREESSIIZZZEEE\n\n"
+                handle_window_size(amount_of_documents)
             end
         else
-            print "\n\n RRREESSIIZZZEEE\n\n"
-            @buffer_config[:max_items] = @buffer_config[:max_items] * 2
-            print @buffer_config[:max_items]
-            print "\n\n RRREESSIIZZZEEE\n\n"
+            print_message("Flush sem *not* owned before")
+            handle_window_size(amount_of_documents)
         end
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
-        @logger.debug("No documents in batch for log type #{@logstash_configuration.log_type}. Skipping")
+            @logger.debug("No documents in batch for log type #{@logstash_configuration.log_type}. Skipping")
         return
         end
 
@@ -81,6 +72,30 @@ class LogStashEventBuffer
         end
     end # def flush
 
+
+
+    private
+    def handle_window_size(amount_of_documents)
+        # if window is full and current window!=min(increased size , max size)
+        if  amount_of_documents == @logstash_configuration.max_items and  @logstash_configuration.max_items != [2*@logstash_event_buffer.get_buffer_size, @logstash_event_buffer.MAX_WINDOW_SIZE].min
+            new_buffer_size = [2*@logstash_event_buffer.get_buffer_size, @logstash_event_buffer.MAX_WINDOW_SIZE].min
+            @logstash_event_buffer.change_buffer_size(new_buffer_size)
+            print_message("Increasing size " new_buffer_size.to_s())
+            
+        elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [@logstash_event_buffer.get_buffer_size/2,@logstash_event_buffer.MIN_WINDOW_SIZEl].max
+            new_buffer_size = [@logstash_event_buffer.get_buffer_size/2,1].max
+            @logstash_event_buffer.change_buffer_size(new_buffer_size)
+            print_message("Decreasing size "+ new_buffer_size.to_s())
+        else
+            print "Error shouldn't get here since messages can't be greater then window size "
+        end
+    end
+
+    public
+    def print_message(message)
+        print("\n" + message + "[ThreadId= " + Thread.current.object_id.to_s + " , semaphore= " +  @semaphore.locked?.to_s + " ]\n")
+    end 
+
     private 
     def is_successfully_posted(response)
       return (response.code == 200) ? true : false
@@ -98,7 +113,7 @@ class LogStashEventBuffer
 
     public 
     def change_buffer_size(new_size)
-        print @buffer_config[:max_items]
+        @buffer_config[:max_items] = new_size
     end
 
 end
