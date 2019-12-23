@@ -36,6 +36,9 @@ class LogStashEventBuffer
     # called from Stud::Buffer#buffer_flush when there are events to flush
     public
     def flush (documents, close=false)
+        print "\n\n\nOwned\n\n\n"
+         print @semaphore.owned?
+        print "\n\n\nOwned\n\n\n"
         @semaphore.synchronize do
             print "\n\n RRREESSIIZZZEEE\n\n"
             @buffer_config[:max_items] = @buffer_config[:max_items] * 2
