@@ -17,6 +17,9 @@ class LogStashAutoResizeBuffer
         @key_types = key_types
         @client=LogAnalyticsClient::new(workspace_id, shared_key, endpoint)
         @logger = logger
+        print "\n\n share key"
+        print shared_key
+        print "\n\n share key"
         @logstash_event_buffer=LogStashEventBuffer::new(@flush_items,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items)
         # buffer_initialize(
         #   :max_items => max_items,
