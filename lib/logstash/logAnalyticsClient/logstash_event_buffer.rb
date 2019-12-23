@@ -16,7 +16,7 @@ class LogStashEventBuffer
     def initialize(logstash_configuration)
         @log_type = logstash_configuration.log_type
         @time_generated_field = logstash_configuration.time_generated_field
-        @flush_items = logstash_configuration.flush_items
+        @flush_items = logstash_configuration.max_items
         @client=LogAnalyticsClient::new(logstash_configuration.workspace_id, logstash_configuration.shared_key, logstash_configuration.endpoint)
         @logger = logger
         @buffer_state = BufferState::NONE
