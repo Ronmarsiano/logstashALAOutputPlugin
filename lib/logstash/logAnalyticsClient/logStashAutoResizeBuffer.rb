@@ -19,7 +19,7 @@ class LogStashAutoResizeBuffer
     public
     def add_event_document2(event_document)
         @logstash_event_buffer.add_event_document(event_document)   
-        handle_window_size() 
+        # handle_window_size() 
         # end
     end # def receive
 
