@@ -23,7 +23,7 @@ class LogStashEventBuffer
 
         print "\n\n\n\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%22222%%%%%%%%%%%%%%%%\n\n\n\n"
         
-        print logstash_configuration.shared_key
+        print logstash_configuration.workspace_key
 
         print "\n\n\n\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%33333%%%%%%%%%%%%%%%%%%\n\n\n\n"
 
@@ -32,7 +32,7 @@ class LogStashEventBuffer
         print "\n\n\n\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%4444%%%%%%%%%%%%%%%%%%%%%%%\n\n\n\n"
 
         print "\n\n\n\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5555%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n\n\n"
-        @client=LogAnalyticsClient::new(logstash_configuration.workspace_id, logstash_configuration.shared_key, logstash_configuration.endpoint)
+        @client=LogAnalyticsClient::new(logstash_configuration.workspace_id, logstash_configuration.workspace_key, logstash_configuration.endpoint)
         @logger = logger
         @buffer_state = BufferState::NONE
 
