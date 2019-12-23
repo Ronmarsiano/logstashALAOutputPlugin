@@ -18,13 +18,14 @@ class LogStashAutoResizeBuffer
 
     public
     def add_event_document2(event_document)
-        @logstash_event_buffer.add_event_document(event_document)    
+        @logstash_event_buffer.add_event_document(event_document)   
+        handle_window_size() 
         # end
     end # def receive
 
     
     public 
-    def handle_window_size(amount_of_documents)
+    def handle_window_size()
         print_message("Start resize")
         @semaphore.synchronize do
             buffer_status = @logstash_event_buffer.get_buffer_status()
@@ -32,11 +33,13 @@ class LogStashAutoResizeBuffer
             if buffer_status == BufferState::FULL_WINDOW_RESIZE and [2*@logstash_event_buffer.get_buffer_size, @logstash_event_buffer.MAX_WINDOW_SIZE].min != @logstash_event_buffer.get_buffer_size
                 new_buffer_size = [2*@logstash_event_buffer.get_buffer_size, @logstash_event_buffer.MAX_WINDOW_SIZE].min
                 @logstash_event_buffer.buffer_flush()
-                @logstash_event_buffer=LogStashEventBuffer::new(new_buffer_size,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,new_buffer_size)
+                @logstash_event_buffer.change_buffer_size(new_buffer_size)
+                # @logstash_event_buffer=LogStashEventBuffer::new(new_buffer_size,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,new_buffer_size)
             elsif buffer_status == BufferState::TIME_REACHED_WINDOW_RESIZE and [@logstash_event_buffer.get_buffer_size/2,@logstash_event_buffer.MIN_WINDOW_SIZEl].max != @logstash_event_buffer.get_buffer_size
                 new_buffer_size = [@logstash_event_buffer.get_buffer_size/2,1].max
                 @logstash_event_buffer.buffer_flush()
-                @logstash_event_buffer=LogStashEventBuffer::new(new_buffer_size,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,new_buffer_size)
+                @logstash_event_buffer.change_buffer_size(new_buffer_size)
+                # @logstash_event_buffer=LogStashEventBuffer::new(new_buffer_size,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,new_buffer_size)
             else
                 print "No action needed"
             end

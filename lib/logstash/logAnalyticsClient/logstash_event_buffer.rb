@@ -43,6 +43,10 @@ class LogStashEventBuffer
     # called from Stud::Buffer#buffer_flush when there are events to flush
     public
     def flush (documents, close=false)
+        print "\n\n RRREESSIIZZZEEE\n\n"
+        @buffer_config[:max_items] = @buffer_config[:max_items] * 2
+        print @buffer_config[:max_items]
+        print "\n\n RRREESSIIZZZEEE\n\n"
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
         @logger.debug("No documents in batch for log type #{@logstash_configuration.log_type}. Skipping")
@@ -85,6 +89,11 @@ class LogStashEventBuffer
     def get_buffer_status()
         return @logstash_configuration.buffer_state
     end 
+
+    public 
+    def change_buffer_size(new_size)
+        print @buffer_config[:max_items]
+    end
 
 end
 
