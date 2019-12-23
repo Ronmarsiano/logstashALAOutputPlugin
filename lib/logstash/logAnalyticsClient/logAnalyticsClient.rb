@@ -52,20 +52,12 @@ class LogAnalyticsClient
 
   def signature(date, content_length)
 
-    print "\n111111111111111111\n"
     sigs = sprintf("POST\n%d\napplication/json\nx-ms-date:%s\n/api/logs",
                   content_length, date)
     utf8_sigs = sigs.encode('utf-8')
-    print "\n2222222222222222222222\n"
-    print "\n\nkey$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n"
-    print @shared_key
-    print "\n\%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%n"
     decoded_shared_key = Base64.decode64(@shared_key)
-    print "\n3333333333333333333333\n"
     hmac_sha256_sigs = OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha256'), decoded_shared_key, utf8_sigs)
-    print "\n44444444444444444444444444\n"
     encoded_hash = Base64.encode64(hmac_sha256_sigs)
-    print "\n555555555555555555555555555\n"
     authorization = sprintf("SharedKey %s:%s", @workspace_id,encoded_hash)
   end
 

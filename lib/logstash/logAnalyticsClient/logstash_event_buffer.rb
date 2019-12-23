@@ -16,6 +16,7 @@ class LogStashEventBuffer
     def initialize(logstash_configuration, logger)
         @client=LogAnalyticsClient::new(logstash_configuration.workspace_id, logstash_configuration.workspace_key, logstash_configuration.endpoint)
         @logger = logger
+        @semaphore = Mutex.new
         @buffer_state = BufferState::NONE
         @logstash_configuration = logstash_configuration
         buffer_initialize(
@@ -23,30 +24,24 @@ class LogStashEventBuffer
           :max_interval => logstash_configuration.max_interval,
           :logger => logger
         )
-
-        print "\n\n----------------------------11-------------------------------\n"
-
-        print @buffer_config
-        print "\n\n----------------------------22-------------------------------\n"
-        print @buffer_config[:max_items]
-        print "\n\n----------------------------33-------------------------------\n"
-        print :max_items
-        print "\n\n----------------------------44-------------------------------\n"
-
     end
 
     public
     def add_event_document(event_document)
-        buffer_receive(event_document)
+        @semaphore.synchronize do
+            buffer_receive(event_document)
+        end
     end # def receive
 
     # called from Stud::Buffer#buffer_flush when there are events to flush
     public
     def flush (documents, close=false)
-        print "\n\n RRREESSIIZZZEEE\n\n"
-        @buffer_config[:max_items] = @buffer_config[:max_items] * 2
-        print @buffer_config[:max_items]
-        print "\n\n RRREESSIIZZZEEE\n\n"
+        @semaphore.synchronize do
+            print "\n\n RRREESSIIZZZEEE\n\n"
+            @buffer_config[:max_items] = @buffer_config[:max_items] * 2
+            print @buffer_config[:max_items]
+            print "\n\n RRREESSIIZZZEEE\n\n"
+        end
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
         @logger.debug("No documents in batch for log type #{@logstash_configuration.log_type}. Skipping")
@@ -57,7 +52,6 @@ class LogStashEventBuffer
         @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@logstash_configuration.log_type} to DataCollector API. First log: " + (documents[0].to_json).to_s)
 
         res = @client.post_data(@logstash_configuration.log_type, documents, @logstash_configuration.time_generated_field)
-        print "\n\n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
         if is_successfully_posted(res)
             @logger.debug("Successfully posted logs as log type #{@logstash_configuration.log_type} with result code #{res.code} to DataCollector API")
         else
