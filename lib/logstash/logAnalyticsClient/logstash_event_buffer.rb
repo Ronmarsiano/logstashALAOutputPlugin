@@ -80,12 +80,12 @@ class LogStashEventBuffer
         if  amount_of_documents == @logstash_configuration.max_items and  @logstash_configuration.max_items != [2*@logstash_event_buffer.get_buffer_size, @logstash_event_buffer.MAX_WINDOW_SIZE].min
             new_buffer_size = [2*@logstash_event_buffer.get_buffer_size, @logstash_event_buffer.MAX_WINDOW_SIZE].min
             @logstash_event_buffer.change_buffer_size(new_buffer_size)
-            print_message("Increasing size " new_buffer_size.to_s())
+            print_message("Increasing size " + new_buffer_size.to_s())
             
         elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [@logstash_event_buffer.get_buffer_size/2,@logstash_event_buffer.MIN_WINDOW_SIZEl].max
             new_buffer_size = [@logstash_event_buffer.get_buffer_size/2,1].max
             @logstash_event_buffer.change_buffer_size(new_buffer_size)
-            print_message("Decreasing size "+ new_buffer_size.to_s())
+            print_message("Decreasing size " + new_buffer_size.to_s())
         else
             print "Error shouldn't get here since messages can't be greater then window size "
         end
