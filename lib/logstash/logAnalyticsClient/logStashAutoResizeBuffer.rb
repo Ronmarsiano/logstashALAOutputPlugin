@@ -28,7 +28,7 @@ class LogStashAutoResizeBuffer
 
 
     public
-    def add_event(event)
+    def add_event_document2(event)
         # print_message("Add event")
 
         # creating document from event
@@ -42,7 +42,7 @@ class LogStashAutoResizeBuffer
         #     print "\n\n going to print docuemnt \n"
         #     print(event_document)
         #     print "\n\n -------------------"
-        @logstash_event_buffer.add_event_document2(event_document)    
+        @logstash_event_buffer.add_event_document(event_document)    
         # end
     end # def receive
 
