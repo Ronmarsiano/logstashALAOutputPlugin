@@ -28,7 +28,7 @@ class LogStashEventBuffer
 
         print self
         print "\n\n-----------------------------------------------------------\n"
-        print self.max_items
+        @buffer_config[:max_items]
         print "\n\n-----------------------------------------------------------\n"
         print self.max_interval
         print "\n\n-----------------------------------------------------------\n"
