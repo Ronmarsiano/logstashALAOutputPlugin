@@ -3,27 +3,23 @@ require "logstash/logAnalyticsClient/logstash_event_buffer"
 require "logstash/outputs/base"
 require "logstash/namespace"
 require "stud/buffer"
+require "logstash/logAnalyticsClient/loganalytics_configuration"
 
 
 class LogStashAutoResizeBuffer
     @MAX_WINDOW_SIZE = 10000
 
-    def initialize(max_items, max_interval, logger,workspace_id, shared_key, endpoint, log_type,time_generated_field,flush_items,key_names,key_types,flush_interval_time)
-        @log_type = log_type
-        @time_generated_field = time_generated_field
-        @flush_items = flush_items
-        @semaphore = Mutex.new
-        @key_names = key_names
-        @key_types = key_types
-        @shared_key = shared_key
-        @flush_interval_time = max_interval
-        @endpoint = endpoint
-        @client=LogAnalyticsClient::new(workspace_id, shared_key, endpoint)
-        @logger = logger
-        print "\n\n share key"
-        print shared_key
-        print "\n\n share key"
-        @logstash_event_buffer=LogStashEventBuffer::new(@flush_items,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items)
+    def initialize(logstash_configuration)
+        @logstash_configuration=logstash_configuration
+        print "\n\nCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC\n\n"
+        print "\n\n\n\n###########################################################\n\n\n"
+        print logstash_configuration
+        print "\n\n\n\n###########################################################\n\n\n"
+        print logstash_configuration.workspace_id
+        print "\n\n\n\n###########################################################\n\n\n"
+        print "\n\n\n\n###########################################################\n\n\n"
+
+        #@logstash_event_buffer=LogStashEventBuffer::new(@flush_items,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items)
         # buffer_initialize(
         #   :max_items => max_items,
         #   :max_interval => max_interval,
