@@ -77,8 +77,8 @@ class LogStashEventBuffer
     private
     def handle_window_size(amount_of_documents)
 
-        print_message( @logstash_configuration.max_items)
-        print_message(amount_of_documents.to_s)
+        print_message( @logstash_configuration.max_items.to_s())
+        print_message(amount_of_documents.to_s())
 
         # if window is full and current window!=min(increased size , max size)
         if  amount_of_documents == @logstash_configuration.max_items and  @logstash_configuration.max_items != [2*@logstash_configuration.max_items, @logstash_event_buffer.MAX_WINDOW_SIZE].min
