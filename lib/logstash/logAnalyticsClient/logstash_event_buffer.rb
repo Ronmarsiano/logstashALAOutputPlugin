@@ -77,11 +77,14 @@ class LogStashEventBuffer
     private
     def handle_window_size(amount_of_documents)
 
+        print "\n\n********11111***********************\n\n"
         print_message( @logstash_configuration.max_items.to_s())
         print_message(amount_of_documents.to_s())
-
+        print "\n\n*********2222222222222**********************\n\n"
         print amount_of_documents
+        print "\n\n***********33333333333333********************\n\n"
         print  @logstash_configuration.max_items
+        print "\n\n***********444444444444444e********************\n\n"
         a = amount_of_documents < @logstash_configuration.max_items
         b =  @logstash_configuration.max_items != [@logstash_configuration.max_items/2,1].max
 
