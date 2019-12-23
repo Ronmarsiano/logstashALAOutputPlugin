@@ -42,6 +42,7 @@ class LogStashEventBuffer
 
         if @semaphore.owned? == false
             @semaphore.synchronize do
+                print "\n\nOWWWNNNNNNEEEEDDDDDD\n\n"
                 print "\n\n RRREESSIIZZZEEE\n\n"
                 @buffer_config[:max_items] = @buffer_config[:max_items] * 2
                 print @buffer_config[:max_items]
