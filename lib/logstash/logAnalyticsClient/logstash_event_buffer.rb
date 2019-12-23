@@ -24,7 +24,7 @@ class LogStashEventBuffer
         buffer_initialize(
           :max_items => logstash_configuration.max_items,
           :max_interval => logstash_configuration.max_interval,
-          :logger => logstash_configuration.logger
+          :logger => logger
         )
     end
 
