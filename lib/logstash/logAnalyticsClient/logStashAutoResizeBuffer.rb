@@ -11,15 +11,8 @@ class LogStashAutoResizeBuffer
 
     def initialize(logstash_configuration)
         @logstash_configuration=logstash_configuration
-        print "\n\nCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC\n\n"
-        print "\n\n\n\n###########################################################\n\n\n"
-        print logstash_configuration
-        print "\n\n\n\n###########################################################\n\n\n"
-        print logstash_configuration.workspace_id
-        print "\n\n\n\n###########################################################\n\n\n"
-        print "\n\n\n\n###########################################################\n\n\n"
 
-        #@logstash_event_buffer=LogStashEventBuffer::new(@flush_items,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items)
+        @logstash_event_buffer=LogStashEventBuffer::new(@flush_items,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items)
         # buffer_initialize(
         #   :max_items => max_items,
         #   :max_interval => max_interval,
