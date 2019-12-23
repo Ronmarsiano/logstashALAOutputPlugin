@@ -9,7 +9,9 @@ class LogStashConfiguration
         @key_names = key_names
         @key_types = key_types
         @max_items = max_items
-        @max_interval = max_interval        
+        @max_interval = max_interval
+        @MAX_WINDOW_SIZE = 10000
+        @MIN_WINDOW_SIZE = 1        
     end
 
     def workspace_id
@@ -46,5 +48,13 @@ class LogStashConfiguration
 
     def max_interval
         @max_interval
+    end
+
+    def MAX_WINDOW_SIZE
+        @MAX_WINDOW_SIZE
+    end
+
+    def MIN_WINDOW_SIZE
+        @MIN_WINDOW_SIZE
     end
 end

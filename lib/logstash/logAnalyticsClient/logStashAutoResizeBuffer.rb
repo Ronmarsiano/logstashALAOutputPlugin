@@ -7,36 +7,17 @@ require "logstash/logAnalyticsClient/loganalytics_configuration"
 
 
 class LogStashAutoResizeBuffer
-    @MAX_WINDOW_SIZE = 10000
 
     def initialize(logstash_configuration, logger)
         @logstash_configuration=logstash_configuration
-
         @logstash_event_buffer=LogStashEventBuffer::new(logstash_configuration,logger)
-        # buffer_initialize(
-        #   :max_items => max_items,
-        #   :max_interval => max_interval,
-        #   :logger => logger
-        # )
+
     end
 
 
 
     public
     def add_event_document2(event_document)
-        # print_message("Add event")
-
-        # creating document from event
-        # event_document = handle_single_event(event)
-        # # Skip if document doesn't contain any items
-        #  if (event_document.keys).length < 1
-        #     return
-        #  end
-# 
-        # @semaphore.synchronize do
-        #     print "\n\n going to print docuemnt \n"
-        #     print(event_document)
-        #     print "\n\n -------------------"
         @logstash_event_buffer.add_event_document(event_document)    
         # end
     end # def receive
@@ -48,11 +29,11 @@ class LogStashAutoResizeBuffer
         @semaphore.synchronize do
             buffer_status = @logstash_event_buffer.get_buffer_status()
             # increase window state + increasing the size is diffrent then old size
-            if buffer_status == BufferState::FULL_WINDOW_RESIZE and [2*@logstash_event_buffer.get_buffer_size, @MAX_WINDOW_SIZE].min != @logstash_event_buffer.get_buffer_size
-                new_buffer_size = [2*@logstash_event_buffer.get_buffer_size, @MAX_WINDOW_SIZE].min
+            if buffer_status == BufferState::FULL_WINDOW_RESIZE and [2*@logstash_event_buffer.get_buffer_size, @logstash_event_buffer.MAX_WINDOW_SIZE].min != @logstash_event_buffer.get_buffer_size
+                new_buffer_size = [2*@logstash_event_buffer.get_buffer_size, @logstash_event_buffer.MAX_WINDOW_SIZE].min
                 @logstash_event_buffer.buffer_flush()
                 @logstash_event_buffer=LogStashEventBuffer::new(new_buffer_size,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,new_buffer_size)
-            elsif buffer_status == BufferState::TIME_REACHED_WINDOW_RESIZE and [@logstash_event_buffer.get_buffer_size/2,1].max != @logstash_event_buffer.get_buffer_size
+            elsif buffer_status == BufferState::TIME_REACHED_WINDOW_RESIZE and [@logstash_event_buffer.get_buffer_size/2,@logstash_event_buffer.MIN_WINDOW_SIZEl].max != @logstash_event_buffer.get_buffer_size
                 new_buffer_size = [@logstash_event_buffer.get_buffer_size/2,1].max
                 @logstash_event_buffer.buffer_flush()
                 @logstash_event_buffer=LogStashEventBuffer::new(new_buffer_size,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,new_buffer_size)

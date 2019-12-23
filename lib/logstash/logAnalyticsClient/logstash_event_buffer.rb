@@ -23,20 +23,24 @@ class LogStashEventBuffer
           :max_interval => logstash_configuration.max_interval,
           :logger => logger
         )
+
+        print "\n\n-----------------------------------------------------------\n"
+
+        print self
+        print "\n\n-----------------------------------------------------------\n"
+        print "\n\n-----------------------------------------------------------\n"
+        print "\n\n-----------------------------------------------------------\n"
+
     end
 
     public
     def add_event_document(event_document)
-        print "\n\n what i got \n\n"
-        print event_document
-        print ("\n\n*************************\n\n")
         buffer_receive(event_document)
     end # def receive
 
     # called from Stud::Buffer#buffer_flush when there are events to flush
     public
     def flush (documents, close=false)
-        print("\nfllusshhhiinggg\n")
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
         @logger.debug("No documents in batch for log type #{@logstash_configuration.log_type}. Skipping")
@@ -49,7 +53,6 @@ class LogStashEventBuffer
         res = @client.post_data(@logstash_configuration.log_type, documents, @logstash_configuration.time_generated_field)
         print "\n\n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
         if is_successfully_posted(res)
-            print "\nMessage sent\n"+ Thread.current.object_id.to_s
             @logger.debug("Successfully posted logs as log type #{@logstash_configuration.log_type} with result code #{res.code} to DataCollector API")
         else
             @logger.error("DataCollector API request failure: error code: #{res.code}, data=>" + (documents.to_json).to_s)

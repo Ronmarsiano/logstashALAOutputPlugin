@@ -52,8 +52,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def register
-    print "Register " + Thread.current.object_id.to_s
-
     ## Configure
     if not @log_type.match(/^[[:alpha:]]+$/)
       raise ArgumentError, 'log_type must be only alpha characters' 
@@ -66,7 +64,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       end
     }
 
-    @MAX_WINDOW_SIZE = 10000
     @RESIZING_WINDOW = false
 
     ## Start 
