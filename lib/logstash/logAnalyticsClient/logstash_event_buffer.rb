@@ -18,6 +18,11 @@ class LogStashEventBuffer
         @client=LogAnalyticsClient::new(workspace_id, shared_key, endpoint)
         @logger = logger
         @buffer_state = BufferState::NONE
+
+        print "\n\n\n JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ\n\n"
+        print shared_key
+        print "\n\n\n JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ\n\n"
+
         buffer_initialize(
           :max_items => max_items,
           :max_interval => max_interval,
