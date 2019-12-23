@@ -70,7 +70,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
     ## Start 
 
-    @logstash_event_buffer=LogStashEventBuffer::new(@flush_itemsm,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items)
+    @logstash_event_buffer=LogStashAutoResizeBuffer::new(@flush_itemsm,@flush_interval_time,@logger,@workspace_id,@shared_key,@endpoint,@log_type,@time_generated_field,@flush_items,key_names,key_types)
 
   end # def register
 
@@ -103,7 +103,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
       
-      @logstash_event_buffer.add_event_document(document)
+      @logstash_event_buffer.add_event_document2(document)
     end
   end # def receive
 

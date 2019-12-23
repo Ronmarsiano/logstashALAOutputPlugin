@@ -29,21 +29,21 @@ class LogStashAutoResizeBuffer
 
     public
     def add_event(event)
-        print_message("Add event")
+        # print_message("Add event")
 
         # creating document from event
-        event_document = handle_single_event(event)
-        # Skip if document doesn't contain any items
-         if (event_document.keys).length < 1
-            return
-         end
-
-        @semaphore.synchronize do
-            print "\n\n going to print docuemnt \n"
-            print(event_document)
-            print "\n\n -------------------"
-            @logstash_event_buffer.add_event_document(event_document)    
-        end
+        # event_document = handle_single_event(event)
+        # # Skip if document doesn't contain any items
+        #  if (event_document.keys).length < 1
+        #     return
+        #  end
+# 
+        # @semaphore.synchronize do
+        #     print "\n\n going to print docuemnt \n"
+        #     print(event_document)
+        #     print "\n\n -------------------"
+        @logstash_event_buffer.add_event_document2(event_document)    
+        # end
     end # def receive
 
     
