@@ -8,13 +8,16 @@ require "stud/buffer"
 class LogStashAutoResizeBuffer
     @MAX_WINDOW_SIZE = 10000
 
-    def initialize(max_items, max_interval, logger,workspace_id, shared_key, endpoint, log_type,time_generated_field,flush_items,key_names,key_types)
+    def initialize(max_items, max_interval, logger,workspace_id, shared_key, endpoint, log_type,time_generated_field,flush_items,key_names,key_types,flush_interval_time)
         @log_type = log_type
         @time_generated_field = time_generated_field
         @flush_items = flush_items
         @semaphore = Mutex.new
         @key_names = key_names
         @key_types = key_types
+        @shared_key = shared_key
+        @flush_interval_time = max_interval
+        @endpoint = endpoint
         @client=LogAnalyticsClient::new(workspace_id, shared_key, endpoint)
         @logger = logger
         print "\n\n share key"
