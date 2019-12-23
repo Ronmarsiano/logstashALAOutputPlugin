@@ -57,7 +57,9 @@ class LogAnalyticsClient
                   content_length, date)
     utf8_sigs = sigs.encode('utf-8')
     print "\n2222222222222222222222\n"
+    print "\n\nkey$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n"
     print @shared_key
+    print "\n\%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%n"
     decoded_shared_key = Base64.decode64(@shared_key)
     print "\n3333333333333333333333\n"
     hmac_sha256_sigs = OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha256'), decoded_shared_key, utf8_sigs)
