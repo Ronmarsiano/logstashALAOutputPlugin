@@ -28,7 +28,9 @@ class LogStashEventBuffer
 
         print self
         print "\n\n-----------------------------------------------------------\n"
+        print self.max_items
         print "\n\n-----------------------------------------------------------\n"
+        print self.max_interval
         print "\n\n-----------------------------------------------------------\n"
 
     end
