@@ -39,7 +39,7 @@ class LogStashEventBuffer
         if @semaphore.owned? == false
             print_message("Flush sem owned before")
             @semaphore.synchronize do
-                handle_window_size(amount_of_documents)
+                handle_window_size(documents.length)
             end
         else
             print_message("Flush sem *not* owned before")
