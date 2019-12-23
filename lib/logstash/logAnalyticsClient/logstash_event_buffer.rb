@@ -99,7 +99,9 @@ class LogStashEventBuffer
 
         # TODO change 1 to min winowd size 
         elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [@logstash_configuration.max_items/2,1].max
+            print_message("Taking min between " + @logstash_configuration.max_items.to_s() + "/2="+ (@logstash_configuration.max_items/2).to_s()+" and 1")
             new_buffer_size = [@logstash_configuration.max_items/2,1].max
+            print_message("new buffer size is "+ new_buffer_size.to_s())
             change_buffer_size(new_buffer_size)
             print_message("Decreasing size " + new_buffer_size.to_s())
         else
