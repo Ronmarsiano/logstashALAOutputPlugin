@@ -80,6 +80,8 @@ class LogStashEventBuffer
         print_message( @logstash_configuration.max_items.to_s())
         print_message(amount_of_documents.to_s())
 
+        print amount_of_documents
+        print  @logstash_configuration.max_items
         a = amount_of_documents < @logstash_configuration.max_items
         b =  @logstash_configuration.max_items != [@logstash_configuration.max_items/2,1].max
 
