@@ -42,9 +42,13 @@ class LogStashConfiguration
         @key_types
     end
 
+    def max_items
+        @max_items
+    end
     def max_items=(new_max_items)
         @max_items = new_max_items
     end
+
 
     def max_interval
         @max_interval
