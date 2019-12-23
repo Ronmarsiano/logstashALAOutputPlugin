@@ -80,12 +80,18 @@ class LogStashEventBuffer
         print_message( @logstash_configuration.max_items.to_s())
         print_message(amount_of_documents.to_s())
 
+        a = amount_of_documents < @logstash_configuration.max_items
+        b =  @logstash_configuration.max_items != [@logstash_configuration.max_items/2,1].max
+
+
         # if window is full and current window!=min(increased size , max size)
         if  amount_of_documents == @logstash_configuration.max_items and  @logstash_configuration.max_items != [2*@logstash_configuration.max_items, @logstash_event_buffer.MAX_WINDOW_SIZE].min
             new_buffer_size = [2*@logstash_configuration.max_items, @logstash_event_buffer.MAX_WINDOW_SIZE].min
             @logstash_event_buffer.change_buffer_size(new_buffer_size)
             print_message("Increasing size " + new_buffer_size.to_s())
             
+
+
         # TODO change 1 to min winowd size 
         elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [@logstash_configuration.max_items/2,1].max
             new_buffer_size = [@logstash_configuration.max_items/2,1].max
