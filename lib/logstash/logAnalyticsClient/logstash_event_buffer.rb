@@ -13,12 +13,12 @@ end
 class LogStashEventBuffer 
     include Stud::Buffer
 
-    def initialize(logstash_configuration)
+    def initialize(logstash_configuration, logger)
         @log_type = logstash_configuration.log_type
         @time_generated_field = logstash_configuration.time_generated_field
         @flush_items = logstash_configuration.max_items
         @client=LogAnalyticsClient::new(logstash_configuration.workspace_id, logstash_configuration.workspace_key, logstash_configuration.endpoint)
-        @logger = logstash_configuration.logger
+        @logger = logger
         @buffer_state = BufferState::NONE
 
         buffer_initialize(

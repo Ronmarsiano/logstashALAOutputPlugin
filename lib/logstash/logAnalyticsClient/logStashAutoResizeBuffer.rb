@@ -9,10 +9,10 @@ require "logstash/logAnalyticsClient/loganalytics_configuration"
 class LogStashAutoResizeBuffer
     @MAX_WINDOW_SIZE = 10000
 
-    def initialize(logstash_configuration)
+    def initialize(logstash_configuration, logger)
         @logstash_configuration=logstash_configuration
 
-        @logstash_event_buffer=LogStashEventBuffer::new(logstash_configuration)
+        @logstash_event_buffer=LogStashEventBuffer::new(logstash_configuration,logger)
         # buffer_initialize(
         #   :max_items => max_items,
         #   :max_interval => max_interval,

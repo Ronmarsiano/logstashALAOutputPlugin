@@ -71,7 +71,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
     ## Start 
     logstash_configuration= LogStashConfiguration::new(@workspace_id, @shared_key, @log_type, @endpoint, @time_generated_field, @key_names, @key_types, @max_items, @max_interval)
-    @logstash_event_buffer=LogStashAutoResizeBuffer::new(logstash_configuration)
+    @logstash_event_buffer=LogStashAutoResizeBuffer::new(logstash_configuration, @logger)
 
   end # def register
 
