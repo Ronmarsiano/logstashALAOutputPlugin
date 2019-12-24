@@ -1,7 +1,6 @@
 class LogStashConfiguration
 
     def initialize(workspace_id, workspace_key, log_type, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, max_items=50, max_interval=5)
-        self.initialize()
         @workspace_id = workspace_id
         @workspace_key = workspace_key
         @log_type = log_type

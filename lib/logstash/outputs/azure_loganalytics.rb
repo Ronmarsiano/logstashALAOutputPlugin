@@ -68,7 +68,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
     ## Start 
     @logstash_configuration= LogStashConfiguration::new(@workspace_id, @shared_key, @log_type, @endpoint, @time_generated_field, @key_names, @key_types, @flush_items, @flush_interval_time)
-    # @logstash_event_buffer=LogStashAutoResizeBuffer::new(@logstash_configuration, @logger)
+    @logstash_event_buffer=LogStashAutoResizeBuffer::new(@logstash_configuration, @logger)
     @buffers = {}
 
   end # def register
@@ -103,6 +103,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       next if (document.keys).length < 1
       current_buffer = @buffers[Thread.current] != nil ?  @buffers[Thread.current] : add_buffer(Thread.current)
       current_buffer.add_event_document2(document)
+
+      # @logstash_event_buffer.add_event_document2(document)
+
     end
   end # def receive
 
