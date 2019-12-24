@@ -14,7 +14,7 @@ class LogStashConfiguration
         @MIN_WINDOW_SIZE = 1        
     end
 
-    def copy(logStashConfiguration)
+    def copy()
         return logstash_configuration= LogStashConfiguration::new(@workspace_id, @workspace_key, @log_type, @endpoint, @time_generated_field, @key_names, @key_types, @max_items, @max_interval)
     end
 
