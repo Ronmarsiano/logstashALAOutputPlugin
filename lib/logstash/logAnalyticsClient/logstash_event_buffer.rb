@@ -42,7 +42,7 @@ class LogStashEventBuffer
                 handle_window_size(documents.length)
             end
         else
-            print_message("Flush sem *not* owned before")
+            print_message("------>>>>>>>>Flush sem *not* owned before")
             handle_window_size(documents.length)
         end
         # Skip in case there are no candidate documents to deliver
@@ -76,40 +76,18 @@ class LogStashEventBuffer
 
     private
     def handle_window_size(amount_of_documents)
-
-        print "\n\n********11111***********************\n\n"
-        print_message( @logstash_configuration.max_items.to_s())
-        print_message(amount_of_documents.to_s())
-        print "\n\n*********2222222222222**********************\n\n"
-        print amount_of_documents
-        print "\n\n***********33333333333333********************\n\n"
-        print  @logstash_configuration.max_items
-        print "\n\n***********444444444444444e********************\n\n"
-        a = amount_of_documents < @logstash_configuration.max_items
-        b =  @logstash_configuration.max_items != [@logstash_configuration.max_items/2,1].max
-
-        c =  @logstash_configuration.max_items
-        d =   amount_of_documents == @logstash_configuration.max_items
-        e = 2*@logstash_configuration.max_items
-        f = @logstash_configuration.MAX_WINDOW_SIZE
-        g = [2*@logstash_configuration.max_items, @logstash_configuration.MAX_WINDOW_SIZE].min
-        h =  @logstash_configuration.max_items != [2*@logstash_configuration.max_items, @logstash_configuration.MAX_WINDOW_SIZE].min
-
         # if window is full and current window!=min(increased size , max size)
         if  amount_of_documents == @logstash_configuration.max_items and  @logstash_configuration.max_items != [2*@logstash_configuration.max_items, @logstash_configuration.MAX_WINDOW_SIZE].min
+            print_message("Increase: Taking min between " + @logstash_configuration.max_items.to_s() + "*2="+ (@logstash_configuration.max_items*2).to_s()+" and "+@logstash_configuration.MAX_WINDOW_SIZE.to_s() )
             new_buffer_size = [2*@logstash_configuration.max_items, @logstash_configuration.MAX_WINDOW_SIZE].min
+            print_message("Increase: new buffer size is "+ new_buffer_size.to_s())
             change_buffer_size(new_buffer_size)
-            print_message("Increasing size " + new_buffer_size.to_s())
-            
-
-
         # TODO change 1 to min winowd size 
-        elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [@logstash_configuration.max_items/2,1].max
-            print_message("Taking min between " + @logstash_configuration.max_items.to_s() + "/2="+ (@logstash_configuration.max_items/2).to_s()+" and 1")
-            new_buffer_size = [@logstash_configuration.max_items/2,1].max
-            print_message("new buffer size is "+ new_buffer_size.to_s())
+        elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [@logstash_configuration.max_items/2,@logstash_configuration.MIN_WINDOW_SIZE].max
+            print_message("Decrease: Taking min between " + @logstash_configuration.max_items.to_s() + "/2="+ (@logstash_configuration.max_items/2).to_s()+" and 1")
+            new_buffer_size = [@logstash_configuration.max_items/2,@logstash_configuration.MIN_WINDOW_SIZE].max
+            print_message("Decrease: new buffer size is "+ new_buffer_size.to_s())
             change_buffer_size(new_buffer_size)
-            print_message("Decreasing size " + new_buffer_size.to_s())
         else
             print "Error shouldn't get here since messages can't be greater then window size "
         end
