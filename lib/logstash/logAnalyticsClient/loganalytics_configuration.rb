@@ -10,7 +10,7 @@ class LogStashConfiguration
         @key_types = key_types
         @max_items = max_items
         @max_interval = max_interval
-        @MAX_WINDOW_SIZE = 10000
+        @MAX_WINDOW_SIZE = 100000
         @MIN_WINDOW_SIZE = 1        
     end
 
