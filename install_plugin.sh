@@ -1,6 +1,11 @@
 
 #! /usr/local/bin/python3
 
+echo "Try to update\\install ruby"
+
+sudo apt  install ruby
+
+
 echo "Remove old gem file"
 
 sudo rm logstash-output-azure_loganalytics-0.3.2.gem
