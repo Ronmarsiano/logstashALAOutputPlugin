@@ -3,13 +3,6 @@ require "logstash/logAnalyticsClient/logAnalyticsClient"
 require "stud/buffer"
 require "logstash/logAnalyticsClient/loganalytics_configuration"
 
-class  BufferState
-    NONE=1, 
-    FULL_WINDOW_RESIZE=2
-    TIME_REACHED_WINDOW_RESIZE =3
-end
-
-
 class LogStashEventBuffer 
     include Stud::Buffer
 
@@ -17,7 +10,6 @@ class LogStashEventBuffer
         @client=LogAnalyticsClient::new(logstash_configuration.workspace_id, logstash_configuration.workspace_key, logstash_configuration.endpoint)
         @logger = logger
         @semaphore = Mutex.new
-        @buffer_state = BufferState::NONE
         @logstash_configuration = logstash_configuration
         buffer_initialize(
           :max_items => logstash_configuration.max_items,
