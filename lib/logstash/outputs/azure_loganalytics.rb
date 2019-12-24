@@ -101,10 +101,10 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       document = handle_single_event(event)
       # Skip if document doesn't contain any items
       next if (document.keys).length < 1
-      current_buffer = @buffers[Thread.current] != nil ?  @buffers[Thread.current] : add_buffer(Thread.current)
-      current_buffer.add_event_document2(document)
+      # current_buffer = @buffers[Thread.current] != nil ?  @buffers[Thread.current] : add_buffer(Thread.current)
+      # current_buffer.add_event_document2(document)
 
-      # @logstash_event_buffer.add_event_document2(document)
+      @logstash_event_buffer.add_event_document2(document)
 
     end
   end # def receive
