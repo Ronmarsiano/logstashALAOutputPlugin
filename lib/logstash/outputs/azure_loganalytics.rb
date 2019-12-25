@@ -54,6 +54,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def register
+    @logstash_configuration= LogStashConfiguration::new(@workspace_id, @shared_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @flush_items, @flush_interval_time)
     validate_configuration()
     # Initialize the logstash resizable buffer
     # This buffer will increase and decrease size according to the amount of messages inserted.
@@ -65,11 +66,11 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   private
   def validate_configuration()
     ## Configure
-    if not @custom_log_table_name.match(/^[[:alpha:]]+$/)
+    if not @logstash_configurationcustom_log_table_name.match(/^[[:alpha:]]+$/)
       raise ArgumentError, 'custom_log_table_name must be only alpha characters' 
     end
 
-    @key_types.each { |k, v|
+    @logstash_configuration.key_types.each { |k, v|
       t = v.downcase
       if ( !t.eql?('string') && !t.eql?('double') && !t.eql?('boolean') ) 
         raise ArgumentError, "Key type(#{v}) for key(#{k}) must be either string, boolean, or double"
