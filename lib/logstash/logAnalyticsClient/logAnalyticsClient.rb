@@ -13,9 +13,9 @@ class LogAnalyticsClient
     @endpoint = endpoint
   end
 
-  def post_data(log_type, json_records, record_timestamp ='')
-    raise ConfigError, 'no log_type' if log_type.empty?
-    raise ConfigError, 'log_type must be only alpha characters' if not is_alpha(log_type)
+  def post_data(custom_log_table_name, json_records, record_timestamp ='')
+    raise ConfigError, 'no custom_log_table_name' if custom_log_table_name.empty?
+    raise ConfigError, 'custom_log_table_name must be only alpha characters' if not is_alpha(custom_log_table_name)
     raise ConfigError, 'no json_records' if json_records.empty?
     body =  json_records.to_json
     uri = sprintf("https://%s.%s/api/logs?api-version=%s",
@@ -26,7 +26,7 @@ class LogAnalyticsClient
     headers = {
         'Content-Type' => 'application/json',
         'Authorization' => sig,
-        'Log-Type' => log_type,
+        'Log-Type' => custom_log_table_name,
         'x-ms-date' => date,
         'time-generated-field' => record_timestamp
     }

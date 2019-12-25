@@ -18,7 +18,7 @@ output {
     azure_loganalytics {
         workspace_id => "<OMS WORKSPACE ID>"
         shared_key => "<CLIENT AUTH KEY>"
-        log_type => "<LOG TYPE NAME>"
+        custom_log_table_name => "<Table name under custom logs in which the data will be ingested>"
         key_names  => ['key1','key2','key3'..] ## list of Key names
         key_types => {'key1'=> 'string' 'key2'=>'double' 'key3'=>'boolean' .. }
         flush_items => <FLUSH_ITEMS_NUM>
@@ -72,7 +72,7 @@ output {
     azure_loganalytics {
         workspace_id => "818f7bbc-8034-4cc3-b97d-f068dd4cd659"
         shared_key => "ppC5500KzCcDsOKwM1yWUvZydCuC3m+ds/2xci0byeQr1G3E0Jkygn1N0Rxx/yVBUrDE2ok3vf4ksXxcBmQQHw==(dummy)"
-        log_type => "ApacheAccessLog"
+        custom_log_table_name => "ApacheAccessLog"
         key_names  => ['logid','date','processing_time','remote','user','method','status','agent']
         flush_items => 10
         flush_interval_time => 5

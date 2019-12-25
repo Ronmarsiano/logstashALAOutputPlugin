@@ -9,19 +9,21 @@ require "logstash/logAnalyticsClient/loganalytics_configuration"
 
 class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
-  config_name "azure_loganalytics"
+  config_name "azure_loganalytics_output"
   
+  # Stating that the output plugin will run in concurrent mode
   concurrency :shared
 
   # Your Operations Management Suite workspace ID
   config :workspace_id, :validate => :string, :required => true
 
-  # The primary or the secondary Connected Sources client authentication key
-  config :shared_key, :validate => :string, :required => true
+  # The primary or the secondary key used for authentication, required by Azure Loganalytics REST API
+  config :workspace_key, :validate => :string, :required => true
 
   # The name of the event type that is being submitted to Log Analytics. 
   # This must be only alpha characters.
-  config :log_type, :validate => :string, :required => true
+  # Table name under custom logs in which the data will be inserted
+  config :custom_log_table_name, :validate => :string, :required => true
 
   # The service endpoint (Default: ods.opinsights.azure.com)
   config :endpoint, :validate => :string, :default => 'ods.opinsights.azure.com'
@@ -52,9 +54,19 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def register
+    validate_configuration()
+    # Initialize the logstash resizable buffer
+    # This buffer will increase and decrease size according to the amount of messages inserted.
+    # If the buffer reached the max amount of messages the amount will be increased untill the limit
+    @logstash_resizable_event_buffer=LogStashAutoResizeBuffer::new(@logstash_configuration, @logger)
+  end # def register
+
+
+  private
+  def validate_configuration()
     ## Configure
-    if not @log_type.match(/^[[:alpha:]]+$/)
-      raise ArgumentError, 'log_type must be only alpha characters' 
+    if not @custom_log_table_name.match(/^[[:alpha:]]+$/)
+      raise ArgumentError, 'custom_log_table_name must be only alpha characters' 
     end
 
     @key_types.each { |k, v|
@@ -63,18 +75,9 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
         raise ArgumentError, "Key type(#{v}) for key(#{k}) must be either string, boolean, or double"
       end
     }
+  end
 
-    @RESIZING_WINDOW = false
-
-    ## Start 
-    @logstash_configuration= LogStashConfiguration::new(@workspace_id, @shared_key, @log_type, @endpoint, @time_generated_field, @key_names, @key_types, @flush_items, @flush_interval_time)
-    @logstash_event_buffer=LogStashAutoResizeBuffer::new(@logstash_configuration, @logger)
-    @buffers = {}
-
-  end # def register
-
-
-  public 
+  private 
   def handle_single_event(event)
     document = {}
     event_hash = event.to_hash()
@@ -104,7 +107,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       # current_buffer = @buffers[Thread.current] != nil ?  @buffers[Thread.current] : add_buffer(Thread.current)
       # current_buffer.add_event_document2(document)
 
-      @logstash_event_buffer.add_event_document(document)
+      @logstash_event_buffer.logstash_resizable_event_buffer(document)
 
     end
   end # def receive

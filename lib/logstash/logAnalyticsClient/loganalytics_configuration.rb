@@ -1,9 +1,9 @@
 class LogStashConfiguration
 
-    def initialize(workspace_id, workspace_key, log_type, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, max_items=50, max_interval=5)
+    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, max_items=50, max_interval=5)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
-        @log_type = log_type
+        @custom_log_table_name = custom_log_table_name
         @endpoint = endpoint
         @time_generated_field = time_generated_field
         @key_names = key_names
@@ -15,7 +15,7 @@ class LogStashConfiguration
     end
 
     def copy()
-        return logstash_configuration= LogStashConfiguration::new(@workspace_id, @workspace_key, @log_type, @endpoint, @time_generated_field, @key_names, @key_types, @max_items, @max_interval)
+        return logstash_configuration= LogStashConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @max_items, @max_interval)
     end
 
     def workspace_id
@@ -26,8 +26,8 @@ class LogStashConfiguration
         @workspace_key
     end
 
-    def log_type
-        @log_type
+    def custom_log_table_name
+        @custom_log_table_name
     end
 
     def endpoint

@@ -7,16 +7,16 @@ require "logstash/event"
 describe LogStash::Outputs::AzureLogAnalytics do
 
   let(:workspace_id) { '<Workspaec ID identifing your workspace>' }
-  let(:shared_key) { '<Primary Key String>' }
-  let(:log_type) { 'ApacheAccessLog' }
+  let(:workspace_key) { '<Primary Key for the Azure log analytics workspace>' }
+  let(:custom_log_table_name) { 'ApacheAccessLog' }
   let(:key_names) { ['logid','date','processing_time','remote','user','method','status','agent','eventtime'] }
   let(:time_generated_field) { 'eventtime' }
 
   let(:azure_loganalytics_config) {
     { 
       "workspace_id" => workspace_id, 
-      "shared_key" => shared_key,
-      "log_type" => log_type,
+      "workspace_key" => workspace_key,
+      "custom_log_table_name" => custom_log_table_name,
       "key_names" => key_names,
       "time_generated_field" => time_generated_field
     }
