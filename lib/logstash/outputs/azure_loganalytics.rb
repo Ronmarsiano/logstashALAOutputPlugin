@@ -66,7 +66,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   private
   def validate_configuration()
     ## Configure
-    if not @logstash_configurationcustom_log_table_name.match(/^[[:alpha:]]+$/)
+    if not @logstash_configuration.custom_log_table_name.match(/^[[:alpha:]]+$/)
       raise ArgumentError, 'custom_log_table_name must be only alpha characters' 
     end
 
