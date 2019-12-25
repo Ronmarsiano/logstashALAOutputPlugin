@@ -15,7 +15,7 @@ Please see [Logstash reference](https://www.elastic.co/guide/en/logstash/current
 
 ```
 output {
-    azure_loganalytics_output {
+    azure_loganalytics {
         workspace_id => "<OMS WORKSPACE ID>"
         shared_key => "<CLIENT AUTH KEY>"
         custom_log_table_name => "<Table name under custom logs in which the data will be ingested>"
@@ -69,7 +69,7 @@ filter {
 }
 
 output {
-    azure_loganalytics_output {
+    azure_loganalytics {
         workspace_id => "818f7bbc-8034-4cc3-b97d-f068dd4cd659"
         shared_key => "ppC5500KzCcDsOKwM1yWUvZydCuC3m+ds/2xci0byeQr1G3E0Jkygn1N0Rxx/yVBUrDE2ok3vf4ksXxcBmQQHw==(dummy)"
         custom_log_table_name => "ApacheAccessLog"

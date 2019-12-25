@@ -9,7 +9,7 @@ require "logstash/logAnalyticsClient/loganalytics_configuration"
 
 class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
-  config_name "azure_loganalytics_output"
+  config_name "azure_loganalytics"
   
   # Stating that the output plugin will run in concurrent mode
   concurrency :shared

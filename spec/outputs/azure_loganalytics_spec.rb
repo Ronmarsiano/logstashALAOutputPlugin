@@ -22,10 +22,10 @@ describe LogStash::Outputs::AzureLogAnalytics do
     }
   }
 
-  let(:azure_loganalytics_output) { LogStash::Outputs::AzureLogAnalytics.new(azure_loganalytics_config) }
+  let(:azure_loganalytics) { LogStash::Outputs::AzureLogAnalytics.new(azure_loganalytics_config) }
 
   before do
-     azure_loganalytics_output.register
+    azure_loganalytics.register
   end 
 
   describe "#flush" do
@@ -61,11 +61,11 @@ describe LogStash::Outputs::AzureLogAnalytics do
 
       event1 =  LogStash::Event.new(log1) 
       event2 =  LogStash::Event.new(log2) 
-      azure_loganalytics_output.receive(event1)
-      azure_loganalytics_output.receive(event2)
+      azure_loganalytics.receive(event1)
+      azure_loganalytics.receive(event2)
       events.push(event1)
       events.push(event2)
-      expect {azure_loganalytics_output.flush(events)}.to_not raise_error
+      expect {azure_loganalytics.flush(events)}.to_not raise_error
     end
   end
 
