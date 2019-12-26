@@ -107,7 +107,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       # current_buffer = @buffers[Thread.current] != nil ?  @buffers[Thread.current] : add_buffer(Thread.current)
       # current_buffer.add_event_document2(document)
 
-      @logstash_event_buffer.logstash_resizable_event_buffer(document)
+      @logstash_resizable_event_buffer.add_event_document(document)
 
     end
   end # def receive
