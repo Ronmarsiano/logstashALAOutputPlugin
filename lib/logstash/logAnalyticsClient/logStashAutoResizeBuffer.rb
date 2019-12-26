@@ -81,6 +81,9 @@ class LogStashAutoResizeBuffer
             new_buffer_size = [@logstash_configuration.max_items/2,@logstash_configuration.MIN_WINDOW_SIZE].max
             print_message("Decrease: new buffer size is "+ new_buffer_size.to_s())
             change_buffer_size(new_buffer_size)
+            print "\n*************************************************************\n\n"
+            print @logger
+            print "\n*************************************************************\n\n"
             @logger.debug("Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}']")
         else
             print "Error shouldn't get here since messages can't be greater then window size "
