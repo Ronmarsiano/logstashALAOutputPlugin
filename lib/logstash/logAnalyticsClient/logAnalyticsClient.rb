@@ -12,14 +12,6 @@ class LogAnalyticsClient
     @shared_key = shared_key
     @endpoint = endpoint
 
-    print "\n\n\n*******************\n\n\n"
-    print @workspace_id
-    print "\n\n\n*******************\n\n\n"
-    print @shared_key
-    print "\n\n\n*******************\n\n\n"
-    print @endpoint
-    print "\n\n\n*******************\n\n\n"
-
   end
 
   def post_data(custom_log_table_name, json_records, record_timestamp ='')
@@ -50,7 +42,6 @@ class LogAnalyticsClient
   end
 
   private
-
   def is_alpha(s)
     return (s.match(/^[[:alpha:]]+$/)) ? true : false
   end

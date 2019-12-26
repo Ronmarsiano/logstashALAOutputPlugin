@@ -8,9 +8,6 @@ class LogStashAutoResizeBuffer
     include Stud::Buffer
 
     def initialize(logstash_configuration, logger)
-        print "\n\nkey key\n\n"
-        logstash_configuration.workspace_key
-        print "\n\nkey key\n\n"
         @client=LogAnalyticsClient::new(logstash_configuration.workspace_id, logstash_configuration.workspace_key, logstash_configuration.endpoint)
         @logger = logger
         @semaphore = Mutex.new
@@ -48,17 +45,8 @@ class LogStashAutoResizeBuffer
         else
             change_max_size(documents.length)
         end
-        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
         begin
         @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@logstash_configuration.custom_log_table_name} to DataCollector API. First log: " + (documents[0].to_json).to_s)
-        print "\n###################################################\n\n\n"
-        print @logstash_configuration.custom_log_table_name
-        print "\n###################################################\n\n\n"
-        print documents
-        print "\n###################################################\n\n\n"
-        print @logstash_configuration.time_generated_field
-        print "\n###################################################\n\n\n"
-
         res = @client.post_data(@logstash_configuration.custom_log_table_name, documents, @logstash_configuration.time_generated_field)
         if is_successfully_posted(res)
             @logger.debug("Successfully posted logs as log type #{@logstash_configuration.custom_log_table_name} with result code #{res.code} to DataCollector API")

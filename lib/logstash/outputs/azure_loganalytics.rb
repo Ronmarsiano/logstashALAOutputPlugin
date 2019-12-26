@@ -54,28 +54,13 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   public
   def register
     @logstash_configuration= LogStashConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval)
-    validate_configuration()
+    # Validate configuration correcness 
+    @logstash_configuration.validate_configuration()
     # Initialize the logstash resizable buffer
     # This buffer will increase and decrease size according to the amount of messages inserted.
     # If the buffer reached the max amount of messages the amount will be increased untill the limit
     @logstash_resizable_event_buffer=LogStashAutoResizeBuffer::new(@logstash_configuration, @logger)
   end # def register
-
-
-  private
-  def validate_configuration()
-    ## Configure
-    if not @logstash_configuration.custom_log_table_name.match(/^[[:alpha:]]+$/)
-      raise ArgumentError, 'custom_log_table_name must be only alpha characters' 
-    end
-
-    @logstash_configuration.key_types.each { |k, v|
-      t = v.downcase
-      if ( !t.eql?('string') && !t.eql?('double') && !t.eql?('boolean') ) 
-        raise ArgumentError, "Key type(#{v}) for key(#{k}) must be either string, boolean, or double"
-      end
-    }
-  end
 
   private 
   def handle_single_event(event)
@@ -102,10 +87,8 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     events.each do |event|
       # creating document from event
       document = handle_single_event(event)
-      # Skip if document doesn't contain any items
+      # Skip if document doesn't contain any items  
       next if (document.keys).length < 1
-      # current_buffer = @buffers[Thread.current] != nil ?  @buffers[Thread.current] : add_buffer(Thread.current)
-      # current_buffer.add_event_document2(document)
 
       @logstash_resizable_event_buffer.add_event_document(document)
 
@@ -125,14 +108,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     else
       return val
     end
-  end
-
-  private 
-  def add_buffer(current_thread)
-    thread_logstash_configuration = @logstash_configuration.copy()
-    thread_logstashAutoResizeBuffer = LogStashAutoResizeBuffer::new(thread_logstash_configuration, @logger)
-    @buffers[current_thread] = thread_logstashAutoResizeBuffer
-    return thread_logstashAutoResizeBuffer
   end
 
 end # class LogStash::Outputs::AzureLogAnalytics

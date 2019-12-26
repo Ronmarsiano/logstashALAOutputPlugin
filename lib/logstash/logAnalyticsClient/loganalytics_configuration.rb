@@ -14,6 +14,26 @@ class LogStashConfiguration
         @max_items = 50    
     end
 
+    public
+    def validate_configuration()
+        if not @custom_log_table_name.match(/^[[:alpha:]]+$/)
+            raise ArgumentError, 'custom_log_table_name must be only alpha characters' 
+        end
+    
+        @key_types.each { |k, v|
+            t = v.downcase
+            if ( !t.eql?('string') && !t.eql?('double') && !t.eql?('boolean') ) 
+                raise ArgumentError, "Key type(#{v}) for key(#{k}) must be either string, boolean, or double"
+            end
+        }
+
+        if @workspace_id.empty? or @workspace_key.empty or @custom_log_table_name.empty? 
+            raise ArgumentError, "Malformed configuration , the following arguments can not be null or empty.[workspace_id=#{@workspace_id} , workspace_key=#{@workspace_key} , custom_log_table_name=#{@custom_log_table_name}]"
+
+        # If all validation pass then configuration is valid 
+        return  true
+    end
+
     def copy()
         return logstash_configuration= LogStashConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @max_items, @plugin_flush_interval)
     end
