@@ -45,7 +45,7 @@ class LogStashAutoResizeBuffer
         else
             change_max_size(documents.length)
         end
-
+        print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
         begin
         @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@logstash_configuration.custom_log_table_name} to DataCollector API. First log: " + (documents[0].to_json).to_s)
 
@@ -118,6 +118,7 @@ class LogStashAutoResizeBuffer
         print_message("Changing buffer size from " + @buffer_config[:max_items].to_s + " to " + new_size.to_s)
         @buffer_config[:max_items] = new_size
         @logstash_configuration.max_items = new_size
+        print "CCHHHANGGEDDD"
     end
 
 end
