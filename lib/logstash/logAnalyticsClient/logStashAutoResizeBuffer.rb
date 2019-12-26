@@ -62,6 +62,7 @@ class LogStashAutoResizeBuffer
 
     private
     def change_max_size(amount_of_documents)
+        print logger
         # If window is full and current window!=min(increased size , max_size)
         #       Change size to min(2*currentSize, max_size)
         if  amount_of_documents == @logstash_configuration.max_items and  @logstash_configuration.max_items != [2*@logstash_configuration.max_items, @logstash_configuration.MAX_WINDOW_SIZE].min
