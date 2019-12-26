@@ -8,6 +8,9 @@ class LogStashAutoResizeBuffer
     include Stud::Buffer
 
     def initialize(logstash_configuration, logger)
+        print "\n\nkey key\n\n"
+        logstash_configuration.workspace_key
+        print "\n\nkey key\n\n"
         @client=LogAnalyticsClient::new(logstash_configuration.workspace_id, logstash_configuration.workspace_key, logstash_configuration.endpoint)
         @logger = logger
         @semaphore = Mutex.new
