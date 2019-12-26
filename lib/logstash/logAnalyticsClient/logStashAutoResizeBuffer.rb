@@ -69,6 +69,9 @@ class LogStashAutoResizeBuffer
         if  amount_of_documents == @logstash_configuration.max_items and  @logstash_configuration.max_items != [2*@logstash_configuration.max_items, @logstash_configuration.MAX_WINDOW_SIZE].min
             new_buffer_size = [2*@logstash_configuration.max_items, @logstash_configuration.MAX_WINDOW_SIZE].min
             # @logger.debug("Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , new_buffer_size='#{new_buffer_size.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
+            print "\n*************************************************************\n\n"
+            print @logger
+            print "\n*************************************************************\n\n"
             @logger.debug("Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}'")
             
             change_buffer_size(new_buffer_size)
