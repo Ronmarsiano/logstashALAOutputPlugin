@@ -48,6 +48,13 @@ class LogStashAutoResizeBuffer
         print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
         begin
         @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@logstash_configuration.custom_log_table_name} to DataCollector API. First log: " + (documents[0].to_json).to_s)
+        print "\n###################################################\n\n\n"
+        print @logstash_configuration.custom_log_table_name
+        print "\n###################################################\n\n\n"
+        print documents
+        print "\n###################################################\n\n\n"
+        print @logstash_configuration.time_generated_field
+        print "\n###################################################\n\n\n"
 
         res = @client.post_data(@logstash_configuration.custom_log_table_name, documents, @logstash_configuration.time_generated_field)
         if is_successfully_posted(res)
