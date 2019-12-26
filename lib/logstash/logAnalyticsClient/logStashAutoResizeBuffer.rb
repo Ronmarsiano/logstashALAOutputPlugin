@@ -69,25 +69,25 @@ class LogStashAutoResizeBuffer
         if  amount_of_documents == @logstash_configuration.max_items and  @logstash_configuration.max_items != [2*@logstash_configuration.max_items, @logstash_configuration.MAX_WINDOW_SIZE].min
             new_buffer_size = [2*@logstash_configuration.max_items, @logstash_configuration.MAX_WINDOW_SIZE].min
             # @logger.debug("Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , new_buffer_size='#{new_buffer_size.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
-            print "\n*************************************************************\n\n"
-            print "Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length}'\n\n"
+            # print "\n*************************************************************\n\n"
+            # print "Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length}'\n\n"
 
-            print @logger
-            print "\n*************************************************************\n\n"
-            @logger.debug("Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}'")
+            # print @logger
+            # print "\n*************************************************************\n\n"
+            # @logger.debug("Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}'")
             
             change_buffer_size(new_buffer_size)
         # TODO change 1 to min winowd size 
         elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [@logstash_configuration.max_items/2,@logstash_configuration.MIN_WINDOW_SIZE].max
-            print_message("Decrease: Taking min between " + @logstash_configuration.max_items.to_s() + "/2="+ (@logstash_configuration.max_items/2).to_s()+" and 1")
+            # print_message("Decrease: Taking min between " + @logstash_configuration.max_items.to_s() + "/2="+ (@logstash_configuration.max_items/2).to_s()+" and 1")
             new_buffer_size = [@logstash_configuration.max_items/2,@logstash_configuration.MIN_WINDOW_SIZE].max
-            print_message("Decrease: new buffer size is "+ new_buffer_size.to_s())
+            # print_message("Decrease: new buffer size is "+ new_buffer_size.to_s())
             change_buffer_size(new_buffer_size)
-            print "\n*************************************************************\n\n"
-            print "Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length}']\n\n"
-            print @logger
-            print "\n*************************************************************\n\n"
-            @logger.debug("Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}']")
+            # print "\n*************************************************************\n\n"
+            # print "Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length}']\n\n"
+            # print @logger
+            # print "\n*************************************************************\n\n"
+            # @logger.debug("Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}']")
         else
             print "Error shouldn't get here since messages can't be greater then window size "
         end
