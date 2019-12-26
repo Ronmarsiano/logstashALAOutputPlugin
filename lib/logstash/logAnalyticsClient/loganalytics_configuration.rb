@@ -26,10 +26,10 @@ class LogStashConfiguration
             end
         }
 
-        if @workspace_id.empty? or @workspace_key.empty or @custom_log_table_name.empty? 
+        if @workspace_id.empty? or @workspace_key.empty? or @custom_log_table_name.empty? 
             raise ArgumentError, "Malformed configuration , the following arguments can not be null or empty.[workspace_id=#{@workspace_id} , workspace_key=#{@workspace_key} , custom_log_table_name=#{@custom_log_table_name}]"
         end
-        
+
         # If all validation pass then configuration is valid 
         return  true
     end
