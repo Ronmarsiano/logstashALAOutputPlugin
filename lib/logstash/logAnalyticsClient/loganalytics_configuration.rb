@@ -1,6 +1,6 @@
 class LogStashConfiguration
 
-    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, max_items=50, max_interval=5)
+    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
         @custom_log_table_name = custom_log_table_name
@@ -8,14 +8,14 @@ class LogStashConfiguration
         @time_generated_field = time_generated_field
         @key_names = key_names
         @key_types = key_types
-        @max_items = max_items
-        @max_interval = max_interval
+        @plugin_flush_interval = plugin_flush_interval
         @MAX_WINDOW_SIZE = 60000
-        @MIN_WINDOW_SIZE = 1        
+        @MIN_WINDOW_SIZE = 1    
+        @max_items = 50    
     end
 
     def copy()
-        return logstash_configuration= LogStashConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @max_items, @max_interval)
+        return logstash_configuration= LogStashConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @max_items, @plugin_flush_interval)
     end
 
     def workspace_id
@@ -55,8 +55,8 @@ class LogStashConfiguration
     end
 
 
-    def max_interval
-        @max_interval
+    def plugin_flush_interval
+        @plugin_flush_interval
     end
 
     def MAX_WINDOW_SIZE

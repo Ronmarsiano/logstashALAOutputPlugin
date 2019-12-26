@@ -14,7 +14,7 @@ class LogStashAutoResizeBuffer
         @logstash_configuration = logstash_configuration
         buffer_initialize(
           :max_items => logstash_configuration.max_items,
-          :max_interval => logstash_configuration.max_interval,
+          :max_interval => logstash_configuration.plugin_flush_interval,
           :logger => logger
         )
     end

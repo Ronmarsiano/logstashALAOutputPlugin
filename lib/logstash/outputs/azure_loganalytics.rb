@@ -45,15 +45,15 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   #   key_types => {'key1'=>'string' 'key2'=>'string' 'key3'=>'boolean' 'key4'=>'double' ...}
   config :key_types, :validate => :hash, :default => {}
 
-  # Max number of items to buffer before flushing. Default 50.
-  config :flush_items, :validate => :number, :default => 50
+  # # Max number of items to buffer before flushing. Default 50.
+  # config :flush_items, :validate => :number, :default => 50
   
   # Max number of seconds to wait between flushes. Default 5
-  config :flush_interval_time, :validate => :number, :default => 5
+  config :plugin_flush_interval, :validate => :number, :default => 5
 
   public
   def register
-    @logstash_configuration= LogStashConfiguration::new(@workspace_id, @shared_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @flush_items, @flush_interval_time)
+    @logstash_configuration= LogStashConfiguration::new(@workspace_id, @shared_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval)
     validate_configuration()
     # Initialize the logstash resizable buffer
     # This buffer will increase and decrease size according to the amount of messages inserted.

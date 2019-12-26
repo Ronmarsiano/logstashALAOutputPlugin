@@ -22,7 +22,7 @@ output {
         key_names  => ['key1','key2','key3'..] ## list of Key names
         key_types => {'key1'=> 'string' 'key2'=>'double' 'key3'=>'boolean' .. }
         flush_items => <FLUSH_ITEMS_NUM>
-        flush_interval_time => <FLUSH INTERVAL TIME(sec)>
+        plugin_flush_interval => <FLUSH INTERVAL TIME(sec)>
     }
 }
 ```
@@ -38,7 +38,7 @@ output {
    * If you want to store a column as datetime or guid data format, set `string` for the column ( the value of the column should be `YYYY-MM-DDThh:mm:ssZ format` if it's `datetime`, and `GUID format` if it's `guid`).
    * In case that `key_types` param are not specified, all columns that you want to submit ( you choose with `key_names` param ) are stored as `string` data type in Log Analytics.
  * **flush_items (optional)** - Default 50. Max number of items to buffer before flushing (1 - 1000).
- * **flush_interval_time (optional)** - Default 5. Max number of seconds to wait between flushes.
+ * **plugin_flush_interval (optional)** - Default 5. Max number of seconds to wait between flushes.
 
 > [NOTE] There is a special param for changing the Log Analytics API endpoint (mainly for supporting Azure sovereign cloud)
 > * **endpoint (optional)** - Default: ods.opinsights.azure.com 
@@ -75,7 +75,7 @@ output {
         custom_log_table_name => "ApacheAccessLog"
         key_names  => ['logid','date','processing_time','remote','user','method','status','agent']
         flush_items => 10
-        flush_interval_time => 5
+        plugin_flush_interval => 5
     }
     # for debug
     stdout { codec => rubydebug }
