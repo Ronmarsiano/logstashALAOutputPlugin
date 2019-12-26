@@ -78,10 +78,10 @@ class LogStashAutoResizeBuffer
             change_buffer_size(new_buffer_size)
 
             # @logger.debug("Decreasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , new_buffer_size='#{new_buffer_size.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
-            @logger.debug("Increasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length}'")
+            @logger.debug("Increasing max size sent in buffer.[amount_of_documents=#{amount_of_documents.length}")
         else
             # @logger.debug("No change in buffer size.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
-            @logger.debug("Increasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length}'")
+            @logger.debug("Increasing max size sent in buffer.[amount_of_documents=#{amount_of_documents.length}")
         end
     end
 
