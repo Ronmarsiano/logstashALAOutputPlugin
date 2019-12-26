@@ -22,6 +22,8 @@ class LogStashAutoResizeBuffer
     public
     def add_event_document(event_document)
         @semaphore.synchronize do
+            @logger.debug("Adding event document to buffer.")
+            @logger.trace("Event document.[document='#{event_document.to_s()}' ]")
             buffer_receive(event_document)
         end
     end # def receive
@@ -29,19 +31,19 @@ class LogStashAutoResizeBuffer
     # called from Stud::Buffer#buffer_flush when there are events to flush
     public
     def flush (documents, close=false)
-        if @semaphore.owned? == false
-            print_message("Flush sem owned before")
-            @semaphore.synchronize do
-                handle_window_size(documents.length)
-            end
-        else
-            print_message("------>>>>>>>>Flush sem *not* owned before")
-            handle_window_size(documents.length)
-        end
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
             @logger.debug("No documents in batch for log type #{@logstash_configuration.custom_log_table_name}. Skipping")
         return
+        end
+
+        # Take lock if it wasn't takend before 
+        if @semaphore.owned? == false
+            @semaphore.synchronize do
+                change_max_size(documents.length)
+            end
+        else
+            change_max_size(documents.length)
         end
 
         begin
@@ -54,27 +56,19 @@ class LogStashAutoResizeBuffer
             @logger.error("DataCollector API request failure: error code: #{res.code}, data=>" + (documents.to_json).to_s)
         end
         rescue Exception => ex
-            print "\n\nException\n\n"
-            print ex
-            print "\n\n"
-            print "Documents"
-            print "\n\n"
-            print documents
-            print "\n\n"
-            @logger.error("Exception occured in posting to DataCollector API: '#{ex}', data=>" + (documents.to_json).to_s)
+            @logger.error("Exception in posting data to Azure Loganalytics. [Exception: '#{ex}', documents=> '#{ (documents.to_json).to_s}']")
         end
     end # def flush
 
 
 
     private
-    def handle_window_size(amount_of_documents)
-        print_message("Handiling amount of messages in window - "+ amount_of_documents.to_s())
-        # if window is full and current window!=min(increased size , max size)
+    def change_max_size(amount_of_documents)
+        # If window is full and current window!=min(increased size , max_size)
+        #       Change size to min(2*currentSize, max_size)
         if  amount_of_documents == @logstash_configuration.max_items and  @logstash_configuration.max_items != [2*@logstash_configuration.max_items, @logstash_configuration.MAX_WINDOW_SIZE].min
-            print_message("Increase: Taking min between " + @logstash_configuration.max_items.to_s() + "*2="+ (@logstash_configuration.max_items*2).to_s()+" and "+@logstash_configuration.MAX_WINDOW_SIZE.to_s() )
             new_buffer_size = [2*@logstash_configuration.max_items, @logstash_configuration.MAX_WINDOW_SIZE].min
-            print_message("Increase: new buffer size is "+ new_buffer_size.to_s())
+            @logger.debug("Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , new_buffer_size='#{new_buffer_size}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE}']")
             change_buffer_size(new_buffer_size)
         # TODO change 1 to min winowd size 
         elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [@logstash_configuration.max_items/2,@logstash_configuration.MIN_WINDOW_SIZE].max
@@ -82,6 +76,7 @@ class LogStashAutoResizeBuffer
             new_buffer_size = [@logstash_configuration.max_items/2,@logstash_configuration.MIN_WINDOW_SIZE].max
             print_message("Decrease: new buffer size is "+ new_buffer_size.to_s())
             change_buffer_size(new_buffer_size)
+            @logger.debug("Changing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}']")
         else
             print "Error shouldn't get here since messages can't be greater then window size "
         end
