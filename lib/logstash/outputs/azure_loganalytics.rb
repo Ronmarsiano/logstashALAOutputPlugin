@@ -3,7 +3,6 @@
 require "logstash/outputs/base"
 require "logstash/namespace"
 require "stud/buffer"
-require "logstash/logAnalyticsClient/logstash_event_buffer"
 require "logstash/logAnalyticsClient/logStashAutoResizeBuffer"
 require "logstash/logAnalyticsClient/loganalytics_configuration"
 
