@@ -23,6 +23,7 @@ class LogAnalyticsClient
   end
 
   def post_data(custom_log_table_name, json_records, record_timestamp ='')
+    print "\n\n\n PPPOOOSSSTTTIIIINNNGGGG\n\n\n"
     raise ConfigError, 'no custom_log_table_name' if custom_log_table_name.empty?
     raise ConfigError, 'custom_log_table_name must be only alpha characters' if not is_alpha(custom_log_table_name)
     raise ConfigError, 'no json_records' if json_records.empty?
