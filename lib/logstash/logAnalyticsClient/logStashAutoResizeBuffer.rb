@@ -70,6 +70,11 @@ class LogStashAutoResizeBuffer
             change_buffer_size(new_buffer_size)
 
             # @logger.debug("Increasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , new_buffer_size='#{new_buffer_size.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
+
+            print "\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
+            print amount_of_documents
+            print "\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
+
             print("Increasing max size sent in buffer.[amount_of_documents=" + amount_of_documents.length.to_s())
 
         # TODO change 1 to min winowd size 
