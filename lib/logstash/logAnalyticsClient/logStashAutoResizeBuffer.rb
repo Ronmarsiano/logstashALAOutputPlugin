@@ -68,16 +68,19 @@ class LogStashAutoResizeBuffer
             new_buffer_size = [2*@logstash_configuration.max_items, @logstash_configuration.MAX_WINDOW_SIZE].min
             change_buffer_size(new_buffer_size)
 
-            @logger.debug("Increasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , new_buffer_size='#{new_buffer_size.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
+            # @logger.debug("Increasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , new_buffer_size='#{new_buffer_size.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
+            @logger.debug("Increasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}'")
 
         # TODO change 1 to min winowd size 
         elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [@logstash_configuration.max_items/2,@logstash_configuration.MIN_WINDOW_SIZE].max
             new_buffer_size = [@logstash_configuration.max_items/2,@logstash_configuration.MIN_WINDOW_SIZE].max
             change_buffer_size(new_buffer_size)
 
-            @logger.debug("Decreasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , new_buffer_size='#{new_buffer_size.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
+            # @logger.debug("Decreasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , new_buffer_size='#{new_buffer_size.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
+            @logger.debug("Increasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}'")
         else
-            @logger.debug("No change in buffer size.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
+            # @logger.debug("No change in buffer size.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
+            @logger.debug("Increasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}'")
         end
     end
 
