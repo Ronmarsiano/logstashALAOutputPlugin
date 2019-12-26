@@ -14,7 +14,6 @@ class LogStashConfiguration
         @max_items = 50    
     end
 
-    public
     def validate_configuration()
         if not @custom_log_table_name.match(/^[[:alpha:]]+$/)
             raise ArgumentError, 'custom_log_table_name must be only alpha characters' 
