@@ -51,9 +51,12 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # Max number of seconds to wait between flushes. Default 5
   config :plugin_flush_interval, :validate => :number, :default => 5
 
+  # Factor for adding to the amount of messages sent
+  config :increase_factor, :validate => :number, :default => 100
+
   public
   def register
-    @logstash_configuration= LogStashConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval,@logger)
+    @logstash_configuration= LogStashConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @logger, @increase_factor)
     # Validate configuration correcness 
     @logstash_configuration.validate_configuration()
     # Initialize the logstash resizable buffer
