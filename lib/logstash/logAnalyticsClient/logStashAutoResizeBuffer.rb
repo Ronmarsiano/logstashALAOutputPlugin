@@ -24,7 +24,6 @@ class LogStashAutoResizeBuffer
         @semaphore.synchronize do
             # @logger.debug("Adding event document to buffer.")
             # @logger.trace("Event document.[document='#{event_document.to_s()}' ]")
-            print_message("Got message")
             buffer_receive(event_document)
         end
     end # def receive
