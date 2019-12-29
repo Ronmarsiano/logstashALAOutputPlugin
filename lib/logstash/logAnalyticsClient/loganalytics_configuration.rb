@@ -9,7 +9,7 @@ class LogStashConfiguration
         @key_names = key_names
         @key_types = key_types
         @plugin_flush_interval = plugin_flush_interval
-        @MAX_WINDOW_SIZE = 60000
+        @MAX_WINDOW_SIZE = 600000
         @MIN_WINDOW_SIZE = 1    
         @max_items = 20000
         @increase_factor =increase_factor
