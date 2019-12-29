@@ -49,6 +49,7 @@ class LogStashAutoResizeBuffer
         @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@logstash_configuration.custom_log_table_name} to DataCollector API. First log: " + (documents[0].to_json).to_s)
         res = @client.post_data(@logstash_configuration.custom_log_table_name, documents, @logstash_configuration.time_generated_field)
         if is_successfully_posted(res)
+            print "\nSent\n"
             @logger.debug("Successfully posted logs as log type #{@logstash_configuration.custom_log_table_name} with result code #{res.code} to DataCollector API")
         else
             @logger.error("DataCollector API request failure: error code: #{res.code}, data=>" + (documents.to_json).to_s)
@@ -62,7 +63,6 @@ class LogStashAutoResizeBuffer
 
     private
     def change_max_size(amount_of_documents)
-        print @logger
         # If window is full and current window!=min(increased size , max_size)
         #       Change size to min(2*currentSize, max_size)
         if  amount_of_documents == @logstash_configuration.max_items and  @logstash_configuration.max_items != [(2* @logstash_configuration.max_items), @logstash_configuration.MAX_WINDOW_SIZE].min
