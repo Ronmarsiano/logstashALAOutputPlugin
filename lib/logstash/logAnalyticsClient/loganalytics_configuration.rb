@@ -1,6 +1,6 @@
 class LogStashConfiguration
 
-    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5,logger, increase_factor=100)
+    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5,logger, increase_factor= 100)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
         @custom_log_table_name = custom_log_table_name
@@ -12,6 +12,7 @@ class LogStashConfiguration
         @MAX_WINDOW_SIZE = 60000
         @MIN_WINDOW_SIZE = 1    
         @max_items = 50
+        @increase_factor =increase_factor
         @logger = logger    
     end
 
