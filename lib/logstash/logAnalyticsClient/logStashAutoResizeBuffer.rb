@@ -22,8 +22,8 @@ class LogStashAutoResizeBuffer
     public
     def add_event_document(event_document)
         @semaphore.synchronize do
-            @logger.debug("Adding event document to buffer.")
-            @logger.trace("Event document.[document='#{event_document.to_s()}' ]")
+            # @logger.debug("Adding event document to buffer.")
+            # @logger.trace("Event document.[document='#{event_document.to_s()}' ]")
             buffer_receive(event_document)
         end
     end # def receive
@@ -33,7 +33,7 @@ class LogStashAutoResizeBuffer
     def flush (documents, close=false)
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
-            @logger.debug("No documents in batch for log type #{@logstash_configuration.custom_log_table_name}. Skipping")
+            @logger.error("No documents in batch for log type #{@logstash_configuration.custom_log_table_name}. Skipping")
         return
         end
 
@@ -46,11 +46,11 @@ class LogStashAutoResizeBuffer
             change_max_size(documents.length)
         end
         begin
-        @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@logstash_configuration.custom_log_table_name} to DataCollector API. First log: " + (documents[0].to_json).to_s)
+        # @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@logstash_configuration.custom_log_table_name} to DataCollector API. First log: " + (documents[0].to_json).to_s)
         res = @client.post_data(@logstash_configuration.custom_log_table_name, documents, @logstash_configuration.time_generated_field)
         if is_successfully_posted(res)
             print "\nSent\n"
-            @logger.debug("Successfully posted logs as log type #{@logstash_configuration.custom_log_table_name} with result code #{res.code} to DataCollector API")
+            # @logger.debug("Successfully posted logs as log type #{@logstash_configuration.custom_log_table_name} with result code #{res.code} to DataCollector API")
         else
             @logger.error("DataCollector API request failure: error code: #{res.code}, data=>" + (documents.to_json).to_s)
         end
