@@ -11,7 +11,7 @@ class LogStashConfiguration
         @plugin_flush_interval = plugin_flush_interval
         @MAX_WINDOW_SIZE = 60000
         @MIN_WINDOW_SIZE = 1    
-        @max_items = 50
+        @max_items = 5000
         @increase_factor =increase_factor
         @logger = logger    
     end
