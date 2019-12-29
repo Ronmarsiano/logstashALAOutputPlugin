@@ -71,7 +71,7 @@ class LogStashAutoResizeBuffer
 
             # @logger.debug("Increasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , new_buffer_size='#{new_buffer_size.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
 
-            print "\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
+            print "\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&1111&&&&&&&&&&&\n"
             print amount_of_documents
             print "\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
 
@@ -83,14 +83,14 @@ class LogStashAutoResizeBuffer
             change_buffer_size(new_buffer_size)
 
 
-            print "\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
+            print "\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&2222&&&&&&&&&&&&&&&&&&&\n"
             print amount_of_documents
             print "\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
             # @logger.debug("Decreasing max size sent in buffer.[amount_of_documents='#{amount_of_documents.length.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , new_buffer_size='#{new_buffer_size.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
             print("Increasing max size sent in buffer.[amount_of_documents=" + amount_of_documents.length.to_s())
         else
 
-            print "\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
+            print "\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&3333&&&&&&&&&&&&&&&&&&\n"
             print amount_of_documents
             print "\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n"
 
