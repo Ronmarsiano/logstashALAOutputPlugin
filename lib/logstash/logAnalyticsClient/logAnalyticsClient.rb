@@ -74,7 +74,7 @@ class LogAnalyticsClient
 
   public
   def print_message(message)
-      print("\n" + message + "[ThreadId= " + Thread.current.object_id.to_s +" ]\n")
+      print("\n" + message + "\n")
   end 
 
 end # end of class
