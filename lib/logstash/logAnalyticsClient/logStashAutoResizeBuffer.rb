@@ -40,15 +40,15 @@ class LogStashAutoResizeBuffer
         # We send Json in the REST request 
         documents_json = documents.to_json
 
-        print_message("************************* --->>>>> "+ documents_json.size.to_s)
+        print_message("************************* --->>>>> "+ documents_json.bytesize.to_s)
 
         # Take lock if it wasn't takend before 
         if @semaphore.owned? == false
             @semaphore.synchronize do
-                change_max_size(documents.length, documents_json.size)
+                change_max_size(documents.length, documents_json.bytesize)
             end
         else
-            change_max_size(documents.length, documents_json.size)
+            change_max_size(documents.length, documents_json.bytesize )
         end
         begin
         # @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@logstash_configuration.custom_log_table_name} to DataCollector API. First log: " + (documents[0].to_json).to_s)
