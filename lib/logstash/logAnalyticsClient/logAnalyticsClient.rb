@@ -22,7 +22,9 @@ class LogAnalyticsClient
     uri = sprintf("https://%s.%s/api/logs?api-version=%s",
                   @workspace_id, @endpoint, API_VERSION)
     date = rfc1123date()
+    print_message("start sig")
     sig = signature(date, body.bytesize)
+    print_message("end sig")
 
     headers = {
         'Content-Type' => 'application/json',
@@ -32,7 +34,9 @@ class LogAnalyticsClient
         'time-generated-field' => record_timestamp
     }
 
+    print_message("start post")
     res = RestClient.post( uri, body, headers)
+    print_message("End post")
     res
   end
 
@@ -60,5 +64,11 @@ class LogAnalyticsClient
     encoded_hash = Base64.encode64(hmac_sha256_sigs)
     authorization = sprintf("SharedKey %s:%s", @workspace_id,encoded_hash)
   end
+
+
+  public
+  def print_message(message)
+      print("\n" + message + "[ThreadId= " + Thread.current.object_id.to_s + " , semaphore= " +  @semaphore.locked?.to_s + " ]\n")
+  end 
 
 end # end of class

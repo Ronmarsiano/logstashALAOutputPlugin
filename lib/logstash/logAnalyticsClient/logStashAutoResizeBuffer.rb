@@ -12,7 +12,6 @@ class LogStashAutoResizeBuffer
         @logger = logger
         @semaphore = Mutex.new
         @logstash_configuration = logstash_configuration
-        @counter =0
         buffer_initialize(
           :max_items => logstash_configuration.max_items,
           :max_interval => logstash_configuration.plugin_flush_interval,
@@ -26,10 +25,6 @@ class LogStashAutoResizeBuffer
         @semaphore.synchronize do
             # @logger.debug("Adding event document to buffer.")
             # @logger.trace("Event document.[document='#{event_document.to_s()}' ]")
-            @counter = @counter +1
-            if @counter % 1000 == 0
-                print_message("Adding document")
-            end
             buffer_receive(event_document)
         end
     end # def receive
@@ -37,6 +32,7 @@ class LogStashAutoResizeBuffer
     # called from Stud::Buffer#buffer_flush when there are events to flush
     public
     def flush (documents, close=false)
+        print_message("start flushing")
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
             @logger.error("No documents in batch for log type #{@logstash_configuration.custom_log_table_name}. Skipping")
@@ -67,6 +63,7 @@ class LogStashAutoResizeBuffer
         rescue Exception => ex
             @logger.error("Exception in posting data to Azure Loganalytics. [Exception: '#{ex}', documents=> '#{ (documents.to_json).to_s}']")
         end
+        print_message("End flushing")
     end # def flush
 
 
