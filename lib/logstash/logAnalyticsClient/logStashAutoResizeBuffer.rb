@@ -47,11 +47,14 @@ class LogStashAutoResizeBuffer
         if @semaphore.owned? == false
             @semaphore.synchronize do
                 change_max_size(documents.length, documents_json.bytesize)
+                print_message("finish changing max size")
             end
         else
             change_max_size(documents.length, documents_json.bytesize)
+            print_message("finish changing max size")
         end
         begin
+        print_message("about to start posting data ")
         # @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@logstash_configuration.custom_log_table_name} to DataCollector API. First log: " + (documents[0].to_json).to_s)
         res = @client.post_data(@logstash_configuration.custom_log_table_name, documents_json, @logstash_configuration.time_generated_field)
         if is_successfully_posted(res)
