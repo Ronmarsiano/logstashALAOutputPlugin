@@ -28,9 +28,9 @@ class LogStashAutoResizeBuffer
             # @logger.trace("Event document.[document='#{event_document.to_s()}' ]")
             buffer_receive(event_document)
             @counter++
-            print_message(@counter)
-            print_message(@logstash_configuration.max_items)
-            print_message((@counter > @logstash_configuration.max_items)).to_s
+            print_message(@counter.to_s)
+            print_message(@logstash_configuration.max_items.to_s)
+            print_message((@counter > @logstash_configuration.max_items).to_s)
             if @counter > @logstash_configuration.max_items
                 flush()
                 @counter=0
