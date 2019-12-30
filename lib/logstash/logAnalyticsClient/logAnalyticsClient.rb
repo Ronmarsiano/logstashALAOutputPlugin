@@ -18,7 +18,7 @@ class LogAnalyticsClient
     raise ConfigError, 'no custom_log_table_name' if custom_log_table_name.empty?
     raise ConfigError, 'custom_log_table_name must be only alpha characters' if not is_alpha(custom_log_table_name)
     raise ConfigError, 'no json_records' if json_records.empty?
-    body =  json_records.to_json
+    body =  json_records
     uri = sprintf("https://%s.%s/api/logs?api-version=%s",
                   @workspace_id, @endpoint, API_VERSION)
     date = rfc1123date()
