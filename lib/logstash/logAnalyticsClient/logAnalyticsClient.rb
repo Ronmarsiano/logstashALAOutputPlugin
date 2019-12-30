@@ -15,13 +15,18 @@ class LogAnalyticsClient
   end
 
   def post_data(custom_log_table_name, json_records, record_timestamp ='')
-    print("start posting ")
+    print("\n\n\n\nstart posting\n\n\n\n ")
+    print_message("Start posting")
     raise ConfigError, 'no custom_log_table_name' if custom_log_table_name.empty?
     raise ConfigError, 'custom_log_table_name must be only alpha characters' if not is_alpha(custom_log_table_name)
     raise ConfigError, 'no json_records' if json_records.empty?
+
+    print_message("Config validated")
+
     body =  json_records
     uri = sprintf("https://%s.%s/api/logs?api-version=%s",
                   @workspace_id, @endpoint, API_VERSION)
+    print_message("URI")
     date = rfc1123date()
     print_message("start sig")
     sig = signature(date, body.bytesize)
