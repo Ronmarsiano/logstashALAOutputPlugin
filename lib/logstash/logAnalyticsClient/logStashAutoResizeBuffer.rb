@@ -12,6 +12,7 @@ class LogStashAutoResizeBuffer
         @logger = logger
         @semaphore = Mutex.new
         @logstash_configuration = logstash_configuration
+        @counter =0
         buffer_initialize(
           :max_items => logstash_configuration.max_items,
           :max_interval => logstash_configuration.plugin_flush_interval,
@@ -19,12 +20,16 @@ class LogStashAutoResizeBuffer
         )
     end
 
+
     public
     def add_event_document(event_document)
         @semaphore.synchronize do
             # @logger.debug("Adding event document to buffer.")
             # @logger.trace("Event document.[document='#{event_document.to_s()}' ]")
-            print_message("Adding document")
+            @counter = @counter +1
+            if @counter % 1000 == 0
+                print_message("Adding document")
+            end
             buffer_receive(event_document)
         end
     end # def receive

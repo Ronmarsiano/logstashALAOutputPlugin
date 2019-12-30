@@ -17,7 +17,7 @@ class LogStashConfiguration
         # This is a size limit for a single post. 
         # If the data from a single post that exceeds 30 MB, you should split it.
         # Taking 2K saftey buffer
-        @MAX_SIZE_BYTES = 30 * 1000 * 1000 - 2000
+        @MAX_SIZE_BYTES = 30 * 1000 * 1000 - 4000
     end
 
     def validate_configuration()
