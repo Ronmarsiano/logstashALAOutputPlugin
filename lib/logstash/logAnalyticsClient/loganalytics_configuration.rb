@@ -1,6 +1,6 @@
 class LogStashConfiguration
 
-    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, increase_factor= 100, logger)
+    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, logger)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
         @custom_log_table_name = custom_log_table_name
@@ -9,10 +9,9 @@ class LogStashConfiguration
         @key_names = key_names
         @key_types = key_types
         @plugin_flush_interval = plugin_flush_interval
-        @MAX_WINDOW_SIZE = 600000
         @MIN_WINDOW_SIZE = 1    
         @max_items = 2000
-        @increase_factor =increase_factor
+        @decrease_factor = decrease_factor
         @logger = logger
         # Maximum of 30 MB per post to Log Analytics Data Collector API. 
         # This is a size limit for a single post. 
@@ -49,8 +48,8 @@ class LogStashConfiguration
         @MAX_SIZE_BYTES
     end
 
-    def increase_factor
-        @increase_factor
+    def decrease_factor
+        @decrease_factor
     end
 
     def workspace_id
@@ -92,10 +91,6 @@ class LogStashConfiguration
 
     def plugin_flush_interval
         @plugin_flush_interval
-    end
-
-    def MAX_WINDOW_SIZE
-        @MAX_WINDOW_SIZE
     end
 
     def MIN_WINDOW_SIZE

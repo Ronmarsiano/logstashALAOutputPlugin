@@ -79,11 +79,14 @@ class LogStashAutoResizeBuffer
             end
 
         # We would like to decrease the window but not more then the MIN_WINDOW_SIZE
-        elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [@logstash_configuration.max_items/2 ,@logstash_configuration.MIN_WINDOW_SIZE].max
-            new_buffer_size = [@logstash_configuration.max_items/2 ,@logstash_configuration.MIN_WINDOW_SIZE].max
+        # We are trying to decrease it slowly to be able to send as much messages as we can in one window 
+        elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [(@logstash_configuration.max_items - @logstash_configuration.decrease_factor) ,@logstash_configuration.MIN_WINDOW_SIZE].max
+            new_buffer_size = [(@logstash_configuration.max_items - @logstash_configuration.decrease_factor) ,@logstash_configuration.MIN_WINDOW_SIZE].max
             change_buffer_size(new_buffer_size)
 
         else
+            print_message("WHHHNHHHHHHHHHHHHHHHHHHHHHHHHYYYYYYY(YYYYYY")
+            
             # print("No change in buffer size.[amount_of_documents='#{amount_of_documents.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
         end
     end
