@@ -23,20 +23,11 @@ class LogStashAutoResizeBuffer
 
     public
     def add_event_document(event_document)
-        @semaphore.synchronize do
+        # @semaphore.synchronize do
             # @logger.debug("Adding event document to buffer.")
             # @logger.trace("Event document.[document='#{event_document.to_s()}' ]")
-            print_message("Adding to buffer")
             buffer_receive(event_document)
-            @counter++
-            print_message(@counter.to_s)
-            print_message(@logstash_configuration.max_items.to_s)
-            print_message((@counter > @logstash_configuration.max_items).to_s)
-            if @counter > @logstash_configuration.max_items
-                flush()
-                @counter=0
-            end
-        end
+        # end
     end # def receive
 
     # called from Stud::Buffer#buffer_flush when there are events to flush
