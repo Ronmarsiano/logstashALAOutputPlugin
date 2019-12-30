@@ -28,8 +28,9 @@ class LogStashAutoResizeBuffer
             # @logger.trace("Event document.[document='#{event_document.to_s()}' ]")
             buffer_receive(event_document)
             @counter++
-            if @counter% logstash_configuration.max_items ==0
+            if @counter> logstash_configuration.max_items
                 flush()
+                @counter=0
             end
         end
     end # def receive
