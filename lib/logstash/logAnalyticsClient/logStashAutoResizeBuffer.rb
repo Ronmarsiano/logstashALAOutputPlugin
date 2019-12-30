@@ -76,7 +76,8 @@ class LogStashAutoResizeBuffer
             else
                 new_buffer_size = @logstash_configuration.MAX_SIZE_BYTES / average_document_size
                 change_buffer_size(new_buffer_size)
-                
+            end
+
         # We would like to decrease the window but not more then the MIN_WINDOW_SIZE
         elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [@logstash_configuration.max_items/2 ,@logstash_configuration.MIN_WINDOW_SIZE].max
             new_buffer_size = [@logstash_configuration.max_items/2 ,@logstash_configuration.MIN_WINDOW_SIZE].max
