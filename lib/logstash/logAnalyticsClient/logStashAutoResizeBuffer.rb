@@ -75,7 +75,6 @@ class LogStashAutoResizeBuffer
         print_message ((2 * @logstash_configuration.max_items) )
         print_message(average_document_size)
         print_message(@logstash_configuration.MAX_SIZE_BYTES)
-        print_message (((2 * @logstash_configuration.max_items) * average_document_size) < @logstash_configuration.MAX_SIZE_BYTES))
         print_message (@logstash_configuration.MAX_SIZE_BYTES / average_document_size)
 
         average_document_size = documents_byte_size / amount_of_documents
