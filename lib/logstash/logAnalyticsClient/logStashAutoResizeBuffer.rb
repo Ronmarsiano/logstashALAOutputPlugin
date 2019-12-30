@@ -22,11 +22,11 @@ class LogStashAutoResizeBuffer
 
     public
     def add_event_document(event_document)
-        @semaphore.synchronize do
+        # @semaphore.synchronize do
             # @logger.debug("Adding event document to buffer.")
             # @logger.trace("Event document.[document='#{event_document.to_s()}' ]")
             buffer_receive(event_document)
-        end
+        # end
     end # def receive
 
     # called from Stud::Buffer#buffer_flush when there are events to flush
@@ -46,10 +46,10 @@ class LogStashAutoResizeBuffer
         # Take lock if it wasn't takend before 
         if @semaphore.owned? == false
             print_message("Trying to take semaphore ")
-            @semaphore.synchronize do
+            # @semaphore.synchronize do
                 change_max_size(documents.length, documents_json.bytesize)
                 print_message("finish changing max size")
-            end
+            # end
         else
             change_max_size(documents.length, documents_json.bytesize)
             print_message("finish changing max size")
