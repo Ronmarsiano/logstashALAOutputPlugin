@@ -40,18 +40,13 @@ class LogStashAutoResizeBuffer
         # We send Json in the REST request 
         documents_json = documents.to_json
 
-        print "\n\n\n\n"
-        print documents_json
-        print "\n\n\n\n"
-        print_message("************************* --->>>>> "+ documents_json.bytesize.to_s)
-
         # Take lock if it wasn't takend before 
         if @semaphore.owned? == false
             @semaphore.synchronize do
                 change_max_size(documents.length, documents_json.bytesize)
             end
         else
-            change_max_size(documents.length, documents_json.bytesize )
+            change_max_size(documents.length, documents_json.bytesize)
         end
         begin
         # @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@logstash_configuration.custom_log_table_name} to DataCollector API. First log: " + (documents[0].to_json).to_s)
@@ -70,13 +65,19 @@ class LogStashAutoResizeBuffer
 
 
     private
-    def change_max_size(amount_of_documents, documents_size)
-        # If window is full and current window!=min(increased size , max_size)
-        #       Change size to min(2*currentSize, max_size)
-        if  amount_of_documents == @logstash_configuration.max_items and  @logstash_configuration.max_items != [(2* @logstash_configuration.max_items), @logstash_configuration.MAX_WINDOW_SIZE].min
-            new_buffer_size = [(2* @logstash_configuration.max_items), @logstash_configuration.MAX_WINDOW_SIZE].min
-            change_buffer_size(new_buffer_size)
+    def change_max_size(amount_of_documents, documents_byte_size)
+        average_document_size = documents_byte_size / amount_of_documents
 
+        # If window is full we need to increase it 
+        if  amount_of_documents == @logstash_configuration.max_items
+            if ((2 * @logstash_configuration.max_items) * average_document_size) < @logstash_configuration.MAX_SIZE_BYTES
+                new_buffer_size = 2 * @logstash_configuration.max_items
+                change_buffer_size(new_buffer_size)
+            else
+                new_buffer_size = @logstash_configuration.MAX_SIZE_BYTES / average_document_size
+                change_buffer_size(new_buffer_size)
+                
+        # We would like to decrease the window but not more then the MIN_WINDOW_SIZE
         elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [@logstash_configuration.max_items/2 ,@logstash_configuration.MIN_WINDOW_SIZE].max
             new_buffer_size = [@logstash_configuration.max_items/2 ,@logstash_configuration.MIN_WINDOW_SIZE].max
             change_buffer_size(new_buffer_size)

@@ -13,7 +13,12 @@ class LogStashConfiguration
         @MIN_WINDOW_SIZE = 1    
         @max_items = 2000
         @increase_factor =increase_factor
-        @logger = logger    
+        @logger = logger
+        # Maximum of 30 MB per post to Log Analytics Data Collector API. 
+        # This is a size limit for a single post. 
+        # If the data from a single post that exceeds 30 MB, you should split it.
+        # Taking 2K saftey buffer
+        @MAX_SIZE_BYTES = 30 * 1000 * 1000 - 2000
     end
 
     def validate_configuration()
@@ -38,6 +43,10 @@ class LogStashConfiguration
 
     def copy()
         return logstash_configuration= LogStashConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @max_items, @plugin_flush_interval)
+    end
+
+    def MAX_SIZE_BYTES
+        @MAX_SIZE_BYTES
     end
 
     def increase_factor
