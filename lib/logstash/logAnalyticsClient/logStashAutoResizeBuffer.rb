@@ -46,13 +46,9 @@ class LogStashAutoResizeBuffer
         # Take lock if it wasn't takend before 
         if @semaphore.owned? == false
             @semaphore.synchronize do
-                print_message(documents_json)
-                print_message( documents_json.bytesize)
                 change_max_size(documents.length, documents_json.bytesize)
             end
         else
-            print_message(documents_json)
-            print_message( documents_json.bytesize)
             change_max_size(documents.length, documents_json.bytesize)
         end
         begin
@@ -74,15 +70,6 @@ class LogStashAutoResizeBuffer
 
     private
     def change_max_size(amount_of_documents, documents_byte_size)
-        print_message(documents_byte_size)
-        print_message(amount_of_documents)
-        print_message ((documents_byte_size / amount_of_documents))
-        print_message ((amount_of_documents == @logstash_configuration.max_items))
-        print_message ((2 * @logstash_configuration.max_items) )
-        print_message(average_document_size)
-        print_message(@logstash_configuration.MAX_SIZE_BYTES)
-        print_message (@logstash_configuration.MAX_SIZE_BYTES / average_document_size)
-
         average_document_size = documents_byte_size / amount_of_documents
 
         # If window is full we need to increase it 
