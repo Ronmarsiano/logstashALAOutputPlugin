@@ -72,8 +72,8 @@ class LogStashAutoResizeBuffer
     def change_max_size(amount_of_documents, documents_byte_size)
         print (documents_byte_size / amount_of_documents)
         print (amount_of_documents == @logstash_configuration.max_items)
-        print ((2 * @logstash_configuration.max_items) * average_document_size) < @logstash_configuration.MAX_SIZE_BYTES)
-        print( @logstash_configuration.MAX_SIZE_BYTES / average_document_size)
+        print (((2 * @logstash_configuration.max_items) * average_document_size) < @logstash_configuration.MAX_SIZE_BYTES))
+        print (@logstash_configuration.MAX_SIZE_BYTES / average_document_size)
 
         average_document_size = documents_byte_size / amount_of_documents
 
