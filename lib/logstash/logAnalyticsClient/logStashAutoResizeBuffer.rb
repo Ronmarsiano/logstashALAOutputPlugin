@@ -46,10 +46,12 @@ class LogStashAutoResizeBuffer
         # Take lock if it wasn't takend before 
         if @semaphore.owned? == false
             @semaphore.synchronize do
+                print_message(documents_json)
                 print_message( documents_json.bytesize)
                 change_max_size(documents.length, documents_json.bytesize)
             end
         else
+            print_message(documents_json)
             print_message( documents_json.bytesize)
             change_max_size(documents.length, documents_json.bytesize)
         end
