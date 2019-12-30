@@ -24,6 +24,7 @@ class LogStashAutoResizeBuffer
         @semaphore.synchronize do
             # @logger.debug("Adding event document to buffer.")
             # @logger.trace("Event document.[document='#{event_document.to_s()}' ]")
+            print_message("Adding document")
             buffer_receive(event_document)
         end
     end # def receive
@@ -37,6 +38,7 @@ class LogStashAutoResizeBuffer
         return
         end
 
+        print_message("Flushing document started")
         # We send Json in the REST request 
         documents_json = documents.to_json
 
