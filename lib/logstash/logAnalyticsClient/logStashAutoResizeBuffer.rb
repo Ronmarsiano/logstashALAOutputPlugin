@@ -40,6 +40,9 @@ class LogStashAutoResizeBuffer
         # We send Json in the REST request 
         documents_json = documents.to_json
 
+        print "\n\n\n\n"
+        print documents_json
+        print "\n\n\n\n"
         print_message("************************* --->>>>> "+ documents_json.bytesize.to_s)
 
         # Take lock if it wasn't takend before 
