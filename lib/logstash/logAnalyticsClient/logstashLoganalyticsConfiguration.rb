@@ -1,6 +1,6 @@
 class LogstashLoganalyticsOutputConfiguration
 
-    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, logger)
+    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, logger)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
         @custom_log_table_name = custom_log_table_name
@@ -10,7 +10,7 @@ class LogstashLoganalyticsOutputConfiguration
         @key_types = key_types
         @plugin_flush_interval = plugin_flush_interval
         @MIN_MESSAGE_AMOUNT = 100 
-        @max_items = 2000
+        @max_items = max_items
         @decrease_factor = decrease_factor
         @amount_resizing = @amount_resizing
         @logger = logger
@@ -33,13 +33,18 @@ class LogstashLoganalyticsOutputConfiguration
             end
         }
 
+        if @max_items > @MIN_MESSAGE_AMOUNT
+            raise ArgumentError, "Setting max_items to value must be greater then #{@MIN_MESSAGE_AMOUNT}."
+
         if @workspace_id.empty? or @workspace_key.empty? or @custom_log_table_name.empty? 
             raise ArgumentError, "Malformed configuration , the following arguments can not be null or empty.[workspace_id=#{@workspace_id} , workspace_key=#{@workspace_key} , custom_log_table_name=#{@custom_log_table_name}]"
 
         elsif not @custom_log_table_name.match(/^[[:alpha:]]+$/)
             raise ArgumentError, 'custom_log_table_name must be only alpha characters.' 
+
         elsif custom_log_table_name.empty?
             raise ArgumentError, 'custom_log_table_name should not be empty.' 
+
         end
 
         # If all validation pass then configuration is valid 

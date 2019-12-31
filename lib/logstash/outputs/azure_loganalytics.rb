@@ -57,9 +57,13 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # This will trigger message amount resizing in a REST request to LA
   config :amount_resizing, :validate => :boolean, :default => true
 
+  # Setting the default amount of messages sent
+  # it this is set with amount_resizing=false --> each message will have max_items
+  config :max_items, :validate => :number, :default => 2000
+
   public
   def register
-    @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @amount_resizing, @logger)
+    @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @amount_resizing, @max_items, @logger)
     
     
     # Validate configuration correcness 
