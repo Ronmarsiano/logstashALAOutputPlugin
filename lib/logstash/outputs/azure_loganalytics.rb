@@ -4,7 +4,7 @@ require "logstash/outputs/base"
 require "logstash/namespace"
 require "stud/buffer"
 require "logstash/logAnalyticsClient/logStashAutoResizeBuffer"
-require "logstash/logAnalyticsClient/loganalytics_configuration"
+require "logstash/logAnalyticsClient/logstashLoganalyticsConfiguration"
 
 class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
@@ -56,19 +56,33 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def register
-    @logstash_configuration= LogStashConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @logger)
+    @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @logger)
+    
     # Validate configuration correcness 
     @logstash_configuration.validate_configuration()
+    @logger.info("Logstash Azure Loganalytics output plugin configuration was found valid")
+
     # Initialize the logstash resizable buffer
     # This buffer will increase and decrease size according to the amount of messages inserted.
     # If the buffer reached the max amount of messages the amount will be increased untill the limit
     @logstash_resizable_event_buffer=LogStashAutoResizeBuffer::new(@logstash_configuration, @logger)
-    @logger.error("1111111111111111111")
-    @logger.warn("1111111111111111111")
-    @logger.info("1111111111111111111")
-    @logger.debug("1111111111111111111")
-    @logger.trace("1111111111111111111")
+
   end # def register
+
+
+  public
+  def multi_receive(events)
+    events.each do |event|
+      # creating document from event
+      document = handle_single_event(event)
+      # Skip if document doesn't contain any items  
+      next if (document.keys).length < 1
+      
+      @logger.trace("Adding event document - " + events.to_s)
+      @logstash_resizable_event_buffer.add_event_document(document)
+
+    end
+  end # def multi_receive
 
   private 
   def handle_single_event(event)
@@ -88,25 +102,13 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       document = event_hash
     end
     return document
-  end
+  end # def handle_single_event
 
-  public
-  def multi_receive(events)
-    events.each do |event|
-      # creating document from event
-      document = handle_single_event(event)
-      # Skip if document doesn't contain any items  
-      next if (document.keys).length < 1
-      
-      @logstash_resizable_event_buffer.add_event_document(document)
-
-    end
-  end # def receive
 
   private
   def convert_value(type, val)
-    t = type.downcase
-    case t
+    type_downcase = type.downcase
+    case type_downcase
     when "boolean"
       v = val.downcase
       return (v.to_s == 'true' ) ? true : false

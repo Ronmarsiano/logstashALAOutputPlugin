@@ -10,7 +10,6 @@ class LogStashAutoResizeBuffer
     def initialize(logstash_configuration, logger)
         @client=LogAnalyticsClient::new(logstash_configuration.workspace_id, logstash_configuration.workspace_key, logstash_configuration.endpoint)
         @logger = logger
-        @semaphore = Mutex.new
         @logstash_configuration = logstash_configuration
         buffer_initialize(
           :max_items => logstash_configuration.max_items,
@@ -23,55 +22,43 @@ class LogStashAutoResizeBuffer
 
     public
     def add_event_document(event_document)
-        # @semaphore.synchronize do
-            # @logger.debug("Adding event document to buffer.")
-            # @logger.trace("Event document.[document='#{event_document.to_s()}' ]")
             buffer_receive(event_document)
-        # end
-    end # def receive
+    end # def add_event_document
+
 
     # called from Stud::Buffer#buffer_flush when there are events to flush
     public
     def flush (documents, close=false)
-        print_message("start flushing")
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
-            @logger.error("No documents in batch for log type #{@logstash_configuration.custom_log_table_name}. Skipping")
-        return
+            @logger.warn("No documents in batch for log type #{@logstash_configuration.custom_log_table_name}. Skipping")
+            return
         end
 
-        print_message("Flushing document started")
         # We send Json in the REST request 
         documents_json = documents.to_json
+        # Resizing the amount of messages according to size of message recived and amount of messages
+        change_max_size(documents.length, documents_json.bytesize)
 
-        # Take lock if it wasn't takend before 
-        if @semaphore.owned? == false
-            print_message("Trying to take semaphore ")
-            # @semaphore.synchronize do
-                change_max_size(documents.length, documents_json.bytesize)
-                print_message("finish changing max size")
-            # end
-        else
-            change_max_size(documents.length, documents_json.bytesize)
-            print_message("finish changing max size")
-        end
-        begin
-        print_message("about to start posting data ")
-        # @logger.debug("Posting log batch (log count: #{documents.length}) as log type #{@logstash_configuration.custom_log_table_name} to DataCollector API. First log: " + (documents[0].to_json).to_s)
-        res = @client.post_data(@logstash_configuration.custom_log_table_name, documents_json, @logstash_configuration.time_generated_field)
-        if is_successfully_posted(res)
-            print "\nSent\n"
-            # @logger.debug("Successfully posted logs as log type #{@logstash_configuration.custom_log_table_name} with result code #{res.code} to DataCollector API")
-        else
-            @logger.error("DataCollector API request failure: error code: #{res.code}, data=>" + (documents.to_json).to_s)
-        end
-        rescue Exception => ex
-            @logger.error("Exception in posting data to Azure Loganalytics. [Exception: '#{ex}', documents=> '#{ (documents.to_json).to_s}']")
-        end
-        print_message("End flushing")
+        send_message_to_loganalytics(documents_json, documents.length)
+
     end # def flush
 
-
+    private 
+    def send_message_to_loganalytics(documents_json, amount_of_documents)
+        begin
+            @logger.debug("Posting log batch (log count: #{amount_of_documents}) as log type #{@logstash_configuration.custom_log_table_name} to DataCollector API.")
+            response = @client.post_data(@logstash_configuration.custom_log_table_name, documents_json, @logstash_configuration.time_generated_field)
+            if is_successfully_posted(response)
+                @logger.debug("Successfully posted logs as log type #{@logstash_configuration.custom_log_table_name} with result code #{response.code} to DataCollector API")
+            else
+                @logger.error("DataCollector API request failure: error code: #{response.code}, data=>" + (documents.to_json).to_s)
+            end
+            rescue Exception => ex
+                @logger.error("Exception in posting data to Azure Loganalytics.\n[Exception: '#{ex}'")
+                @logger.error("Documents failed to be sent.[documents= '#{(documents.to_json).to_s}']")
+            end
+    end # end send_message_to_loganalytics
 
     private
     def change_max_size(amount_of_documents, documents_byte_size)
@@ -89,10 +76,10 @@ class LogStashAutoResizeBuffer
                 change_buffer_size(new_buffer_size)
             end
 
-        # We would like to decrease the window but not more then the MIN_WINDOW_SIZE
+        # We would like to decrease the window but not more then the MIN_MESSAGE_AMOUNT
         # We are trying to decrease it slowly to be able to send as much messages as we can in one window 
-        elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [(@logstash_configuration.max_items - @logstash_configuration.decrease_factor) ,@logstash_configuration.MIN_WINDOW_SIZE].max
-            new_buffer_size = [(@logstash_configuration.max_items - @logstash_configuration.decrease_factor) ,@logstash_configuration.MIN_WINDOW_SIZE].max
+        elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [(@logstash_configuration.max_items - @logstash_configuration.decrease_factor) ,@logstash_configuration.MIN_MESSAGE_AMOUNT].max
+            new_buffer_size = [(@logstash_configuration.max_items - @logstash_configuration.decrease_factor) ,@logstash_configuration.MIN_MESSAGE_AMOUNT].max
             change_buffer_size(new_buffer_size)
 
         end

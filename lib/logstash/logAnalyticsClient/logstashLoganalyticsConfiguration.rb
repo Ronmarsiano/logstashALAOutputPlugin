@@ -1,4 +1,4 @@
-class LogStashConfiguration
+class LogstashLoganalyticsOutputConfiguration
 
     def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, logger)
         @workspace_id = workspace_id
@@ -9,21 +9,21 @@ class LogStashConfiguration
         @key_names = key_names
         @key_types = key_types
         @plugin_flush_interval = plugin_flush_interval
-        @MIN_WINDOW_SIZE = 1    
+        @MIN_MESSAGE_AMOUNT = 100 
         @max_items = 2000
         @decrease_factor = decrease_factor
         @logger = logger
+        
         # Maximum of 30 MB per post to Log Analytics Data Collector API. 
         # This is a size limit for a single post. 
         # If the data from a single post that exceeds 30 MB, you should split it.
-        # Taking 2K saftey buffer
-        @MAX_SIZE_BYTES = 30 * 1000 * 1000 - 4000
+        @loganalytics_api_data_limit = 30 * 1000 * 1000
+
+        # Taking 4K saftey buffer
+        @MAX_SIZE_BYTES = @loganalytics_api_data_limit - 4000
     end
 
     def validate_configuration()
-        if not @custom_log_table_name.match(/^[[:alpha:]]+$/)
-            raise ArgumentError, 'custom_log_table_name must be only alpha characters' 
-        end
     
         @key_types.each { |k, v|
             t = v.downcase
@@ -34,14 +34,13 @@ class LogStashConfiguration
 
         if @workspace_id.empty? or @workspace_key.empty? or @custom_log_table_name.empty? 
             raise ArgumentError, "Malformed configuration , the following arguments can not be null or empty.[workspace_id=#{@workspace_id} , workspace_key=#{@workspace_key} , custom_log_table_name=#{@custom_log_table_name}]"
+
+        elsif not @custom_log_table_name.match(/^[[:alpha:]]+$/)
+            raise ArgumentError, 'custom_log_table_name must be only alpha characters' 
         end
 
         # If all validation pass then configuration is valid 
         return  true
-    end
-
-    def copy()
-        return logstash_configuration= LogStashConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @max_items, @plugin_flush_interval)
     end
 
     def MAX_SIZE_BYTES
@@ -93,7 +92,7 @@ class LogStashConfiguration
         @plugin_flush_interval
     end
 
-    def MIN_WINDOW_SIZE
-        @MIN_WINDOW_SIZE
+    def MIN_MESSAGE_AMOUNT
+        @MIN_MESSAGE_AMOUNT
     end
 end
