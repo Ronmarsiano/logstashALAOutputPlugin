@@ -12,7 +12,7 @@ class LogstashLoganalyticsOutputConfiguration
         @MIN_MESSAGE_AMOUNT = 100 
         @max_items = max_items
         @decrease_factor = decrease_factor
-        @amount_resizing = @amount_resizing
+        @amount_resizing = amount_resizing
         @logger = logger
         
         # Maximum of 30 MB per post to Log Analytics Data Collector API. 
