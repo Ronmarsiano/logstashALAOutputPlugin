@@ -32,8 +32,8 @@ class LogstashLoganalyticsOutputConfiguration
                 raise ArgumentError, "Key type(#{v}) for key(#{k}) must be either string, boolean, or double"
             end
         }
-
-        if @max_items > @MIN_MESSAGE_AMOUNT
+        
+        if @max_items < @MIN_MESSAGE_AMOUNT
             raise ArgumentError, "Setting max_items to value must be greater then #{@MIN_MESSAGE_AMOUNT}."
 
         elsif @workspace_id.empty? or @workspace_key.empty? or @custom_log_table_name.empty? 

@@ -63,7 +63,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   public
   def register
-    print "\n\n\n\n\n\n" + @max_items.to_s + " \n\n\n\n"
     @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @amount_resizing, @max_items, @logger)
     
     
