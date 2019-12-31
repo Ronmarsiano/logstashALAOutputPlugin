@@ -37,7 +37,9 @@ class LogstashLoganalyticsOutputConfiguration
             raise ArgumentError, "Malformed configuration , the following arguments can not be null or empty.[workspace_id=#{@workspace_id} , workspace_key=#{@workspace_key} , custom_log_table_name=#{@custom_log_table_name}]"
 
         elsif not @custom_log_table_name.match(/^[[:alpha:]]+$/)
-            raise ArgumentError, 'custom_log_table_name must be only alpha characters' 
+            raise ArgumentError, 'custom_log_table_name must be only alpha characters.' 
+        elsif custom_log_table_name.empty?
+            raise ArgumentError, 'custom_log_table_name should not be empty.' 
         end
 
         # If all validation pass then configuration is valid 

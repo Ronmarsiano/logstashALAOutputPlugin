@@ -11,48 +11,34 @@ class LogAnalyticsClient
     @workspace_id = workspace_id
     @shared_key = shared_key
     @endpoint = endpoint
+    @uri = sprintf("https://%s.%s/api/logs?api-version=%s",
+      @workspace_id, @endpoint, API_VERSION)
 
   end
 
-  def post_data(custom_log_table_name, json_records, record_timestamp ='')
-    print("\n\n\n\nstart posting\n\n\n\n ")
-    print_message("Start posting")
-    raise ConfigError, 'no custom_log_table_name' if custom_log_table_name.empty?
-    raise ConfigError, 'custom_log_table_name must be only alpha characters' if not is_alpha(custom_log_table_name)
-    raise ConfigError, 'no json_records' if json_records.empty?
+  def 
+    post_data(custom_log_table_name, body, record_timestamp ='')
+    raise ConfigError, 'no json_records' if body.empty?
 
-    print_message("Config validated")
+    header = get_header(custom_log_table_name, record_timestamp)
+    response = RestClient.post(@uri, body, header)
 
-    body =  json_records
-    uri = sprintf("https://%s.%s/api/logs?api-version=%s",
-                  @workspace_id, @endpoint, API_VERSION)
-    print_message("URI")
-    date = rfc1123date()
-    print_message("start sig")
-    sig = signature(date, body.bytesize)
-    print_message("end sig")
+    return response
+  end
 
-    headers = {
+  def 
+    get_header(custom_log_table_name,record_timestamp)
+      return {
         'Content-Type' => 'application/json',
-        'Authorization' => sig,
+        'Authorization' => signature(date, body.bytesize),
         'Log-Type' => custom_log_table_name,
-        'x-ms-date' => date,
+        'x-ms-date' => rfc1123date(),
         'time-generated-field' => record_timestamp
     }
-
-    print_message("start post")
-    res = RestClient.post( uri, body, headers)
-    print_message("End post")
-    res
   end
 
   def set_proxy(proxy='')
     RestClient.proxy = proxy.empty? ? ENV['http_proxy'] : proxy
-  end
-
-  private
-  def is_alpha(s)
-    return (s.match(/^[[:alpha:]]+$/)) ? true : false
   end
 
   def rfc1123date()
@@ -70,11 +56,5 @@ class LogAnalyticsClient
     encoded_hash = Base64.encode64(hmac_sha256_sigs)
     authorization = sprintf("SharedKey %s:%s", @workspace_id,encoded_hash)
   end
-
-
-  public
-  def print_message(message)
-      print("\n" + message + "\n")
-  end 
 
 end # end of class
