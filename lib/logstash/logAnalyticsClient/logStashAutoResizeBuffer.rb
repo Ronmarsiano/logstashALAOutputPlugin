@@ -1,19 +1,19 @@
 require "stud/buffer"
 require "logstash/logAnalyticsClient/logAnalyticsClient"
 require "stud/buffer"
-require "logstash/logAnalyticsClient/loganalytics_configuration"
+require "logstash/logAnalyticsClient/logstashLoganalyticsConfiguration"
 
 
 class LogStashAutoResizeBuffer
     include Stud::Buffer
 
-    def initialize(logstash_configuration, logger)
-        @client=LogAnalyticsClient::new(logstash_configuration.workspace_id, logstash_configuration.workspace_key, logstash_configuration.endpoint)
+    def initialize(logstashLoganalyticsConfiguration, logger)
+        @client=LogAnalyticsClient::new(logstashLoganalyticsConfiguration.workspace_id, logstashLoganalyticsConfiguration.workspace_key, logstashLoganalyticsConfiguration.endpoint)
         @logger = logger
-        @logstash_configuration = logstash_configuration
+        @logstashLoganalyticsConfiguration = logstashLoganalyticsConfiguration
         buffer_initialize(
-          :max_items => logstash_configuration.max_items,
-          :max_interval => logstash_configuration.plugin_flush_interval,
+          :max_items => logstashLoganalyticsConfiguration.max_items,
+          :max_interval => logstashLoganalyticsConfiguration.plugin_flush_interval,
           :logger => logger
         )
     end
@@ -30,7 +30,7 @@ class LogStashAutoResizeBuffer
     def flush (documents, close=false)
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
-            @logger.warn("No documents in batch for log type #{@logstash_configuration.custom_log_table_name}. Skipping")
+            @logger.warn("No documents in batch for log type #{@logstashLoganalyticsConfiguration.custom_log_table_name}. Skipping")
             return
         end
 
@@ -38,7 +38,7 @@ class LogStashAutoResizeBuffer
         documents_json = documents.to_json
 
         # 
-        if @loganalytics_configuration.amount_resizing == true
+        if @logstashLoganalyticsConfiguration.amount_resizing == true
             # Resizing the amount of messages according to size of message recived and amount of messages
             change_max_size(documents.length, documents_json.bytesize)
         end
@@ -50,10 +50,10 @@ class LogStashAutoResizeBuffer
     private 
     def send_message_to_loganalytics(documents_json, amount_of_documents)
         begin
-            @logger.debug("Posting log batch (log count: #{amount_of_documents}) as log type #{@logstash_configuration.custom_log_table_name} to DataCollector API.")
-            response = @client.post_data(@logstash_configuration.custom_log_table_name, documents_json, @logstash_configuration.time_generated_field)
+            @logger.debug("Posting log batch (log count: #{amount_of_documents}) as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API.")
+            response = @client.post_data(@logstashLoganalyticsConfiguration.custom_log_table_name, documents_json, @logstashLoganalyticsConfiguration.time_generated_field)
             if is_successfully_posted(response)
-                @logger.debug("Successfully posted logs as log type #{@logstash_configuration.custom_log_table_name} with result code #{response.code} to DataCollector API")
+                @logger.debug("Successfully posted logs as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} with result code #{response.code} to DataCollector API")
             else
                 @logger.error("DataCollector API request failure: error code: #{response.code}, data=>" + (documents.to_json).to_s)
             end
@@ -70,19 +70,19 @@ class LogStashAutoResizeBuffer
         # If window is full we need to increase it 
         # "amount_of_documents" can be greater since buffer is not synchronized meaning 
         # that flush can occure after limit was reached.
-        if  amount_of_documents >= @logstash_configuration.max_items
-            if ((2 * @logstash_configuration.max_items) * average_document_size) < @logstash_configuration.MAX_SIZE_BYTES
-                new_buffer_size = 2 * @logstash_configuration.max_items
+        if  amount_of_documents >= @logstashLoganalyticsConfiguration.max_items
+            if ((2 * @logstashLoganalyticsConfiguration.max_items) * average_document_size) < @logstashLoganalyticsConfiguration.MAX_SIZE_BYTES
+                new_buffer_size = 2 * @logstashLoganalyticsConfiguration.max_items
                 change_buffer_size(new_buffer_size)
             else
-                new_buffer_size = @logstash_configuration.MAX_SIZE_BYTES / average_document_size
+                new_buffer_size = @logstashLoganalyticsConfiguration.MAX_SIZE_BYTES / average_document_size
                 change_buffer_size(new_buffer_size)
             end
 
         # We would like to decrease the window but not more then the MIN_MESSAGE_AMOUNT
         # We are trying to decrease it slowly to be able to send as much messages as we can in one window 
-        elsif amount_of_documents < @logstash_configuration.max_items and  @logstash_configuration.max_items != [(@logstash_configuration.max_items - @logstash_configuration.decrease_factor) ,@logstash_configuration.MIN_MESSAGE_AMOUNT].max
-            new_buffer_size = [(@logstash_configuration.max_items - @logstash_configuration.decrease_factor) ,@logstash_configuration.MIN_MESSAGE_AMOUNT].max
+        elsif amount_of_documents < @logstashLoganalyticsConfiguration.max_items and  @logstashLoganalyticsConfiguration.max_items != [(@logstashLoganalyticsConfiguration.max_items - @logstashLoganalyticsConfiguration.decrease_factor) ,@logstashLoganalyticsConfiguration.MIN_MESSAGE_AMOUNT].max
+            new_buffer_size = [(@logstashLoganalyticsConfiguration.max_items - @logstashLoganalyticsConfiguration.decrease_factor) ,@logstashLoganalyticsConfiguration.MIN_MESSAGE_AMOUNT].max
             change_buffer_size(new_buffer_size)
 
         end
@@ -102,7 +102,7 @@ class LogStashAutoResizeBuffer
     def change_buffer_size(new_size)
         print_message("Changing buffer size from " + @buffer_config[:max_items].to_s + " to " + new_size.to_s)
         @buffer_config[:max_items] = new_size
-        @logstash_configuration.max_items = new_size
+        @logstashLoganalyticsConfiguration.max_items = new_size
     end
 
 end
