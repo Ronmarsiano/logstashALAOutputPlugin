@@ -36,7 +36,7 @@ class LogstashLoganalyticsOutputConfiguration
         if @max_items > @MIN_MESSAGE_AMOUNT
             raise ArgumentError, "Setting max_items to value must be greater then #{@MIN_MESSAGE_AMOUNT}."
 
-        if @workspace_id.empty? or @workspace_key.empty? or @custom_log_table_name.empty? 
+        elsif @workspace_id.empty? or @workspace_key.empty? or @custom_log_table_name.empty? 
             raise ArgumentError, "Malformed configuration , the following arguments can not be null or empty.[workspace_id=#{@workspace_id} , workspace_key=#{@workspace_key} , custom_log_table_name=#{@custom_log_table_name}]"
 
         elsif not @custom_log_table_name.match(/^[[:alpha:]]+$/)
