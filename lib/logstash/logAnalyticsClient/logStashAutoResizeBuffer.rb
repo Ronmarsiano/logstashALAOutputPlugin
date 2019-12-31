@@ -88,6 +88,7 @@ class LogStashAutoResizeBuffer
         # We are trying to decrease it slowly to be able to send as much messages as we can in one window 
         elsif amount_of_documents < @logstashLoganalyticsConfiguration.max_items and  @logstashLoganalyticsConfiguration.max_items != [(@logstashLoganalyticsConfiguration.max_items - @logstashLoganalyticsConfiguration.decrease_factor) ,@logstashLoganalyticsConfiguration.MIN_MESSAGE_AMOUNT].max
             new_buffer_size = [(@logstashLoganalyticsConfiguration.max_items - @logstashLoganalyticsConfiguration.decrease_factor) ,@logstashLoganalyticsConfiguration.MIN_MESSAGE_AMOUNT].max
+            @logger.info("Decreasing buffer size from #{@logstashLoganalyticsConfiguration.max_items} to #{new_buffer_size}")
             change_buffer_size(new_buffer_size)
 
         end
