@@ -78,7 +78,9 @@ class LogStashAutoResizeBuffer
         average_document_size = documents_byte_size / amount_of_documents
 
         # If window is full we need to increase it 
-        if  amount_of_documents == @logstash_configuration.max_items
+        # "amount_of_documents" can be greater since buffer is not synchronized meaning 
+        # that flush can occure after limit was reached.
+        if  amount_of_documents >= @logstash_configuration.max_items
             if ((2 * @logstash_configuration.max_items) * average_document_size) < @logstash_configuration.MAX_SIZE_BYTES
                 new_buffer_size = 2 * @logstash_configuration.max_items
                 change_buffer_size(new_buffer_size)
@@ -93,10 +95,6 @@ class LogStashAutoResizeBuffer
             new_buffer_size = [(@logstash_configuration.max_items - @logstash_configuration.decrease_factor) ,@logstash_configuration.MIN_WINDOW_SIZE].max
             change_buffer_size(new_buffer_size)
 
-        else
-            print_message("WHHHNHHHHHHHHHHHHHHHHHHHHHHHHYYYYYYY(YYYYYY")
-            
-            # print("No change in buffer size.[amount_of_documents='#{amount_of_documents.to_s()}' , old_buffer_size='#{@logstash_configuration.max_items.to_s()}' , MAX_SIZE='#{@logstash_configuration.MAX_WINDOW_SIZE.to_s()}']")
         end
     end
 
@@ -109,16 +107,6 @@ class LogStashAutoResizeBuffer
     def is_successfully_posted(response)
       return (response.code == 200) ? true : false
     end
-
-    public
-    def get_buffer_size()
-        return @logstash_configuration.flush_items
-    end
-
-    public
-    def get_buffer_status()
-        return @logstash_configuration.buffer_state
-    end 
 
     public 
     def change_buffer_size(new_size)

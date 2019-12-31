@@ -63,6 +63,11 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     # This buffer will increase and decrease size according to the amount of messages inserted.
     # If the buffer reached the max amount of messages the amount will be increased untill the limit
     @logstash_resizable_event_buffer=LogStashAutoResizeBuffer::new(@logstash_configuration, @logger)
+    @logger.error("1111111111111111111")
+    @logger.warning("1111111111111111111")
+    @logger.info("1111111111111111111")
+    @logger.debug("1111111111111111111")
+    @logger.trace("1111111111111111111")
   end # def register
 
   private 
