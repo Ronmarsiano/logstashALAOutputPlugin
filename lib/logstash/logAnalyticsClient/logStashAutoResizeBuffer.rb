@@ -53,15 +53,13 @@ class LogStashAutoResizeBuffer
             @logger.debug("Posting log batch (log count: #{amount_of_documents}) as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API.")
             response = @client.post_data(@logstashLoganalyticsConfiguration.custom_log_table_name, documents_json, @logstashLoganalyticsConfiguration.time_generated_field)
             if is_successfully_posted(response)
-                @logger.debug("Successfully posted logs as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} with result code #{response.code} to DataCollector API")
-                # TODO remove me 
-                @logger.info("Successfully posted logs as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} with result code #{response.code} to DataCollector API")
+                @logger.info("Successfully posted #{amount_of_documents} logs as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name}.")
             else
                 @logger.error("DataCollector API request failure: error code: #{response.code}, data=>" + (documents.to_json).to_s)
             end
             rescue Exception => ex
                 @logger.error("Exception in posting data to Azure Loganalytics.\n[Exception: '#{ex}'")
-                @logger.error("Documents failed to be sent.[documents= '#{documents_json}']")
+                @logger.error("Documents(#{amount_of_documents}) failed to be sent.[documents= '#{documents_json}']")
             end
     end # end send_message_to_loganalytics
 
@@ -73,13 +71,18 @@ class LogStashAutoResizeBuffer
         # "amount_of_documents" can be greater since buffer is not synchronized meaning 
         # that flush can occure after limit was reached.
         if  amount_of_documents >= @logstashLoganalyticsConfiguration.max_items
+            # if doubling the size wouldn't exceed the API limit
             if ((2 * @logstashLoganalyticsConfiguration.max_items) * average_document_size) < @logstashLoganalyticsConfiguration.MAX_SIZE_BYTES
                 new_buffer_size = 2 * @logstashLoganalyticsConfiguration.max_items
-                change_buffer_size(new_buffer_size)
+                # @logger.debug("Increasing buffer size from #{@logstashLoganalyticsConfiguration.max_items} to #{new_buffer_size}")
+                # change_buffer_size(new_buffer_size)
             else
                 new_buffer_size = @logstashLoganalyticsConfiguration.MAX_SIZE_BYTES / average_document_size
-                change_buffer_size(new_buffer_size)
+                # @logger.debug("Decreasing buffer size from #{@logstashLoganalyticsConfiguration.max_items} to #{new_buffer_size}")
+                # change_buffer_size(new_buffer_size)
             end
+            @logger.info("Increasing buffer size from #{@logstashLoganalyticsConfiguration.max_items} to #{new_buffer_size}")
+            change_buffer_size(new_buffer_size)
 
         # We would like to decrease the window but not more then the MIN_MESSAGE_AMOUNT
         # We are trying to decrease it slowly to be able to send as much messages as we can in one window 
