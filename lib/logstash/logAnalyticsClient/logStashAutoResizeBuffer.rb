@@ -16,13 +16,12 @@ class LogStashAutoResizeBuffer
           :max_interval => logstash_configuration.plugin_flush_interval,
           :logger => logger
         )
-        @counter=0
     end
 
 
     public
     def add_event_document(event_document)
-            buffer_receive(event_document)
+        buffer_receive(event_document)
     end # def add_event_document
 
 

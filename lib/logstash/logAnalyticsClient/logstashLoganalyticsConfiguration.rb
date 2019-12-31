@@ -1,6 +1,6 @@
 class LogstashLoganalyticsOutputConfiguration
 
-    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, logger)
+    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, logger)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
         @custom_log_table_name = custom_log_table_name
@@ -12,6 +12,7 @@ class LogstashLoganalyticsOutputConfiguration
         @MIN_MESSAGE_AMOUNT = 100 
         @max_items = 2000
         @decrease_factor = decrease_factor
+        @amount_resizing = @amount_resizing
         @logger = logger
         
         # Maximum of 30 MB per post to Log Analytics Data Collector API. 
@@ -45,6 +46,10 @@ class LogstashLoganalyticsOutputConfiguration
 
     def MAX_SIZE_BYTES
         @MAX_SIZE_BYTES
+    end
+
+    def amount_resizing
+        @amount_resizing
     end
 
     def decrease_factor
@@ -86,7 +91,6 @@ class LogstashLoganalyticsOutputConfiguration
     def max_items=(new_max_items)
         @max_items = new_max_items
     end
-
 
     def plugin_flush_interval
         @plugin_flush_interval

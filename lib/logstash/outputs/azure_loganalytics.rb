@@ -54,9 +54,13 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # Factor for adding to the amount of messages sent
   config :decrease_factor, :validate => :number, :default => 100
 
+  # This will trigger message amount resizing in a REST request to LA
+  config :amount_resizing, :validate => :boolean, :default => true
+
   public
   def register
-    @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @logger)
+    @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @amount_resizing, @logger)
+    
     
     # Validate configuration correcness 
     @logstash_configuration.validate_configuration()
