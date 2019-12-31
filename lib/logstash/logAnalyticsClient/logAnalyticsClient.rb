@@ -20,19 +20,19 @@ class LogAnalyticsClient
     post_data(custom_log_table_name, body, record_timestamp ='')
     raise ConfigError, 'no json_records' if body.empty?
 
-    header = get_header(custom_log_table_name, record_timestamp)
+    header = get_header(custom_log_table_name, record_timestamp, body.bytesize)
     response = RestClient.post(@uri, body, header)
 
     return response
   end
 
   def 
-    get_header(custom_log_table_name,record_timestamp)
+    get_header(custom_log_table_name,record_timestamp, body_bytesize_length)
       date = rfc1123date()
 
       return {
         'Content-Type' => 'application/json',
-        'Authorization' => signature(date, body.bytesize),
+        'Authorization' => signature(date, body_bytesize_length),
         'Log-Type' => custom_log_table_name,
         'x-ms-date' => date,
         'time-generated-field' => record_timestamp
@@ -48,10 +48,9 @@ class LogAnalyticsClient
     current_time.httpdate()
   end
 
-  def signature(date, content_length)
+  def signature(date, body_bytesize_length)
 
-    sigs = sprintf("POST\n%d\napplication/json\nx-ms-date:%s\n/api/logs",
-                  content_length, date)
+    sigs = sprintf("POST\n%d\napplication/json\nx-ms-date:%s\n/api/logs", body_bytesize_length, date)
     utf8_sigs = sigs.encode('utf-8')
     decoded_shared_key = Base64.decode64(@shared_key)
     hmac_sha256_sigs = OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha256'), decoded_shared_key, utf8_sigs)
