@@ -28,13 +28,15 @@ class LogAnalyticsClient
 
   def 
     get_header(custom_log_table_name,record_timestamp)
+      date = rfc1123date()
+
       return {
         'Content-Type' => 'application/json',
         'Authorization' => signature(date, body.bytesize),
         'Log-Type' => custom_log_table_name,
-        'x-ms-date' => rfc1123date(),
+        'x-ms-date' => date,
         'time-generated-field' => record_timestamp
-    }
+      }
   end
 
   def set_proxy(proxy='')
