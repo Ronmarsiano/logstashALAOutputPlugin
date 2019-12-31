@@ -53,7 +53,7 @@ class LogStashAutoResizeBuffer
             @logger.debug("Posting log batch (log count: #{amount_of_documents}) as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API.")
             response = @client.post_data(@logstashLoganalyticsConfiguration.custom_log_table_name, documents_json, @logstashLoganalyticsConfiguration.time_generated_field)
             if is_successfully_posted(response)
-                @logger.info("Successfully posted #{amount_of_documents} logs as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name}.")
+                @logger.info("Successfully posted #{amount_of_documents} logs into cutom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}].")
             else
                 @logger.error("DataCollector API request failure: error code: #{response.code}, data=>" + (documents.to_json).to_s)
             end
