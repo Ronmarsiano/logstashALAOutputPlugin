@@ -37,7 +37,7 @@ class LogStashAutoResizeBuffer
         # We send Json in the REST request 
         documents_json = documents.to_json
 
-        # 
+        # Setting reisizng to true will cause chanigng the max size
         if @logstashLoganalyticsConfiguration.amount_resizing == true
             # Resizing the amount of messages according to size of message recived and amount of messages
             change_max_size(documents.length, documents_json.bytesize)
