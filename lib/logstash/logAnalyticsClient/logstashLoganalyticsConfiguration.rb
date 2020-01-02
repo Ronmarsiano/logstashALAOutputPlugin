@@ -67,6 +67,10 @@ class LogstashLoganalyticsOutputConfiguration
         @proxy
     end
 
+    def logger
+        @logger
+    end
+
     def decrease_factor
         @decrease_factor
     end
