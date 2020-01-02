@@ -41,9 +41,6 @@ class LogAnalyticsClient
   # This option is not used in the output plugin and will be used 
   #  
   def set_proxy(proxy='')
-    print "\n\n\n&&&&&&&&&&&&&&&&&&&&\n\n\n"
-    print proxy.empty?
-    print "\n\n\n&&&&&&&&&&&&&&&&&&&&\n\n\n"
     RestClient.proxy = proxy.empty? ? ENV['http_proxy'] : proxy
   end
 
