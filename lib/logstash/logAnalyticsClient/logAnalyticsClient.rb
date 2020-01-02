@@ -1,23 +1,16 @@
 require "logstash/logAnalyticsClient/logstashLoganalyticsConfiguration"
+require 'rest-client'
+require 'json'
+require 'openssl'
+require 'base64'
+require 'time'
 
 class LogAnalyticsClient
   API_VERSION = '2016-04-01'.freeze
 
   def initialize (logstashLoganalyticsConfiguration)
-    require 'rest-client'
-    require 'json'
-    require 'openssl'
-    require 'base64'
-    require 'time'
-
     @logstashLoganalyticsConfiguration = logstashLoganalyticsConfiguration
-    print "\n\n^^^^^^^^^^^^^^^^^^^^^^^^\n\n"
-    print @logstashLoganalyticsConfiguration.workspace_id
-    print "\n\n^^^^^^^^^^^^^^^^^^^^^^^^\n\n"
-    print @logstashLoganalyticsConfiguration.endpoint
-    print "\n\n^^^^^^^^^^^^^^^^^^^^^^^^\n\n"
     @uri = sprintf("https://%s.%s/api/logs?api-version=%s", @logstashLoganalyticsConfiguration.workspace_id, @logstashLoganalyticsConfiguration.endpoint, API_VERSION)
-
   end
 
   def 
