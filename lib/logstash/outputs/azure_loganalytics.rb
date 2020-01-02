@@ -61,9 +61,12 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # it this is set with amount_resizing=false --> each message will have max_items
   config :max_items, :validate => :number, :default => 2000
 
+  # Setting proxy to be used for the Azure Loganalytics REST client
+  config :proxy, :validate => :string, :default => ''
+
   public
   def register
-    @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @amount_resizing, @max_items, @logger)
+    @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @amount_resizing, @max_items, @proxy ,@logger)
     
     
     # Validate configuration correcness 

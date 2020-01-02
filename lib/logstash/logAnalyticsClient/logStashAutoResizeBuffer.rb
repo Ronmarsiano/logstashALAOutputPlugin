@@ -7,17 +7,16 @@ require "logstash/logAnalyticsClient/logstashLoganalyticsConfiguration"
 class LogStashAutoResizeBuffer
     include Stud::Buffer
 
-    def initialize(logstashLoganalyticsConfiguration, logger)
-        @client=LogAnalyticsClient::new(logstashLoganalyticsConfiguration.workspace_id, logstashLoganalyticsConfiguration.workspace_key, logstashLoganalyticsConfiguration.endpoint)
-        @logger = logger
+    def initialize(logstashLoganalyticsConfiguration)
         @logstashLoganalyticsConfiguration = logstashLoganalyticsConfiguration
+        @logger = @logstashLoganalyticsConfiguration.logger
+        @client=LogAnalyticsClient::new(logstashLoganalyticsConfiguration)
         buffer_initialize(
           :max_items => logstashLoganalyticsConfiguration.max_items,
           :max_interval => logstashLoganalyticsConfiguration.plugin_flush_interval,
-          :logger => logger
+          :logger => @logstashLoganalyticsConfiguration.logger
         )
     end
-
 
     public
     def add_event_document(event_document)
@@ -86,11 +85,6 @@ class LogStashAutoResizeBuffer
         change_buffer_size(new_buffer_size)
     end
 
-    public
-    def print_message(message)
-        print("\n" + message + "[ThreadId= " + Thread.current.object_id.to_s + " ]\n")
-    end 
-
     private 
     def is_successfully_posted(response)
       return (response.code == 200) ? true : false
@@ -103,9 +97,9 @@ class LogStashAutoResizeBuffer
             old_buffer_size = @buffer_config[:max_items]
             @buffer_config[:max_items] = new_size
             @logstashLoganalyticsConfiguration.max_items = new_size
-            @logger.info("Changing buffer size.[new_size='#{new_size}' , configuration='#{old_buffer_size}']")
+            @logger.info("Changing buffer size.[configuration='#{old_buffer_size}' , new_size='#{new_size}']")
         else
-            @logger.info("Buffer size wasn't changed.[new_size='#{new_size}' , configuration='#{@buffer_config[:max_items]}']")
+            @logger.info("Buffer size wasn't changed.[configuration='#{old_buffer_size}' , new_size='#{new_size}']")
         end
     end
 

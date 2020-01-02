@@ -1,18 +1,17 @@
+require "logstash/logAnalyticsClient/logstashLoganalyticsConfiguration"
+
 class LogAnalyticsClient
   API_VERSION = '2016-04-01'.freeze
 
-  def initialize (workspace_id, shared_key,endpoint ='ods.opinsights.azure.com')
+  def initialize (logstashLoganalyticsConfiguration)
     require 'rest-client'
     require 'json'
     require 'openssl'
     require 'base64'
     require 'time'
 
-    @workspace_id = workspace_id
-    @shared_key = shared_key
-    @endpoint = endpoint
-    @uri = sprintf("https://%s.%s/api/logs?api-version=%s",
-      @workspace_id, @endpoint, API_VERSION)
+    @logstashLoganalyticsConfiguration = logstashLoganalyticsConfiguration
+    @uri = sprintf("https://%s.%s/api/logs?api-version=%s", @logstashLoganalyticsConfiguration.workspace_id, @logstashLoganalyticsConfiguration.endpoint, API_VERSION)
 
   end
 
@@ -39,6 +38,9 @@ class LogAnalyticsClient
       }
   end
 
+  # Setting proxy for the REST client.
+  # This option is not used in the output plugin and will be used 
+  #  
   def set_proxy(proxy='')
     RestClient.proxy = proxy.empty? ? ENV['http_proxy'] : proxy
   end
@@ -49,13 +51,12 @@ class LogAnalyticsClient
   end
 
   def signature(date, body_bytesize_length)
-
     sigs = sprintf("POST\n%d\napplication/json\nx-ms-date:%s\n/api/logs", body_bytesize_length, date)
     utf8_sigs = sigs.encode('utf-8')
-    decoded_shared_key = Base64.decode64(@shared_key)
+    decoded_shared_key = Base64.decode64(@logstashLoganalyticsConfiguration.shared_key)
     hmac_sha256_sigs = OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha256'), decoded_shared_key, utf8_sigs)
     encoded_hash = Base64.encode64(hmac_sha256_sigs)
-    authorization = sprintf("SharedKey %s:%s", @workspace_id,encoded_hash)
+    authorization = sprintf("SharedKey %s:%s", @logstashLoganalyticsConfiguration.workspace_id, encoded_hash)
   end
 
 end # end of class

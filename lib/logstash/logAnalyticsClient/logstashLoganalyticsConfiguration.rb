@@ -1,6 +1,6 @@
 class LogstashLoganalyticsOutputConfiguration
 
-    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, logger)
+    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, proxy, logger)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
         @custom_log_table_name = custom_log_table_name
@@ -13,6 +13,7 @@ class LogstashLoganalyticsOutputConfiguration
         @max_items = max_items
         @decrease_factor = decrease_factor
         @amount_resizing = amount_resizing
+        @proxy = proxy
         @logger = logger
         
         # Maximum of 30 MB per post to Log Analytics Data Collector API. 
@@ -49,6 +50,7 @@ class LogstashLoganalyticsOutputConfiguration
 
         end
 
+        @logger.info("Azure Loganalytics configuration was found valid.")
         # If all validation pass then configuration is valid 
         return  true
     end
@@ -59,6 +61,10 @@ class LogstashLoganalyticsOutputConfiguration
 
     def amount_resizing
         @amount_resizing
+    end
+
+    def proxy
+        @proxy
     end
 
     def decrease_factor
