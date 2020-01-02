@@ -10,6 +10,7 @@ class LogAnalyticsClient
 
   def initialize (logstashLoganalyticsConfiguration)
     @logstashLoganalyticsConfiguration = logstashLoganalyticsConfiguration
+    set_proxy(@logstashLoganalyticsConfiguration.proxy)
     @uri = sprintf("https://%s.%s/api/logs?api-version=%s", @logstashLoganalyticsConfiguration.workspace_id, @logstashLoganalyticsConfiguration.endpoint, API_VERSION)
   end
 
@@ -40,6 +41,9 @@ class LogAnalyticsClient
   # This option is not used in the output plugin and will be used 
   #  
   def set_proxy(proxy='')
+    print "\n\n\n&&&&&&&&&&&&&&&&&&&&\n\n\n"
+    print proxy.empty?
+    print "\n\n\n&&&&&&&&&&&&&&&&&&&&\n\n\n"
     RestClient.proxy = proxy.empty? ? ENV['http_proxy'] : proxy
   end
 
