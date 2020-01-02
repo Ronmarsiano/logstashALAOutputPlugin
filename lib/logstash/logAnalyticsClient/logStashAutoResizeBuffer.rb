@@ -80,8 +80,9 @@ class LogStashAutoResizeBuffer
                 # change_buffer_size(new_buffer_size)
             end
             @logger.info("Increasing buffer size from #{@logstashLoganalyticsConfiguration.max_items} to #{new_buffer_size}")
-            print_message("changing buffer size ******************************************************************************")
+            print_message("changing buffer size *******************************2222***********************************************")
             change_buffer_size(new_buffer_size)
+            print_message("changing buffer size ***************************************************1111***************************")
 
         # We would like to decrease the window but not more then the MIN_MESSAGE_AMOUNT
         # We are trying to decrease it slowly to be able to send as much messages as we can in one window 
@@ -89,10 +90,11 @@ class LogStashAutoResizeBuffer
             new_buffer_size = [(@logstashLoganalyticsConfiguration.max_items - @logstashLoganalyticsConfiguration.decrease_factor) ,@logstashLoganalyticsConfiguration.MIN_MESSAGE_AMOUNT].max
             @logger.info("Decreasing buffer size from #{@logstashLoganalyticsConfiguration.max_items} to #{new_buffer_size}")
             print "\n\n\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n\n\n\n"
+            print new_buffer_size
+            print "\n\n\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n\n\n\n"
             print_message(new_buffer_size.to_s)
             print "\n\n\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n\n\n\n"
             change_buffer_size(new_buffer_size)
-
         end
     end
 
