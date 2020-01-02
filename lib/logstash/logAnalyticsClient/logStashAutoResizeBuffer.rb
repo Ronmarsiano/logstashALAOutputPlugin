@@ -100,9 +100,10 @@ class LogStashAutoResizeBuffer
     def change_buffer_size(new_size)
         # Change buffer size only if it's needed
         if @buffer_config[:max_items] != new_size
+            old_buffer_size = @buffer_config[:max_items]
             @buffer_config[:max_items] = new_size
             @logstashLoganalyticsConfiguration.max_items = new_size
-            @logger.info("Changing buffer size.[new_size='#{new_size}' , configuration='#{@buffer_config[:max_items]}']")
+            @logger.info("Changing buffer size.[new_size='#{new_size}' , configuration='#{old_buffer_size}']")
         else
             @logger.info("Buffer size wasn't changed.[new_size='#{new_size}' , configuration='#{@buffer_config[:max_items]}']")
         end
