@@ -64,6 +64,7 @@ class LogStashAutoResizeBuffer
 
     private
     def change_max_size(amount_of_documents, documents_byte_size)
+        new_buffer_size = @logstashLoganalyticsConfiguration.max_items
         average_document_size = documents_byte_size / amount_of_documents
         # If window is full we need to increase it 
         # "amount_of_documents" can be greater since buffer is not synchronized meaning 
@@ -72,32 +73,18 @@ class LogStashAutoResizeBuffer
             # if doubling the size wouldn't exceed the API limit
             if ((2 * @logstashLoganalyticsConfiguration.max_items) * average_document_size) < @logstashLoganalyticsConfiguration.MAX_SIZE_BYTES
                 new_buffer_size = 2 * @logstashLoganalyticsConfiguration.max_items
-                # @logger.debug("Increasing buffer size from #{@logstashLoganalyticsConfiguration.max_items} to #{new_buffer_size}")
-                # change_buffer_size(new_buffer_size)
             else
                 new_buffer_size = @logstashLoganalyticsConfiguration.MAX_SIZE_BYTES / average_document_size
-                # @logger.debug("Decreasing buffer size from #{@logstashLoganalyticsConfiguration.max_items} to #{new_buffer_size}")
-                # change_buffer_size(new_buffer_size)
             end
-            @logger.info("Increasing buffer size from #{@logstashLoganalyticsConfiguration.max_items} to #{new_buffer_size}")
-            print_message("changing buffer size *******************************2222***********************************************")
-            change_buffer_size(new_buffer_size)
-            print_message("changing buffer size ***************************************************1111***************************")
 
         # We would like to decrease the window but not more then the MIN_MESSAGE_AMOUNT
         # We are trying to decrease it slowly to be able to send as much messages as we can in one window 
         elsif amount_of_documents < @logstashLoganalyticsConfiguration.max_items and  @logstashLoganalyticsConfiguration.max_items != [(@logstashLoganalyticsConfiguration.max_items - @logstashLoganalyticsConfiguration.decrease_factor) ,@logstashLoganalyticsConfiguration.MIN_MESSAGE_AMOUNT].max
             new_buffer_size = [(@logstashLoganalyticsConfiguration.max_items - @logstashLoganalyticsConfiguration.decrease_factor) ,@logstashLoganalyticsConfiguration.MIN_MESSAGE_AMOUNT].max
-            @logger.info("Decreasing buffer size from #{@logstashLoganalyticsConfiguration.max_items} to #{new_buffer_size}")
-            print "\n\n\n\n&&&&&&&&&&&&&&&4444&&&&&&&&&&&&&&&&&&&&&&&&\n\n\n\n"
-            print new_buffer_size
-            print "\n\n\n\n&&&&&&&&&&&&&&&&&&&&55555&&&&&&&&&&&&&&&&&&&\n\n\n\n"
-            a = new_buffer_size.to_s
-            print "\n\n\n\n&&&&&&&&&&&&&&&&&&&&666666666&&&&&&&&&&&&&&&&&&&\n\n\n\n"
-            print_message(new_buffer_size.to_s)
-            print "\n\n\n\n&&&&&&&&&&&&&&&&&&&&&&&777777&&&&&&&&&&&&&&&\n\n\n\n"
-            change_buffer_size(new_buffer_size)
         end
+
+        @logger.info("Changing buffer size from #{@logstashLoganalyticsConfiguration.max_items} to #{new_buffer_size}")
+        change_buffer_size(new_buffer_size)
     end
 
     public
@@ -112,9 +99,12 @@ class LogStashAutoResizeBuffer
 
     public 
     def change_buffer_size(new_size)
-        print_message("Changing buffer size from " + @buffer_config[:max_items].to_s + " to " + new_size.to_s)
-        @buffer_config[:max_items] = new_size
-        @logstashLoganalyticsConfiguration.max_items = new_size
+        # Change buffer size only if it's needed
+        if @buffer_config[:max_items] != new_size
+            @logger.debug("Changing buffer size from " + @buffer_config[:max_items].to_s + " to " + new_size.to_s)
+            @buffer_config[:max_items] = new_size
+            @logstashLoganalyticsConfiguration.max_items = new_size
+        end
     end
 
 end
