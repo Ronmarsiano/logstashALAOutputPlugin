@@ -86,7 +86,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       # Skip if document doesn't contain any items  
       next if (document.keys).length < 1
       
-      @logger.trace("Adding event document - " + events.to_s)
+      @logger.trace("Adding event document - " + event.to_s)
       @logstash_resizable_event_buffer.add_event_document(document)
 
     end
@@ -109,21 +109,22 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     else
       document = event_hash
     end
+
     return document
   end # def handle_single_event
 
 
   private
-  def convert_value(type, val)
+  def convert_value(type, value)
     type_downcase = type.downcase
     case type_downcase
     when "boolean"
-      v = val.downcase
-      return (v.to_s == 'true' ) ? true : false
+      value_downcase = value.downcase
+      return (value_downcase.to_s == 'true' ) ? true : false
     when "double"
-      return Integer(val) rescue Float(val) rescue val
+      return Integer(value) rescue Float(value) rescue value
     else
-      return val
+      return value
     end
   end
 
