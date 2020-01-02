@@ -44,6 +44,8 @@ class LogstashLoganalyticsOutputConfiguration
 
         elsif custom_log_table_name.empty?
             raise ArgumentError, 'custom_log_table_name should not be empty.' 
+        elsif @key_names > 500
+            raise ArgumentError, 'Azure Loganalytics imits the amount of columns to 500 in each table.' 
 
         end
 
