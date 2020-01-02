@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name = 'logstash-output-azure_loganalytics'
   s.version    =  File.read("VERSION").strip
-  s.authors = ["Yoichi Kawasaki"]
-  s.email = "yoichi.kawasaki@outlook.com"
+  s.authors = ["Microsoft Azure Sentinel"]
+  # s.email = "yoichi.kawasaki@outlook.com"
   s.summary = %q{logstash output plugin to store events into Azure Log Analytics}
   s.description = s.summary
   s.homepage = "http://github.com/yokawasa/logstash-output-azure_loganalytics"
