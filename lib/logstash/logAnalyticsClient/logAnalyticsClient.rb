@@ -11,6 +11,11 @@ class LogAnalyticsClient
     require 'time'
 
     @logstashLoganalyticsConfiguration = logstashLoganalyticsConfiguration
+    print "\n\n^^^^^^^^^^^^^^^^^^^^^^^^\n\n"
+    print @logstashLoganalyticsConfiguration.workspace_id
+    print "\n\n^^^^^^^^^^^^^^^^^^^^^^^^\n\n"
+    print @logstashLoganalyticsConfiguration.endpoint
+    print "\n\n^^^^^^^^^^^^^^^^^^^^^^^^\n\n"
     @uri = sprintf("https://%s.%s/api/logs?api-version=%s", @logstashLoganalyticsConfiguration.workspace_id, @logstashLoganalyticsConfiguration.endpoint, API_VERSION)
 
   end
