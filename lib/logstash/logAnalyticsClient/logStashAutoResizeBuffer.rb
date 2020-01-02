@@ -93,9 +93,9 @@ class LogStashAutoResizeBuffer
             print new_buffer_size
             print "\n\n\n\n&&&&&&&&&&&&&&&&&&&&55555&&&&&&&&&&&&&&&&&&&\n\n\n\n"
             a = new_buffer_size.to_s
-
+            print "\n\n\n\n&&&&&&&&&&&&&&&&&&&&666666666&&&&&&&&&&&&&&&&&&&\n\n\n\n"
             print_message(new_buffer_size.to_s)
-            print "\n\n\n\n&&&&&&&&&&&&&&&&&&&&&&&6666&&&&&&&&&&&&&&&&\n\n\n\n"
+            print "\n\n\n\n&&&&&&&&&&&&&&&&&&&&&&&777777&&&&&&&&&&&&&&&\n\n\n\n"
             change_buffer_size(new_buffer_size)
         end
     end
