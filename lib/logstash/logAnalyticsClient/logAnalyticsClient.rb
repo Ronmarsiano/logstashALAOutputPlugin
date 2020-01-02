@@ -58,7 +58,7 @@ class LogAnalyticsClient
   def signature(date, body_bytesize_length)
     sigs = sprintf("POST\n%d\napplication/json\nx-ms-date:%s\n/api/logs", body_bytesize_length, date)
     utf8_sigs = sigs.encode('utf-8')
-    decoded_shared_key = Base64.decode64(@logstashLoganalyticsConfiguration.shared_key)
+    decoded_shared_key = Base64.decode64(@logstashLoganalyticsConfiguration.workspace_key)
     hmac_sha256_sigs = OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha256'), decoded_shared_key, utf8_sigs)
     encoded_hash = Base64.encode64(hmac_sha256_sigs)
     authorization = sprintf("SharedKey %s:%s", @logstashLoganalyticsConfiguration.workspace_id, encoded_hash)
