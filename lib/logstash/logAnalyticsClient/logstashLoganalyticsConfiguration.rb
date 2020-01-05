@@ -27,11 +27,6 @@ class LogstashLoganalyticsOutputConfiguration
     end
 
     def validate_configuration()
-    
-        print ("\n\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n")
-        print @workspace_key
-        print ("\n\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n")
-
         @key_types.each { |k, v|
             t = v.downcase
             if ( !t.eql?('string') && !t.eql?('double') && !t.eql?('boolean') ) 
