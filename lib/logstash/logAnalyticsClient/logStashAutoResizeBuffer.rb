@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "stud/buffer"
 require "logstash/logAnalyticsClient/logAnalyticsClient"
 require "stud/buffer"

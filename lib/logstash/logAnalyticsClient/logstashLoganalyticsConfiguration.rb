@@ -1,3 +1,4 @@
+# encoding: utf-8
 class LogstashLoganalyticsOutputConfiguration
 
     def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, proxy, logger)
@@ -27,6 +28,10 @@ class LogstashLoganalyticsOutputConfiguration
 
     def validate_configuration()
     
+        print ("\n\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n")
+        print @workspace_key
+        print ("\n\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n")
+
         @key_types.each { |k, v|
             t = v.downcase
             if ( !t.eql?('string') && !t.eql?('double') && !t.eql?('boolean') ) 

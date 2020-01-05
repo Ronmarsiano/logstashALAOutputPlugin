@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "logstash/logAnalyticsClient/logstashLoganalyticsConfiguration"
 require 'rest-client'
 require 'json'
