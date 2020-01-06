@@ -58,8 +58,7 @@ class LogStashAutoResizeBuffer
                 resend_message(documents_json, amount_of_documents)
             end
             rescue Exception => ex
-                @logger.error("Exception in posting data to Azure Loganalytics.\n[Exception: '#{ex}'")
-                @logger.error("Documents(#{amount_of_documents}) failed to be sent.[documents= '#{documents_json}']")
+                @logger.error("Exception in posting data to Azure Loganalytics.\n[Exception: '#{ex}'\nDocuments(#{amount_of_documents}) failed to be sent.[documents= '#{documents_json}']")
             end
     end # end send_message_to_loganalytics
 

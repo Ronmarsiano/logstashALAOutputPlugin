@@ -13,9 +13,6 @@ class LogAnalyticsClient
     @logstashLoganalyticsConfiguration = logstashLoganalyticsConfiguration
     set_proxy(@logstashLoganalyticsConfiguration.proxy)
     @uri = sprintf("https://%s.%s/api/logs?api-version=%s", @logstashLoganalyticsConfiguration.workspace_id, @logstashLoganalyticsConfiguration.endpoint, API_VERSION)
-    print("\n\n\n\n\n**********************************************\n\n\n\n")
-    print (@logstashLoganalyticsConfiguration.endpoint)
-    print("\n\n\n\n\n**********************************************\n\n\n\n")
   end
 
   def 
