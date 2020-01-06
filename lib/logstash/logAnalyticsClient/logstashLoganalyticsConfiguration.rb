@@ -1,7 +1,7 @@
 # encoding: utf-8
 class LogstashLoganalyticsOutputConfiguration
 
-    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='google.comsu.comsa', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, proxy, logger)
+    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, proxy, logger)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
         @custom_log_table_name = custom_log_table_name
@@ -51,7 +51,7 @@ class LogstashLoganalyticsOutputConfiguration
         end
 
         @logger.info("Azure Loganalytics configuration was found valid.")
-
+        
         # If all validation pass then configuration is valid 
         return  true
     end

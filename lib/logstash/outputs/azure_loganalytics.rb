@@ -24,7 +24,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   config :custom_log_table_name, :validate => :string, :required => true
 
   # The service endpoint (Default: ods.opinsights.azure.com)
-  config :endpoint, :validate => :string, :default => 'ods.opinsights.azure.com'
+  config :endpoint, :validate => :string, :default => 'ods.opinssssssights.azure.com'
 
   # The name of the time generated field.
   # Be carefule that the value of field should strictly follow the ISO 8601 format (YYYY-MM-DDThh:mm:ssZ)
