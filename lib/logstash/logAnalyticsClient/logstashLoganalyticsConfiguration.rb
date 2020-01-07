@@ -1,7 +1,7 @@
 # encoding: utf-8
 class LogstashLoganalyticsOutputConfiguration
 
-    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, proxy, logger)
+    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, proxy, retransmition_time, logger)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
         @custom_log_table_name = custom_log_table_name
@@ -16,6 +16,9 @@ class LogstashLoganalyticsOutputConfiguration
         @amount_resizing = amount_resizing
         @proxy = proxy
         @logger = logger
+        @retransmition_time = retransmition_time
+        # Delay between each resending of a message
+        @RETRANSMITION_DELAY = 2
         
         # Maximum of 30 MB per post to Log Analytics Data Collector API. 
         # This is a size limit for a single post. 
@@ -33,8 +36,11 @@ class LogstashLoganalyticsOutputConfiguration
                 raise ArgumentError, "Key type(#{v}) for key(#{k}) must be either string, boolean, or double"
             end
         }
+
+        if @retransmition_time < 0
+            raise ArgumentError, "Setting retransmition_time which sets the time spent for resending each failed messages must be positive integer. [retransmition_time=#{@retransmition_time}]." 
         
-        if @max_items < @MIN_MESSAGE_AMOUNT
+        elsif @max_items < @MIN_MESSAGE_AMOUNT
             raise ArgumentError, "Setting max_items to value must be greater then #{@MIN_MESSAGE_AMOUNT}."
 
         elsif @workspace_id.empty? or @workspace_key.empty? or @custom_log_table_name.empty? 

@@ -55,23 +55,26 @@ class LogStashAutoResizeBuffer
                 @logger.info("Successfully posted #{amount_of_documents} logs into cutom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}].")
             else
                 @logger.error("DataCollector API request failure: error code: #{response.code}, data=>" + (documents.to_json).to_s)
-                resend_message(documents_json, amount_of_documents)
+                resend_message(documents_json, amount_of_documents, @logstashLoganalyticsConfiguration.retransmition_time)
             end
             rescue Exception => ex
                 @logger.error("Exception in posting data to Azure Loganalytics.\n[Exception: '#{ex}'\nDocuments(#{amount_of_documents}) failed to be sent.[documents= '#{documents_json}']")
-                resend_message(documents_json, amount_of_documents)
+                resend_message(documents_json, amount_of_documents, @logstashLoganalyticsConfiguration.retransmition_time)
             end
     end # end send_message_to_loganalytics
 
     private 
-    def resend_message(documents_json, amount_of_documents)
-        @logger.info("Resending #{amount_of_documents} documents as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API in 2 seconds.")
-        sleep 2
-        response = @client.post_data(@logstashLoganalyticsConfiguration.custom_log_table_name, documents_json, @logstashLoganalyticsConfiguration.time_generated_field)
-        if is_successfully_posted(response)
-            @logger.info("Successfully sent #{amount_of_documents} logs into cutom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}] after resending.")
-        else
-            resend_message(documents_json, amount_of_documents)
+    def resend_message(documents_json, amount_of_documents, remaining_duration)
+        if remaining_duration > 0
+            @logger.info("Resending #{amount_of_documents} documents as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API in #{@logstashLoganalyticsConfiguration.RETRANSMITION_DELAY} seconds.")
+            sleep @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY
+            response = @client.post_data(@logstashLoganalyticsConfiguration.custom_log_table_name, documents_json, @logstashLoganalyticsConfiguration.time_generated_field)
+            if is_successfully_posted(response)
+                @logger.info("Successfully sent #{amount_of_documents} logs into cutom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}] after resending.")
+            else
+                @logger.debug("Resnding #{amount_of_documents} documents failed, will try to resend for #{(remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY)}")
+                resend_message(documents_json, amount_of_documents, (remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY))
+            end
         end
     end
 

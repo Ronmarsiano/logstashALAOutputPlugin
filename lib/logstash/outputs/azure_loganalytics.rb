@@ -63,9 +63,12 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # Setting proxy to be used for the Azure Loganalytics REST client
   config :proxy, :validate => :string, :default => ''
 
+  # This will set the amount of time given for retransmiting messages once sending is failed
+  config :retransmition_time, :validate => :number, :default => 0
+
   public
   def register
-    @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @amount_resizing, @max_items, @proxy ,@logger)
+    @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @amount_resizing, @max_items, @proxy, @retransmition_time, @logger)
     
     
     # Validate configuration correcness 
