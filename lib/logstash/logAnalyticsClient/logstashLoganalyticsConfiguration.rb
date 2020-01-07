@@ -17,6 +17,12 @@ class LogstashLoganalyticsOutputConfiguration
         @proxy = proxy
         @logger = logger
         @retransmition_time = retransmition_time
+
+        print "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+        print "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR\n\n"
+        print @retransmition_time
+        print "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+
         # Delay between each resending of a message
         @RETRANSMITION_DELAY = 2
         
