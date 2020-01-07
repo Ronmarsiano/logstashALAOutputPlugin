@@ -64,7 +64,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   config :proxy, :validate => :string, :default => ''
 
   # This will set the amount of time given for retransmiting messages once sending is failed
-  config :retransmition_time, :validate => :number, :default => 0
+  config :retransmition_time, :validate => :number, :default => 10
 
   public
   def register
