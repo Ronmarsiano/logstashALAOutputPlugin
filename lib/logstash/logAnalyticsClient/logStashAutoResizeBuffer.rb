@@ -65,7 +65,9 @@ class LogStashAutoResizeBuffer
 
     private 
     def resend_message(documents_json, amount_of_documents, remaining_duration)
+        print("\n\n\n\n\n RREREEESSSENNNDDDD\n\n\n")
         if remaining_duration > 0
+            print("\n\n\n\n\n 11111111111111RREREEESSSENNNDDDD\n\n\n")
             @logger.info("Resending #{amount_of_documents} documents as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API in #{@logstashLoganalyticsConfiguration.RETRANSMITION_DELAY} seconds.")
             sleep @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY
             response = @client.post_data(@logstashLoganalyticsConfiguration.custom_log_table_name, documents_json, @logstashLoganalyticsConfiguration.time_generated_field)
