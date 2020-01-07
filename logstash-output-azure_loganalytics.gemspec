@@ -17,6 +17,8 @@ Gem::Specification.new do |s|
   # Special flag to let us know this is actually a logstash plugin
   s.metadata = { "logstash_plugin" => "true", "logstash_group" => "output" }
 
+  s.platform = Gem::Platform::JAVA if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
+  
   # Gem dependencies
   s.add_runtime_dependency "rest-client", ">= 1.8.0"
   s.add_runtime_dependency "logstash-core-plugin-api", ">= 1.60", "<= 2.99"
