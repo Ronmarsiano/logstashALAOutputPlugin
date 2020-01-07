@@ -18,11 +18,6 @@ class LogstashLoganalyticsOutputConfiguration
         @logger = logger
         @retransmition_time = retransmition_time
 
-        print "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-        print "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR\n\n"
-        print @retransmition_time
-        print "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-
         # Delay between each resending of a message
         @RETRANSMITION_DELAY = 2
         
@@ -66,6 +61,10 @@ class LogstashLoganalyticsOutputConfiguration
         
         # If all validation pass then configuration is valid 
         return  true
+    end
+
+    def RETRANSMITION_DELAY
+        @RETRANSMITION_DELAY
     end
 
     def MAX_SIZE_BYTES
