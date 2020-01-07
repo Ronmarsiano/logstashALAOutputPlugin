@@ -54,20 +54,11 @@ class LogStashAutoResizeBuffer
             if is_successfully_posted(response)
                 @logger.info("Successfully posted #{amount_of_documents} logs into cutom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}].")
             else
-                print("\n\n\n\n\n $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n\n")
                 @logger.error("DataCollector API request failure: error code: #{response.code}, data=>" + (documents.to_json).to_s)
                 resend_message(documents_json, amount_of_documents, @logstashLoganalyticsConfiguration.retransmition_time)
             end
             rescue Exception => ex
-                print("\n\n\n\n\n ####################################\n\n\n")
                 @logger.error("Exception in posting data to Azure Loganalytics.\n[Exception: '#{ex}'\nDocuments(#{amount_of_documents}) failed to be sent.[documents= '#{documents_json}']")
-                print("\n\n\n\n\n 1111111111111111####################################\n\n\n")
-                print documents_json
-                print "\n\n1111111111111111111111111111111111111111111111111111111111111111111111111111\n\n"
-                print amount_of_documents
-                print "\n\n2222222222222222222222222222222222222222222222222222222222222222\n\n"
-                print @logstashLoganalyticsConfiguration.retransmition_time
-                print "\n\n3333333333333333333333333333333333333333333333333333333333333\n\n"
                 resend_message(documents_json, amount_of_documents, @logstashLoganalyticsConfiguration.retransmition_time)
                 print("\n\n\n\n\n 222222222222222222222223333####################################\n\n\n")
             end
@@ -75,15 +66,14 @@ class LogStashAutoResizeBuffer
 
     private 
     def resend_message(documents_json, amount_of_documents, remaining_duration)
-        print("\n\n\n\n\n RREREEESSSENNNDDDD\n\n\n")
         if remaining_duration > 0
-            print("\n\n\n\n\n 11111111111111RREREEESSSENNNDDDD\n\n\n")
             @logger.info("Resending #{amount_of_documents} documents as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API in #{@logstashLoganalyticsConfiguration.RETRANSMITION_DELAY} seconds.")
             sleep @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY
             response = @client.post_data(@logstashLoganalyticsConfiguration.custom_log_table_name, documents_json, @logstashLoganalyticsConfiguration.time_generated_field)
             if is_successfully_posted(response)
                 @logger.info("Successfully sent #{amount_of_documents} logs into cutom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}] after resending.")
             else
+                print("\n\n\n\n\n %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n\n")
                 @logger.debug("Resnding #{amount_of_documents} documents failed, will try to resend for #{(remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY)}")
                 resend_message(documents_json, amount_of_documents, (remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY))
             end
