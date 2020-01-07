@@ -68,24 +68,22 @@ class LogStashAutoResizeBuffer
     def resend_message(documents_json, amount_of_documents, remaining_duration)
         if remaining_duration > 0
             @logger.info("Resending #{amount_of_documents} documents as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API in #{@logstashLoganalyticsConfiguration.RETRANSMITION_DELAY} seconds.")
-            print "\n\n111111111111111111111111111111111111111111111\n\n\n\n"
             sleep @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY
-            print "\n\n\n222222222222222222222222222222222222222222222222222222222\n\n\n\n"
             begin
                 response = @client.post_data(@logstashLoganalyticsConfiguration.custom_log_table_name, documents_json, @logstashLoganalyticsConfiguration.time_generated_field)
                 if is_successfully_posted(response)
-                    print "\n\n\n44444444444444444444444444444444444444444444444444444444444444444444444444\n\n\n\n"
                     @logger.info("Successfully sent #{amount_of_documents} logs into cutom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}] after resending.")
                 else
-                    print("\n\n\n\n\n %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n\n")
                     @logger.debug("Resnding #{amount_of_documents} documents failed, will try to resend for #{(remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY)}")
                     resend_message(documents_json, amount_of_documents, (remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY))
                 end
-
             rescue Exception => ex
                 @logger.debug("Resnding #{amount_of_documents} documents failed, will try to resend for #{(remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY)}")
                 resend_message(documents_json, amount_of_documents, (remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY))
             end
+        else 
+            @logger.error("Could not resend #{amount_of_documents} documents, message is dropped.")
+            @logger.trace("Documents (#{amount_of_documents}) dropped. [documents_json=#{documents_json}]")
         end
     end
 
