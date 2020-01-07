@@ -5,8 +5,8 @@ Gem::Specification.new do |s|
   # s.email = "yoichi.kawasaki@outlook.com"
   s.summary = %q{logstash output plugin to store events into Azure Log Analytics}
   s.description = s.summary
-  s.homepage = "http://github.com/yokawasa/logstash-output-azure_loganalytics"
-  s.licenses = ["Apache License (2.0)"]
+  # s.homepage = "http://github.com/yokawasa/logstash-output-azure_loganalytics"
+  # s.licenses = ["Apache License (2.0)"]
   s.require_paths = ["lib"]
 
   # Files
