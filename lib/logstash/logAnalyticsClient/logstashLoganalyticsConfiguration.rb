@@ -70,6 +70,10 @@ class LogstashLoganalyticsOutputConfiguration
         @amount_resizing
     end
 
+    def retransmition_time
+        @retransmition_time
+    end
+
     def proxy
         @proxy
     end
