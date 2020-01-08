@@ -1,6 +1,6 @@
 # encoding: utf-8
 require "logstash/devutils/rspec/spec_helper"
-require "logstash/outputs/logstash-output-azure_loganalytics"
+require "logstash/outputs/logstash-output-azure-loganalytics"
 require "logstash/codecs/plain"
 require "logstash/event"
 
