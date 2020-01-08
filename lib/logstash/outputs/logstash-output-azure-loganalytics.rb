@@ -33,6 +33,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # The list of key names in in-coming record that you want to submit to Log Analytics
   config :key_names, :validate => :array, :default => []
 
+  
   # The list of data types for each column as which you want to store in Log Analytics (`string`, `boolean`, or `double`)
   # - The key names in `key_types` param must be included in `key_names` param. The column data whose key isn't included in  `key_names` is treated as `string` data type.
   # - Multiple key value entries are separated by `spaces` rather than commas 
