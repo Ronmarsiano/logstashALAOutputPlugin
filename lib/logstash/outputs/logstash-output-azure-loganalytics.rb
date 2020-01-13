@@ -68,7 +68,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   config :retransmition_time, :validate => :number, :default => 10
 
   # Optional to overide the resorce ID field on the workspace table
-  config :azure_resource_id, :validate => :string, default => ''
+  config :azure_resource_id, :validate => :string, :default => ''
 
   public
   def register
