@@ -30,7 +30,8 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # Be carefule that the value of field should strictly follow the ISO 8601 format (YYYY-MM-DDThh:mm:ssZ)
   config :time_generated_field, :validate => :string, :default => ''
 
-  # The list of key names in in-coming record that you want to submit to Log Analytics
+  # The list of key names in in-coming record that you want to submit to Log Analytics leaving the keys empty will
+  # send all the data into Log analtyics 
   config :key_names, :validate => :array, :default => []
 
   
