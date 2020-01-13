@@ -70,7 +70,7 @@ class LogStashAutoResizeBuffer
             @logger.info("Resending #{amount_of_documents} documents as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API in #{@logstashLoganalyticsConfiguration.RETRANSMITION_DELAY} seconds.")
             sleep @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY
             begin
-                response = @client.post_data(@logstashLoganalyticsConfiguration.custom_log_table_name, documents_json, @logstashLoganalyticsConfiguration.time_generated_field)
+                response = @client.post_data(documents_json)
                 if is_successfully_posted(response)
                     @logger.info("Successfully sent #{amount_of_documents} logs into cutom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}] after resending.")
                 else
