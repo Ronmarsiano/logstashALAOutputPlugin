@@ -19,7 +19,7 @@ class LogAnalyticsClient
     post_data(body)
     raise ConfigError, 'no json_records' if body.empty?
 
-    header = get_header( @logstashLoganalyticsConfiguration.time_generated_field, body.bytesize)
+    header = get_header(body.bytesize)
     response = RestClient.post(@uri, body, header)
 
     return response
