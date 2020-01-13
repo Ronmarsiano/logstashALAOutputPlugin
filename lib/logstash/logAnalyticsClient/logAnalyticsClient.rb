@@ -34,7 +34,8 @@ class LogAnalyticsClient
         'Authorization' => signature(date, body_bytesize_length),
         'Log-Type' => custom_log_table_name,
         'x-ms-date' => date,
-        'time-generated-field' => record_timestamp
+        'time-generated-field' => record_timestamp,
+        '_ResourceId' => '/subscriptions/78ffdd91-611e-402f-8a7e-7ab0b209b7c6/resourcegroups/cef/providers/microsoft.compute/virtualmachines/syslog-1'
       }
   end
 
