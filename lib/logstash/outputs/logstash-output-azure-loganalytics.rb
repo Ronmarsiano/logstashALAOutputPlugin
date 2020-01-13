@@ -67,9 +67,12 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # This will set the amount of time given for retransmiting messages once sending is failed
   config :retransmition_time, :validate => :number, :default => 10
 
+  # Optional to overide the resorce ID field on the workspace table
+  config :azure_resource_id, :validate => :string, default => 0
+
   public
   def register
-    @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @amount_resizing, @max_items, @proxy, @retransmition_time, @logger)
+    @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @amount_resizing, @max_items, @proxy, @retransmition_time, @azure_resource_id, @logger)
     
     
     # Validate configuration correcness 

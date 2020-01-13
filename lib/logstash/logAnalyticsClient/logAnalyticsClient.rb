@@ -16,26 +16,26 @@ class LogAnalyticsClient
   end
 
   def 
-    post_data(custom_log_table_name, body, record_timestamp ='')
+    post_data(body)
     raise ConfigError, 'no json_records' if body.empty?
 
-    header = get_header(custom_log_table_name, record_timestamp, body.bytesize)
+    header = get_header( @logstashLoganalyticsConfiguration.time_generated_field, body.bytesize)
     response = RestClient.post(@uri, body, header)
 
     return response
   end
 
   def 
-    get_header(custom_log_table_name,record_timestamp, body_bytesize_length)
+    get_header(body_bytesize_length)
       date = rfc1123date()
 
       return {
         'Content-Type' => 'application/json',
         'Authorization' => signature(date, body_bytesize_length),
-        'Log-Type' => custom_log_table_name,
+        'Log-Type' => @logstashLoganalyticsConfiguration.custom_log_table_name,
         'x-ms-date' => date,
-        'time-generated-field' => record_timestamp,
-        'x-ms-AzureResourceId' => '/subscriptions/78ffdd91-611e-402f-8a7e-7ab0b209b7c6/resourcegroups/cef/providers/microsoft.compute/virtualmachines/syslog-1'
+        'time-generated-field' =>  @logstashLoganalyticsConfiguration.time_generated_field,
+        'x-ms-AzureResourceId' => @logstashLoganalyticsConfiguration.azure_resource_id
       }
   end
 

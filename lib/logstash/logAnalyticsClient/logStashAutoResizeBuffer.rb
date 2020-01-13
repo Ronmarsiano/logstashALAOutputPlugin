@@ -50,7 +50,7 @@ class LogStashAutoResizeBuffer
     def send_message_to_loganalytics(documents_json, amount_of_documents)
         begin
             @logger.debug("Posting log batch (log count: #{amount_of_documents}) as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API.")
-            response = @client.post_data(@logstashLoganalyticsConfiguration.custom_log_table_name, documents_json, @logstashLoganalyticsConfiguration.time_generated_field)
+            response = @client.post_data(documents_json)
             if is_successfully_posted(response)
                 @logger.info("Successfully posted #{amount_of_documents} logs into cutom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}].")
             else

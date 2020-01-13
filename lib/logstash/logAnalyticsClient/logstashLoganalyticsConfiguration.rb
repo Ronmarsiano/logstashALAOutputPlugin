@@ -1,7 +1,7 @@
 # encoding: utf-8
 class LogstashLoganalyticsOutputConfiguration
 
-    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, proxy, retransmition_time, logger)
+    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, proxy, retransmition_time, azure_resource_id='', logger)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
         @custom_log_table_name = custom_log_table_name
@@ -17,6 +17,7 @@ class LogstashLoganalyticsOutputConfiguration
         @proxy = proxy
         @logger = logger
         @retransmition_time = retransmition_time
+        @azure_resource_id = azure_resource_id
 
         # Delay between each resending of a message
         @RETRANSMITION_DELAY = 2
@@ -28,6 +29,7 @@ class LogstashLoganalyticsOutputConfiguration
 
         # Taking 4K saftey buffer
         @MAX_SIZE_BYTES = @loganalytics_api_data_limit - 4000
+
     end
 
     def validate_configuration()
@@ -61,6 +63,10 @@ class LogstashLoganalyticsOutputConfiguration
         
         # If all validation pass then configuration is valid 
         return  true
+    end
+
+    def azure_resource_id
+        @azure_resource_id
     end
 
     def RETRANSMITION_DELAY
