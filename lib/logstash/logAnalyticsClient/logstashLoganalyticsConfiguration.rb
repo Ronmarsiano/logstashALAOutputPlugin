@@ -1,7 +1,7 @@
 # encoding: utf-8
 class LogstashLoganalyticsOutputConfiguration
 
-    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, proxy, retransmition_time, azure_resource_id='', logger)
+    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, azure_resource_id='', proxy, retransmition_time, logger)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
         @custom_log_table_name = custom_log_table_name
