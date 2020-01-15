@@ -42,7 +42,7 @@ class LogstashLoganalyticsOutputConfiguration
         
         # If all validation pass then configuration is valid 
         return  true
-    end
+    end # def validate_configuration
 
     def azure_resource_id
         @azure_resource_id
@@ -155,5 +155,4 @@ class LogstashLoganalyticsOutputConfiguration
     def retransmition_time=(new_retransmition_time)
         @retransmition_time = new_retransmition_time
     end
-    
 end

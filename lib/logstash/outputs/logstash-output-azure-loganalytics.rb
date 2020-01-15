@@ -30,8 +30,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # Be carefule that the value of field should strictly follow the ISO 8601 format (YYYY-MM-DDThh:mm:ssZ)
   config :time_generated_field, :validate => :string, :default => ''
 
-  # The list of key names in in-coming record that you want to submit to Log Analytics leaving the keys empty will
-  # send all the data into Log analtyics 
+  # Subset of keys to send to the Azure Loganalytics workspace
   config :key_names, :validate => :array, :default => []
 
   # # Max number of items to buffer before flushing. Default 50.
@@ -74,8 +73,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
   end # def register
 
-
-  public
   def multi_receive(events)
     events.each do |event|
       # creating document from event
@@ -88,12 +85,14 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
     end
   end # def multi_receive
-
+  
+  #private 
+  private
 
   # In case that the user has defined key_names meaning that he would like to a subset of the data,
   # we would like to insert only thoes keys.
   # If no keys were defined we will send all the data 
-  private 
+   
   def create_event_document(event)
     document = {}
     event_hash = event.to_hash()

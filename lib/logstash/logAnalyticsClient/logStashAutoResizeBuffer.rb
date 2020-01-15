@@ -17,7 +17,7 @@ class LogStashAutoResizeBuffer
           :max_interval => logstashLoganalyticsConfiguration.plugin_flush_interval,
           :logger => @logstashLoganalyticsConfiguration.logger
         )
-    end
+    end # initialize
 
     public
     def add_event_document(event_document)
@@ -26,7 +26,6 @@ class LogStashAutoResizeBuffer
 
 
     # called from Stud::Buffer#buffer_flush when there are events to flush
-    public
     def flush (documents, close=false)
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
@@ -45,6 +44,18 @@ class LogStashAutoResizeBuffer
         send_message_to_loganalytics(documents_json, documents.length)
 
     end # def flush
+
+    def change_buffer_size(new_size)
+        # Change buffer size only if it's needed
+        if @buffer_config[:max_items] != new_size
+            old_buffer_size = @buffer_config[:max_items]
+            @buffer_config[:max_items] = new_size
+            @logstashLoganalyticsConfiguration.max_items = new_size
+            @logger.info("Changing buffer size.[configuration='#{old_buffer_size}' , new_size='#{new_size}']")
+        else
+            @logger.info("Buffer size wasn't changed.[configuration='#{old_buffer_size}' , new_size='#{new_size}']")
+        end
+    end # def change_buffer_size
 
     private 
     def send_message_to_loganalytics(documents_json, amount_of_documents)
@@ -115,18 +126,4 @@ class LogStashAutoResizeBuffer
     def is_successfully_posted(response)
       return (response.code == 200) ? true : false
     end
-
-    public 
-    def change_buffer_size(new_size)
-        # Change buffer size only if it's needed
-        if @buffer_config[:max_items] != new_size
-            old_buffer_size = @buffer_config[:max_items]
-            @buffer_config[:max_items] = new_size
-            @logstashLoganalyticsConfiguration.max_items = new_size
-            @logger.info("Changing buffer size.[configuration='#{old_buffer_size}' , new_size='#{new_size}']")
-        else
-            @logger.info("Buffer size wasn't changed.[configuration='#{old_buffer_size}' , new_size='#{new_size}']")
-        end
-    end
-
 end
