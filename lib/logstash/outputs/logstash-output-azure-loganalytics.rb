@@ -34,18 +34,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # send all the data into Log analtyics 
   config :key_names, :validate => :array, :default => []
 
-  
-  # The list of data types for each column as which you want to store in Log Analytics (`string`, `boolean`, or `double`)
-  # - The key names in `key_types` param must be included in `key_names` param. The column data whose key isn't included in  `key_names` is treated as `string` data type.
-  # - Multiple key value entries are separated by `spaces` rather than commas 
-  #   See also https://www.elastic.co/guide/en/logstash/current/configuration-file-structure.html#hash
-  # - If you want to store a column as datetime or guid data format, set `string` for the column ( the value of the column should be `YYYY-MM-DDThh:mm:ssZ format` if it's `datetime`, and `GUID format` if it's `guid`).
-  # - In case that `key_types` param are not specified, all columns that you want to submit ( you choose with `key_names` param ) are stored as `string` data type in Log Analytics.
-  # Example:
-  #   key_names => ['key1','key2','key3','key4',...]
-  #   key_types => {'key1'=>'string' 'key2'=>'string' 'key3'=>'boolean' 'key4'=>'double' ...}
-  config :key_types, :validate => :hash, :default => {}
-
   # # Max number of items to buffer before flushing. Default 50.
   # config :flush_items, :validate => :number, :default => 50
   
@@ -58,7 +46,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # This will trigger message amount resizing in a REST request to LA
   config :amount_resizing, :validate => :boolean, :default => true
 
-  # Setting the default amount of messages sent
+  # Setting the default amount of messages sent                                                                                                    
   # it this is set with amount_resizing=false --> each message will have max_items
   config :max_items, :validate => :number, :default => 2000
 
@@ -111,11 +99,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
       # Get the intersection of key_names and keys of event_hash
       keys_intersection = @key_names & event_hash.keys
       keys_intersection.each do |key|
-        if @key_types.include?(key)
-          document[key] = convert_value(@key_types[key], event_hash[key])
-        else
-          document[key] = event_hash[key]
-        end
+        document[key] = event_hash[key]
       end
     else
       document = event_hash
@@ -123,21 +107,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
     return document
   end # def handle_single_event
-
-  # 
-  private
-  def convert_value(type, value)
-    type_downcase = type.downcase
-    case type_downcase
-    when "boolean"
-      value_downcase = value.downcase
-      return (value_downcase.to_s == 'true' ) ? true : false
-    when "double"
-      return Integer(value) rescue Float(value) rescue value
-    else
-      return value
-    end
-  end
 
   # Building the logstash object configuration from the ouput cofiguration provided by the user
   # Return LogstashLoganalyticsOutputConfiguration populated with the configuration values
@@ -147,7 +116,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     logstash_configuration.endpoint = @endpoint
     logstash_configuration.time_generated_field = @time_generated_field
     logstash_configuration.key_names = @key_names
-    logstash_configuration.key_types = @key_types
     logstash_configuration.plugin_flush_interval = @plugin_flush_interval
     logstash_configuration.decrease_factor = @decrease_factor
     logstash_configuration.amount_resizing = @amount_resizing

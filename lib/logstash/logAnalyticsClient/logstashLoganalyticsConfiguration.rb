@@ -1,6 +1,5 @@
 # encoding: utf-8
 class LogstashLoganalyticsOutputConfiguration
-                                                                        #####
     def initialize(workspace_id, workspace_key, custom_log_table_name, logger)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
@@ -20,13 +19,6 @@ class LogstashLoganalyticsOutputConfiguration
     end
 
     def validate_configuration()
-        @key_types.each { |k, v|
-            t = v.downcase
-            if ( !t.eql?('string') && !t.eql?('double') && !t.eql?('boolean') ) 
-                raise ArgumentError, "Key type(#{v}) for key(#{k}) must be either string, boolean, or double"
-            end
-        }
-
         if @retransmition_time < 0
             raise ArgumentError, "Setting retransmition_time which sets the time spent for resending each failed messages must be positive integer. [retransmition_time=#{@retransmition_time}]." 
         
@@ -108,10 +100,6 @@ class LogstashLoganalyticsOutputConfiguration
         @key_names
     end
 
-    def key_types
-        @key_types
-    end
-
     def max_items
         @max_items
     end
@@ -138,10 +126,6 @@ class LogstashLoganalyticsOutputConfiguration
 
     def key_names=(new_key_names)
         @key_names = new_key_names
-    end
-
-    def key_types=(new_key_types)
-        @key_types = new_key_types
     end
 
     def plugin_flush_interval=(new_plugin_flush_interval)
