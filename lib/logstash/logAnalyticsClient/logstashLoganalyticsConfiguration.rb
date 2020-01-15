@@ -1,23 +1,11 @@
 # encoding: utf-8
 class LogstashLoganalyticsOutputConfiguration
-
-    def initialize(workspace_id, workspace_key, custom_log_table_name, endpoint='ods.opinsights.azure.com', time_generated_field='', key_names=[], key_types={}, plugin_flush_interval=5, decrease_factor= 100, amount_resizing=true, max_items=2000, azure_resource_id='', proxy, retransmition_time, logger)
+                                                                        #####
+    def initialize(workspace_id, workspace_key, custom_log_table_name, logger)
         @workspace_id = workspace_id
         @workspace_key = workspace_key
         @custom_log_table_name = custom_log_table_name
-        @endpoint = endpoint
-        @time_generated_field = time_generated_field
-        @key_names = key_names
-        @key_types = key_types
-        @plugin_flush_interval = plugin_flush_interval
-        @MIN_MESSAGE_AMOUNT = 100 
-        @max_items = max_items
-        @decrease_factor = decrease_factor
-        @amount_resizing = amount_resizing
-        @proxy = proxy
         @logger = logger
-        @retransmition_time = retransmition_time
-        @azure_resource_id = azure_resource_id
 
         # Delay between each resending of a message
         @RETRANSMITION_DELAY = 2
@@ -29,7 +17,6 @@ class LogstashLoganalyticsOutputConfiguration
 
         # Taking 4K saftey buffer
         @MAX_SIZE_BYTES = @loganalytics_api_data_limit - 4000
-
     end
 
     def validate_configuration()
@@ -129,10 +116,6 @@ class LogstashLoganalyticsOutputConfiguration
         @max_items
     end
 
-    def max_items=(new_max_items)
-        @max_items = new_max_items
-    end
-
     def plugin_flush_interval
         @plugin_flush_interval
     end
@@ -140,4 +123,53 @@ class LogstashLoganalyticsOutputConfiguration
     def MIN_MESSAGE_AMOUNT
         @MIN_MESSAGE_AMOUNT
     end
+    
+    def max_items=(new_max_items)
+        @max_items = new_max_items
+    end
+
+    def endpoint=(new_endpoint)
+        @endpoint = new_endpoint
+    end
+
+    def time_generated_field=(new_time_generated_field)
+        @time_generated_field = new_time_generated_field
+    end
+
+    def key_names=(new_key_names)
+        @key_names = new_key_names
+    end
+
+    def key_types=(new_key_types)
+        @key_types = new_key_types
+    end
+
+    def plugin_flush_interval=(new_plugin_flush_interval)
+        @plugin_flush_interval = new_plugin_flush_interval
+    end
+    
+    def decrease_factor=(new_decrease_factor)
+        @decrease_factor = new_decrease_factor
+    end
+
+    def amount_resizing=(new_amount_resizing)
+        @amount_resizing = new_amount_resizing
+    end
+
+    def max_items=(new_max_items)
+        @max_items = new_max_items
+    end
+    
+    def azure_resource_id=(new_azure_resource_id)
+        @azure_resource_id = new_azure_resource_id
+    end
+    
+    def proxy=(new_proxy)
+        @proxy = new_proxy
+    end
+
+    def retransmition_time=(new_retransmition_time)
+        @retransmition_time = new_retransmition_time
+    end
+    
 end

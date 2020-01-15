@@ -68,14 +68,13 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # This will set the amount of time given for retransmiting messages once sending is failed
   config :retransmition_time, :validate => :number, :default => 10
 
-  # Optional to overide the resorce ID field on the workspace table
+  # Optional to overide the resorce ID field on the workspace table.
+  # Resource ID provided must be a valid resource ID on azure 
   config :azure_resource_id, :validate => :string, :default => ''
 
   public
   def register
-    @logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @endpoint, @time_generated_field, @key_names, @key_types, @plugin_flush_interval, @decrease_factor, @amount_resizing, @max_items, @azure_resource_id, @proxy, @retransmition_time, @logger)
-    
-    
+    @logstash_configuration= build_logstash_configuration()
     # Validate configuration correcness 
     @logstash_configuration.validate_configuration()
     @logger.info("Logstash Azure Loganalytics output plugin configuration was found valid")
@@ -101,6 +100,8 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
 
     end
   end # def multi_receive
+
+
 
   private 
   def handle_single_event(event)
@@ -136,6 +137,26 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     else
       return value
     end
+  end
+
+  # Building the logstash object configuration from the ouput cofiguration provided by the user
+  # Return LogstashLoganalyticsOutputConfiguration populated with the configuration values
+  private
+  def build_logstash_configuration()
+    logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @logger)    
+    logstash_configuration.endpoint = @endpoint
+    logstash_configuration.time_generated_field = @time_generated_field
+    logstash_configuration.key_names = @key_names
+    logstash_configuration.key_types = @key_types
+    logstash_configuration.plugin_flush_interval = @plugin_flush_interval
+    logstash_configuration.decrease_factor = @decrease_factor
+    logstash_configuration.amount_resizing = @amount_resizing
+    logstash_configuration.max_items = @max_items
+    logstash_configuration.azure_resource_id = @azure_resource_id
+    logstash_configuration.proxy = @proxy
+    logstash_configuration.retransmition_time = @retransmition_time
+    
+    return logstash_configuration
   end
 
 end # class LogStash::Outputs::AzureLogAnalytics
