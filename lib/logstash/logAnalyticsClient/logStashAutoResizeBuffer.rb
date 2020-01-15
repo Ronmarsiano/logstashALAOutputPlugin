@@ -4,6 +4,8 @@ require "logstash/logAnalyticsClient/logAnalyticsClient"
 require "stud/buffer"
 require "logstash/logAnalyticsClient/logstashLoganalyticsConfiguration"
 
+# LogStashAutoResizeBuffer class setting a resizable buffer which is flushed periodically
+# The buffer resize itslef according to Azure Loganalytics  and configuration limitations
 class LogStashAutoResizeBuffer
     include Stud::Buffer
 
@@ -21,11 +23,13 @@ class LogStashAutoResizeBuffer
     # Public methods
     public
 
+    # Adding an event document into the buffer
     def add_event_document(event_document)
         buffer_receive(event_document)
     end # def add_event_document
 
-    # called from Stud::Buffer#buffer_flush when there are events to flush
+    # Flushing all buffer content to Azure Loganalytics.
+    # Called from Stud::Buffer#buffer_flush when there are events to flush
     def flush (documents, close=false)
         # Skip in case there are no candidate documents to deliver
         if documents.length < 1
