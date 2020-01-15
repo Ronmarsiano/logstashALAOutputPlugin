@@ -79,7 +79,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   def multi_receive(events)
     events.each do |event|
       # creating document from event
-      document = handle_single_event(event)
+      document = create_event_document(event)
       # Skip if document doesn't contain any items  
       next if (document.keys).length < 1
       
@@ -90,9 +90,11 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   end # def multi_receive
 
 
-
+  # In case that the user has defined key_names meaning that he would like to a subset of the data,
+  # we would like to insert only thoes keys.
+  # If no keys were defined we will send all the data 
   private 
-  def handle_single_event(event)
+  def create_event_document(event)
     document = {}
     event_hash = event.to_hash()
     if @key_names.length > 0
@@ -106,11 +108,10 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     end
 
     return document
-  end # def handle_single_event
+  end # def create_event_document
 
   # Building the logstash object configuration from the ouput cofiguration provided by the user
   # Return LogstashLoganalyticsOutputConfiguration populated with the configuration values
-  private
   def build_logstash_configuration()
     logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @logger)    
     logstash_configuration.endpoint = @endpoint
@@ -125,6 +126,6 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     logstash_configuration.retransmition_time = @retransmition_time
     
     return logstash_configuration
-  end
+  end # def build_logstash_configuration
 
 end # class LogStash::Outputs::AzureLogAnalytics
