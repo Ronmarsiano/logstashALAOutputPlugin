@@ -124,7 +124,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     return document
   end # def handle_single_event
 
-
+  # 
   private
   def convert_value(type, value)
     type_downcase = type.downcase

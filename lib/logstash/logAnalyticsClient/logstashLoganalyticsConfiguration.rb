@@ -9,7 +9,7 @@ class LogstashLoganalyticsOutputConfiguration
 
         # Delay between each resending of a message
         @RETRANSMITION_DELAY = 2
-        
+        @MIN_MESSAGE_AMOUNT = 100
         # Maximum of 30 MB per post to Log Analytics Data Collector API. 
         # This is a size limit for a single post. 
         # If the data from a single post that exceeds 30 MB, you should split it.
