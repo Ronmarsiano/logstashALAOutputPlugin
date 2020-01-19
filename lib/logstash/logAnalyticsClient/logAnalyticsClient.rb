@@ -13,43 +13,50 @@ class LogAnalyticsClient
     @logstashLoganalyticsConfiguration = logstashLoganalyticsConfiguration
     set_proxy(@logstashLoganalyticsConfiguration.proxy)
     @uri = sprintf("https://%s.%s/api/logs?api-version=%s", @logstashLoganalyticsConfiguration.workspace_id, @logstashLoganalyticsConfiguration.endpoint, API_VERSION)
-  end
+  end # def initialize
 
-  def 
-    post_data(body)
+
+  # Post the given json to Azure Loganalytics
+  def post_data(body)
     raise ConfigError, 'no json_records' if body.empty?
-
+    # Create REST request header
     header = get_header(body.bytesize)
+    # Post REST request 
     response = RestClient.post(@uri, body, header)
 
     return response
-  end
+  end # def post_data
 
-  def 
-    get_header(body_bytesize_length)
-      date = rfc1123date()
+  private 
 
-      return {
-        'Content-Type' => 'application/json',
-        'Authorization' => signature(date, body_bytesize_length),
-        'Log-Type' => @logstashLoganalyticsConfiguration.custom_log_table_name,
-        'x-ms-date' => date,
-        'time-generated-field' =>  @logstashLoganalyticsConfiguration.time_generated_field,
-        'x-ms-AzureResourceId' => @logstashLoganalyticsConfiguration.azure_resource_id
-      }
-  end
+  # Create a header for the given length 
+  def get_header(body_bytesize_length)
+    # We would like each request to be sent with the current time
+    date = rfc1123date()
+
+    return {
+      'Content-Type' => 'application/json',
+      'Authorization' => signature(date, body_bytesize_length),
+      'Log-Type' => @logstashLoganalyticsConfiguration.custom_log_table_name,
+      'x-ms-date' => date,
+      'time-generated-field' =>  @logstashLoganalyticsConfiguration.time_generated_field,
+      'x-ms-AzureResourceId' => @logstashLoganalyticsConfiguration.azure_resource_id
+    }
+  end # def get_header
 
   # Setting proxy for the REST client.
   # This option is not used in the output plugin and will be used 
   #  
   def set_proxy(proxy='')
     RestClient.proxy = proxy.empty? ? ENV['http_proxy'] : proxy
-  end
+  end # def set_proxy
 
+  # Return the current data 
   def rfc1123date()
     current_time = Time.now
     current_time.httpdate()
-  end
+    return current_time
+  end # def rfc1123date
 
   def signature(date, body_bytesize_length)
     sigs = sprintf("POST\n%d\napplication/json\nx-ms-date:%s\n/api/logs", body_bytesize_length, date)
