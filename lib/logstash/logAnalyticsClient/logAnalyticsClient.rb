@@ -59,7 +59,7 @@ class LogAnalyticsClient
   def rfc1123date()
     current_time = Time.now
     current_time.httpdate()
-    return current_time
+    # return current_time
   end # def rfc1123date
 
   def signature(date, body_bytesize_length)
