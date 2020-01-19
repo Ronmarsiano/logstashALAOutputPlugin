@@ -34,6 +34,10 @@ class LogAnalyticsClient
     # We would like each request to be sent with the current time
     date = rfc1123date()
 
+    print "\n\n\n\nData date date \n\n\n\n"
+    print date
+    print "\n\n\n\nData date date \n\n\n\n"
+
     return {
       'Content-Type' => 'application/json',
       'Authorization' => signature(date, body_bytesize_length),
@@ -55,7 +59,6 @@ class LogAnalyticsClient
   def rfc1123date()
     current_time = Time.now
     current_time.httpdate()
-    return current_time
   end # def rfc1123date
 
   def signature(date, body_bytesize_length)
