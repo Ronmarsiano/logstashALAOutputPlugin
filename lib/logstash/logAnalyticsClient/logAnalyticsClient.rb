@@ -34,10 +34,6 @@ class LogAnalyticsClient
     # We would like each request to be sent with the current time
     date = rfc1123date()
 
-    print "\n\n\n\nData date date \n\n\n\n"
-    print date
-    print "\n\n\n\nData date date \n\n\n\n"
-
     return {
       'Content-Type' => 'application/json',
       'Authorization' => signature(date, body_bytesize_length),
@@ -58,8 +54,8 @@ class LogAnalyticsClient
   # Return the current data 
   def rfc1123date()
     current_time = Time.now
+    
     return current_time.httpdate()
-    # return current_time
   end # def rfc1123date
 
   def signature(date, body_bytesize_length)
@@ -69,6 +65,8 @@ class LogAnalyticsClient
     hmac_sha256_sigs = OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha256'), decoded_shared_key, utf8_sigs)
     encoded_hash = Base64.encode64(hmac_sha256_sigs)
     authorization = sprintf("SharedKey %s:%s", @logstashLoganalyticsConfiguration.workspace_id, encoded_hash)
-  end
+    
+    return authorization
+  end # def signature
 
 end # end of class
