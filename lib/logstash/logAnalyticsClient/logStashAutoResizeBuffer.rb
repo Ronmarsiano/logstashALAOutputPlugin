@@ -106,9 +106,9 @@ class LogStashAutoResizeBuffer
         if  amount_of_documents >= @logstashLoganalyticsConfiguration.max_items
             # if doubling the size wouldn't exceed the API limit
             if ((2 * @logstashLoganalyticsConfiguration.max_items) * average_document_size) < @logstashLoganalyticsConfiguration.MAX_SIZE_BYTES
-                new_buffer_size = 2 * @logstashLoganalyticsConfiguration.max_items
+                new_buffer_size = 2 * @logstashLoganalyticsConfiguration.max_items - 100
             else
-                new_buffer_size = @logstashLoganalyticsConfiguration.MAX_SIZE_BYTES / average_document_size
+                new_buffer_size = @logstashLoganalyticsConfiguration.MAX_SIZE_BYTES / average_document_size - 100
             end
 
         # We would like to decrease the window but not more then the MIN_MESSAGE_AMOUNT
