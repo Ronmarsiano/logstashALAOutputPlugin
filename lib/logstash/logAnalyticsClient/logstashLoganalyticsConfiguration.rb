@@ -15,7 +15,7 @@ class LogstashLoganalyticsOutputConfiguration
         @loganalytics_api_data_limit = 30 * 1000 * 1000
 
         # Taking 4K saftey buffer
-        @MAX_SIZE_BYTES = @loganalytics_api_data_limit - 8000
+        @MAX_SIZE_BYTES = @loganalytics_api_data_limit - 10000
     end
 
     def validate_configuration()
