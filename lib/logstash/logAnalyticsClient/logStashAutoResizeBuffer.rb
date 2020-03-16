@@ -44,15 +44,16 @@ class LogStashAutoResizeBuffer
             # Resizing the amount of messages according to size of message recived and amount of messages
             change_message_limit_size(documents.length, documents_json.bytesize)
         end
-        send_message_to_loganalytics(documents_json, documents.length, documents)
+        send_message_to_loganalytics(documents_json, documents)
     end # def flush
 
     # Private methods 
     private 
 
     # Send documents_json to Azure Loganalytics  
-    def send_message_to_loganalytics(documents_json, amount_of_documents, documents)
+    def send_message_to_loganalytics(documents_json, documents)
         begin
+            amount_of_documents = documents.length
             @logger.debug("Posting log batch (log count: #{amount_of_documents}) as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API.")
             response = @client.post_data(documents_json)
             if is_successfully_posted(response)
@@ -63,15 +64,15 @@ class LogStashAutoResizeBuffer
             end
             rescue Exception => ex
                 @logger.error("Exception in posting data to Azure Loganalytics.\n[Exception: '#{ex}]'")
-                @logger.error("Exception class \n[Exception Class: '#{ex.class}]'")
                 @logger.trace("Exception in posting data to Azure Loganalytics.[amount_of_documents=#{amount_of_documents} documents=#{documents_json}]")
-                resend_message(documents_json, amount_of_documents, @logstashLoganalyticsConfiguration.retransmition_time)
+                resend_message(documents_json, documents, @logstashLoganalyticsConfiguration.retransmition_time)
             end
     end # end send_message_to_loganalytics
 
     # If sending the message toAzure Loganalytics fails we would like to retry to send it again.
     # We would like to do it untill we reached to the duration 
-    def resend_message(documents_json, amount_of_documents, remaining_duration)
+    def resend_message(documents_json, documents, remaining_duration)
+        amount_of_documents = documents.length
         if remaining_duration > 0
             @logger.info("Resending #{amount_of_documents} documents as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API in #{@logstashLoganalyticsConfiguration.RETRANSMITION_DELAY} seconds.")
             sleep @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY
