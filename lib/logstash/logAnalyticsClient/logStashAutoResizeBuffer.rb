@@ -44,14 +44,14 @@ class LogStashAutoResizeBuffer
             # Resizing the amount of messages according to size of message recived and amount of messages
             change_message_limit_size(documents.length, documents_json.bytesize)
         end
-        send_message_to_loganalytics(documents_json, documents.length)
+        send_message_to_loganalytics(documents_json, documents.length, documents)
     end # def flush
 
     # Private methods 
     private 
 
     # Send documents_json to Azure Loganalytics  
-    def send_message_to_loganalytics(documents_json, amount_of_documents)
+    def send_message_to_loganalytics(documents_json, amount_of_documents, documents)
         begin
             @logger.debug("Posting log batch (log count: #{amount_of_documents}) as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API.")
             response = @client.post_data(documents_json)
@@ -63,6 +63,7 @@ class LogStashAutoResizeBuffer
             end
             rescue Exception => ex
                 @logger.error("Exception in posting data to Azure Loganalytics.\n[Exception: '#{ex}]'")
+                @logger.error("Exception class \n[Exception Class: '#{ex.class}]'")
                 @logger.trace("Exception in posting data to Azure Loganalytics.[amount_of_documents=#{amount_of_documents} documents=#{documents_json}]")
                 resend_message(documents_json, amount_of_documents, @logstashLoganalyticsConfiguration.retransmition_time)
             end
