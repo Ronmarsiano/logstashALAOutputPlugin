@@ -157,4 +157,3 @@ Once you're done, you can use the logstash API to undo your log level changes:
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/yokawasa/logstash-output-azure-loganalytics.

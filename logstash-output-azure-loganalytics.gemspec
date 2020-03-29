@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.summary = %q{logstash output plugin to store events into Azure Log Analytics}
   s.description = s.summary
   s.homepage = "http://https://github.com/Azure/Azure-Sentinel"
-  # s.licenses = ["Apache License (2.0)"]
+  s.licenses = ["Apache License (2.0)"]
   s.require_paths = ["lib"]
 
   # Files
