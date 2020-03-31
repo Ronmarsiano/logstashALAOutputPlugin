@@ -1,11 +1,11 @@
 Gem::Specification.new do |s|
-  s.name = 'logstash-output-azure-loganalytics'
+  s.name = 'logstash-output-azure_loganalytics'
   s.version    =  File.read("VERSION").strip
-  s.authors = ["Microsoft Azure Sentinel"]
-  s.email       = 'ronmarsiano@gmail.com'
+  s.authors = ["Yoichi Kawasaki"]
+  s.email = "yoichi.kawasaki@outlook.com"
   s.summary = %q{logstash output plugin to store events into Azure Log Analytics}
   s.description = s.summary
-  s.homepage = "http://https://github.com/Azure/Azure-Sentinel"
+  s.homepage = "http://github.com/yokawasa/logstash-output-azure_loganalytics"
   s.licenses = ["Apache License (2.0)"]
   s.require_paths = ["lib"]
 
@@ -17,8 +17,6 @@ Gem::Specification.new do |s|
   # Special flag to let us know this is actually a logstash plugin
   s.metadata = { "logstash_plugin" => "true", "logstash_group" => "output" }
 
-  s.platform = Gem::Platform::JAVA if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-  
   # Gem dependencies
   s.add_runtime_dependency "rest-client", ">= 1.8.0"
   s.add_runtime_dependency "azure-loganalytics-datacollector-api", ">= 0.1.5"
