@@ -34,7 +34,7 @@ Note: View the GitHub to learn more about the sent message’s configuration, pe
 Here is an example configuration who parse Syslog incoming data into a custom table named "logstashCustomTableName".
 
 ### Example Configuration
-
+<u>
 input {
   tcp {
     port => 514
@@ -57,6 +57,7 @@ output {
                 plugin_flush_interval => 5
         }
 }
+</u>
 
 ### Run the plugin with the example configuration
 
