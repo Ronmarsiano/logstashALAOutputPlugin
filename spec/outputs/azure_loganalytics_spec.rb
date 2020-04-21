@@ -23,7 +23,7 @@ describe LogStash::Outputs::AzureLogAnalytics do
       "custom_log_table_name" => custom_log_table_name,
       "key_names" => key_names,
       "time_generated_field" => time_generated_field,
-      "plugin_flush_interval" => plugin_flush_interval
+      "plugin_flush_interval" => plugin_flush_interval,
       "amount_resizing" => amount_resizing
     }
   }
