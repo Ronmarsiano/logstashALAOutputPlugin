@@ -61,8 +61,8 @@ describe LogStash::Outputs::AzureLogAnalytics do
 
       event1 =  LogStash::Event.new(log1) 
       event2 =  LogStash::Event.new(log2) 
-      azure_loganalytics.receive(event1)
-      azure_loganalytics.receive(event2)
+      azure_loganalytics.multi_receive(event1)
+      azure_loganalytics.multi_receive(event2)
       events.push(event1)
       events.push(event2)
       expect {azure_loganalytics.flush(events)}.to_not raise_error
