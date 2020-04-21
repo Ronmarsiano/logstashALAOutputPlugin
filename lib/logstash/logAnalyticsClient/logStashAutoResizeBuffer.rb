@@ -5,7 +5,7 @@ require "stud/buffer"
 require "logstash/logAnalyticsClient/logstashLoganalyticsConfiguration"
 
 # LogStashAutoResizeBuffer class setting a resizable buffer which is flushed periodically
-# The buffer resize itslef according to Azure Loganalytics  and configuration limitations
+# The buffer resize itself according to Azure Loganalytics  and configuration limitations
 class LogStashAutoResizeBuffer
     include Stud::Buffer
 
@@ -56,7 +56,7 @@ class LogStashAutoResizeBuffer
             @logger.debug("Posting log batch (log count: #{amount_of_documents}) as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API.")
             response = @client.post_data(documents_json)
             if is_successfully_posted(response)
-                @logger.info("Successfully posted #{amount_of_documents} logs into cutom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}].")
+                @logger.info("Successfully posted #{amount_of_documents} logs into custom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}].")
             else
                 @logger.error("DataCollector API request failure: error code: #{response.code}, data=>" + (documents.to_json).to_s)
                 resend_message(documents_json, amount_of_documents, @logstashLoganalyticsConfiguration.retransmition_time)
@@ -69,7 +69,7 @@ class LogStashAutoResizeBuffer
     end # end send_message_to_loganalytics
 
     # If sending the message toAzure Loganalytics fails we would like to retry to send it again.
-    # We would like to do it untill we reached to the duration 
+    # We would like to do it until we reached to the duration 
     def resend_message(documents_json, amount_of_documents, remaining_duration)
         if remaining_duration > 0
             @logger.info("Resending #{amount_of_documents} documents as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API in #{@logstashLoganalyticsConfiguration.RETRANSMITION_DELAY} seconds.")
@@ -93,7 +93,7 @@ class LogStashAutoResizeBuffer
     end # def resend_message
 
     # We would like to change the amount of messages in the buffer (change_max_size)
-    # We change the amount according to the Azure Loganalytics limitation and the ammount of messages inserted to the buffer
+    # We change the amount according to the Azure Loganalytics limitation and the amount of messages inserted to the buffer
     # in one sending window.
     # Meaning that if we reached the max amount we would like to increase it.
     # Else we would like to decrease it(to reduce latency for messages)
@@ -120,8 +120,8 @@ class LogStashAutoResizeBuffer
         change_buffer_size(new_buffer_size)
     end # def change_message_limit_size
 
-    # Reciving new_size as the new max buffer size.
-    # Changing both the buffer, the configuration and logging as necessery
+    # Receiving new_size as the new max buffer size.
+    # Changing both the buffer, the configuration and logging as necessary
     def change_buffer_size(new_size)
         # Change buffer size only if it's needed(new size)
         if @buffer_config[:max_items] != new_size

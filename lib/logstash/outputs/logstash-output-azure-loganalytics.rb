@@ -27,7 +27,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   config :endpoint, :validate => :string, :default => 'ods.opinsights.azure.com'
 
   # The name of the time generated field.
-  # Be carefule that the value of field should strictly follow the ISO 8601 format (YYYY-MM-DDThh:mm:ssZ)
+  # Be careful that the value of field should strictly follow the ISO 8601 format (YYYY-MM-DDThh:mm:ssZ)
   config :time_generated_field, :validate => :string, :default => ''
 
   # Subset of keys to send to the Azure Loganalytics workspace
@@ -52,23 +52,23 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   # Setting proxy to be used for the Azure Loganalytics REST client
   config :proxy, :validate => :string, :default => ''
 
-  # This will set the amount of time given for retransmiting messages once sending is failed
-  config :retransmition_time, :validate => :number, :default => 10
+  # This will set the amount of time given for retransmitting messages once sending is failed
+  config :retransmission_time, :validate => :number, :default => 10
 
-  # Optional to overide the resorce ID field on the workspace table.
+  # Optional to override the resource ID field on the workspace table.
   # Resource ID provided must be a valid resource ID on azure 
   config :azure_resource_id, :validate => :string, :default => ''
 
   public
   def register
     @logstash_configuration= build_logstash_configuration()
-    # Validate configuration correcness 
+    # Validate configuration correctness 
     @logstash_configuration.validate_configuration()
     @logger.info("Logstash Azure Loganalytics output plugin configuration was found valid")
 
     # Initialize the logstash resizable buffer
     # This buffer will increase and decrease size according to the amount of messages inserted.
-    # If the buffer reached the max amount of messages the amount will be increased untill the limit
+    # If the buffer reached the max amount of messages the amount will be increased until the limit
     @logstash_resizable_event_buffer=LogStashAutoResizeBuffer::new(@logstash_configuration)
 
   end # def register
@@ -90,7 +90,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
   private
 
   # In case that the user has defined key_names meaning that he would like to a subset of the data,
-  # we would like to insert only thoes keys.
+  # we would like to insert only those keys.
   # If no keys were defined we will send all the data 
    
   def create_event_document(event)
@@ -109,7 +109,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     return document
   end # def create_event_document
 
-  # Building the logstash object configuration from the ouput cofiguration provided by the user
+  # Building the logstash object configuration from the output configuration provided by the user
   # Return LogstashLoganalyticsOutputConfiguration populated with the configuration values
   def build_logstash_configuration()
     logstash_configuration= LogstashLoganalyticsOutputConfiguration::new(@workspace_id, @workspace_key, @custom_log_table_name, @logger)    
@@ -122,7 +122,7 @@ class LogStash::Outputs::AzureLogAnalytics < LogStash::Outputs::Base
     logstash_configuration.max_items = @max_items
     logstash_configuration.azure_resource_id = @azure_resource_id
     logstash_configuration.proxy = @proxy
-    logstash_configuration.retransmition_time = @retransmition_time
+    logstash_configuration.retransmission_time = @retransmission_time
     
     return logstash_configuration
   end # def build_logstash_configuration

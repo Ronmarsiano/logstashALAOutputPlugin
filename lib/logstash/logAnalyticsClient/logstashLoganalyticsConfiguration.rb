@@ -7,20 +7,20 @@ class LogstashLoganalyticsOutputConfiguration
         @logger = logger
 
         # Delay between each resending of a message
-        @RETRANSMITION_DELAY = 2
+        @RETRANSMISSION_DELAY = 2
         @MIN_MESSAGE_AMOUNT = 100
         # Maximum of 30 MB per post to Log Analytics Data Collector API. 
         # This is a size limit for a single post. 
         # If the data from a single post that exceeds 30 MB, you should split it.
         @loganalytics_api_data_limit = 30 * 1000 * 1000
 
-        # Taking 4K saftey buffer
+        # Taking 4K safety buffer
         @MAX_SIZE_BYTES = @loganalytics_api_data_limit - 10000
     end
 
     def validate_configuration()
-        if @retransmition_time < 0
-            raise ArgumentError, "Setting retransmition_time which sets the time spent for resending each failed messages must be positive integer. [retransmition_time=#{@retransmition_time}]." 
+        if @retransmission_time < 0
+            raise ArgumentError, "Setting retransmission_time which sets the time spent for resending each failed messages must be positive integer. [retransmition_time=#{@retransmition_time}]." 
         
         elsif @max_items < @MIN_MESSAGE_AMOUNT
             raise ArgumentError, "Setting max_items to value must be greater then #{@MIN_MESSAGE_AMOUNT}."
@@ -35,7 +35,7 @@ class LogstashLoganalyticsOutputConfiguration
             raise ArgumentError, 'custom_log_table_name should not be empty.' 
             
         elsif @key_names.length > 500
-            raise ArgumentError, 'Azure Loganalytics imits the amount of columns to 500 in each table.' 
+            raise ArgumentError, 'Azure Loganalytics limits the amount of columns to 500 in each table.' 
         end
 
         @logger.info("Azure Loganalytics configuration was found valid.")
@@ -48,8 +48,8 @@ class LogstashLoganalyticsOutputConfiguration
         @azure_resource_id
     end
 
-    def RETRANSMITION_DELAY
-        @RETRANSMITION_DELAY
+    def RETRANSMISSION_DELAY
+        @RETRANSMISSION_DELAY
     end
 
     def MAX_SIZE_BYTES
@@ -60,8 +60,8 @@ class LogstashLoganalyticsOutputConfiguration
         @amount_resizing
     end
 
-    def retransmition_time
-        @retransmition_time
+    def retransmission_time
+        @retransmission_time
     end
 
     def proxy
@@ -152,7 +152,7 @@ class LogstashLoganalyticsOutputConfiguration
         @proxy = new_proxy
     end
 
-    def retransmition_time=(new_retransmition_time)
-        @retransmition_time = new_retransmition_time
+    def retransmission_time=(new_retransmission_time)
+        @retransmission_time = new_retransmission_time
     end
 end

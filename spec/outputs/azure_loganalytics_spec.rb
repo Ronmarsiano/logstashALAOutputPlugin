@@ -6,7 +6,7 @@ require "logstash/event"
 
 describe LogStash::Outputs::AzureLogAnalytics do
 
-  let(:workspace_id) { '<Workspaec ID identifing your workspace>' }
+  let(:workspace_id) { '<Workspace ID identifying your workspace>' }
   let(:workspace_key) { '<Primary Key for the Azure log analytics workspace>' }
   let(:custom_log_table_name) { 'ApacheAccessLog' }
   let(:key_names) { ['logid','date','processing_time','remote','user','method','status','agent','eventtime'] }
