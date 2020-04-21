@@ -11,6 +11,7 @@ describe LogStash::Outputs::AzureLogAnalytics do
   let(:custom_log_table_name) { 'ApacheAccessLog' }
   let(:key_names) { ['logid','date','processing_time','remote','user','method','status','agent','eventtime'] }
   let(:time_generated_field) { 'eventtime' }
+  let(:plugin_flush_interval) {3000}
 
   let(:azure_loganalytics_config) {
     { 
@@ -18,7 +19,8 @@ describe LogStash::Outputs::AzureLogAnalytics do
       "workspace_key" => workspace_key,
       "custom_log_table_name" => custom_log_table_name,
       "key_names" => key_names,
-      "time_generated_field" => time_generated_field
+      "time_generated_field" => time_generated_field,
+      "plugin_flush_interval" => plugin_flush_interval
     }
   }
 
@@ -61,10 +63,11 @@ describe LogStash::Outputs::AzureLogAnalytics do
 
       event1 =  LogStash::Event.new(log1) 
       event2 =  LogStash::Event.new(log2) 
-      azure_loganalytics.multi_receive(event1)
-      azure_loganalytics.multi_receive(event2)
       events.push(event1)
       events.push(event2)
+      azure_loganalytics.multi_receive(events)
+      sleep(plugin_flush_interval + 1000)
+
       expect {azure_loganalytics.flush(events)}.to_not raise_error
     end
   end
