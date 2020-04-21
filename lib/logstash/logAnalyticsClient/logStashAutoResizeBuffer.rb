@@ -59,12 +59,12 @@ class LogStashAutoResizeBuffer
                 @logger.info("Successfully posted #{amount_of_documents} logs into custom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}].")
             else
                 @logger.error("DataCollector API request failure: error code: #{response.code}, data=>" + (documents.to_json).to_s)
-                resend_message(documents_json, amount_of_documents, @logstashLoganalyticsConfiguration.retransmition_time)
+                resend_message(documents_json, amount_of_documents, @logstashLoganalyticsConfiguration.retransmission_time)
             end
             rescue Exception => ex
                 @logger.error("Exception in posting data to Azure Loganalytics.\n[Exception: '#{ex}]'")
                 @logger.trace("Exception in posting data to Azure Loganalytics.[amount_of_documents=#{amount_of_documents} documents=#{documents_json}]")
-                resend_message(documents_json, amount_of_documents, @logstashLoganalyticsConfiguration.retransmition_time)
+                resend_message(documents_json, amount_of_documents, @logstashLoganalyticsConfiguration.retransmission_time)
             end
     end # end send_message_to_loganalytics
 
@@ -73,11 +73,11 @@ class LogStashAutoResizeBuffer
     def resend_message(documents_json, amount_of_documents, remaining_duration)
         if remaining_duration > 0
             @logger.info("Resending #{amount_of_documents} documents as log type #{@logstashLoganalyticsConfiguration.custom_log_table_name} to DataCollector API in #{@logstashLoganalyticsConfiguration.RETRANSMITION_DELAY} seconds.")
-            sleep @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY
+            sleep @logstashLoganalyticsConfiguration.RETRANSMISSION_DELAY
             begin
                 response = @client.post_data(documents_json)
                 if is_successfully_posted(response)
-                    @logger.info("Successfully sent #{amount_of_documents} logs into cutom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}] after resending.")
+                    @logger.info("Successfully sent #{amount_of_documents} logs into custom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}] after resending.")
                 else
                     @logger.debug("Resnding #{amount_of_documents} documents failed, will try to resend for #{(remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY)}")
                     resend_message(documents_json, amount_of_documents, (remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY))

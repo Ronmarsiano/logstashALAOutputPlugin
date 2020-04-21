@@ -20,7 +20,7 @@ class LogstashLoganalyticsOutputConfiguration
 
     def validate_configuration()
         if @retransmission_time < 0
-            raise ArgumentError, "Setting retransmission_time which sets the time spent for resending each failed messages must be positive integer. [retransmition_time=#{@retransmition_time}]." 
+            raise ArgumentError, "Setting retransmission_time which sets the time spent for resending each failed messages must be positive integer. [retransmission_time=#{@retransmission_time}]." 
         
         elsif @max_items < @MIN_MESSAGE_AMOUNT
             raise ArgumentError, "Setting max_items to value must be greater then #{@MIN_MESSAGE_AMOUNT}."
