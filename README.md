@@ -64,6 +64,6 @@ Now you are able to run logstash with the example configuration and send mock da
 
 For example: 
 ```
-'logger -p local4.warn -t CEF: "0|Microsoft|Device|cef-test|example|data|1|here is some more data for the example" -P 514 -d -n 127.0.0.1' 
+logger -p local4.warn -t CEF: "0|Microsoft|Device|cef-test|example|data|1|here is some more data for the example" -P 514 -d -n 127.0.0.1
 
 ```
