@@ -60,42 +60,10 @@ output {
 }
 ```
 
-### Run the plugin with the example configuration
+Now you are able to run logstash with the example configuration and send mock data using the 'logger' command.
 
-Now you run logstash with the the example configuration like this:
+For example: 
 ```
-# Test your logstash configuration before actually running the logstash
-bin/logstash -f logstash-apache2-to-loganalytics.conf --configtest
-# run
-bin/logstash -f logstash-apache2-to-loganalytics.conf
-```
+'logger -p local4.warn -t CEF: "0|Microsoft|Device|cef-test|example|data|1|here is some more data for the example" -P 514 -d -n 127.0.0.1' 
 
-Here is an expected output for sample input (Apache2 access log):
-
-<u>Apache2 access log</u>
-```
-106.143.121.169 - - [29/Dec/2016:01:38:16 +0000] "GET /test.html HTTP/1.1" 304 179 "-" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36"
-```
-
-<u>Output (rubydebug)</u>
-```
-{
-        "message" => "106.143.121.169 - - [29/Dec/2016:01:38:16 +0000] \"GET /test.html HTTP/1.1\" 304 179 \"-\" \"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36\"",
-       "@version" => "1",
-     "@timestamp" => "2016-12-29T01:38:16.000Z",
-           "path" => "/var/log/apache2/access.log",
-           "host" => "host_name",
-           "type" => "apache_access",
-       "clientip" => "106.143.121.169",
-          "ident" => "-",
-           "auth" => "-",
-      "timestamp" => "29/Dec/2016:01:38:16 +0000",
-           "verb" => "GET",
-        "request" => "/test.html",
-    "httpversion" => "1.1",
-       "response" => "304",
-          "bytes" => "179",
-       "referrer" => "\"-\"",
-          "agent" => "\"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36\""
-}
 ```
