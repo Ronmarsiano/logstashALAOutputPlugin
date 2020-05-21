@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.name = 'logstash-output-azure-loganalytics'
+  s.name = 'microsoft-logstash-output-azure-loganalytics'
   s.version    =  File.read("VERSION").strip
   s.authors = ["Ron Marsiano"]
   s.email = "romarsia@outlook.com"

@@ -12,7 +12,7 @@ Released on: 2020-04-30
 ## Installation
 
 Azure Sentinel provides Logstash output plugin to Log analytics workspace. 
-Install the logstash-output-azure-loganalytics, use Logstash Working with plugins document. 
+Install the microsoft-logstash-output-azure-loganalytics, use Logstash Working with plugins document. 
 For offline setup follow Logstash Offline Plugin Management instruction. 
 
 ## Configuration
@@ -50,7 +50,7 @@ filter {
 }
 
 output {
-        logstash-output-azure-loganalytics {
+        microsoft-logstash-output-azure-loganalytics {
                 workspace_id => "<WS_ID>"
                 workspace_key => "${WS_KEY}"
                 custom_log_table_name => "logstashCustomTableName"
