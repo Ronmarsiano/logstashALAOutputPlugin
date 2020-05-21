@@ -39,9 +39,9 @@ class LogStashAutoResizeBuffer
 
         # We send Json in the REST request 
         documents_json = documents.to_json
-        # Setting reisizng to true will cause chanigng the max size
+        # Setting resizing to true will cause changing the max size
         if @logstashLoganalyticsConfiguration.amount_resizing == true
-            # Resizing the amount of messages according to size of message recived and amount of messages
+            # Resizing the amount of messages according to size of message received and amount of messages
             change_message_limit_size(documents.length, documents_json.bytesize)
         end
         send_message_to_loganalytics(documents_json, documents.length)
@@ -79,11 +79,11 @@ class LogStashAutoResizeBuffer
                 if is_successfully_posted(response)
                     @logger.info("Successfully sent #{amount_of_documents} logs into custom log analytics table[#{@logstashLoganalyticsConfiguration.custom_log_table_name}] after resending.")
                 else
-                    @logger.debug("Resnding #{amount_of_documents} documents failed, will try to resend for #{(remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY)}")
+                    @logger.debug("Resending #{amount_of_documents} documents failed, will try to resend for #{(remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY)}")
                     resend_message(documents_json, amount_of_documents, (remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY))
                 end
             rescue Exception => ex
-                @logger.debug("Resnding #{amount_of_documents} documents failed, will try to resend for #{(remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY)}")
+                @logger.debug("Resending #{amount_of_documents} documents failed, will try to resend for #{(remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY)}")
                 resend_message(documents_json, amount_of_documents, (remaining_duration - @logstashLoganalyticsConfiguration.RETRANSMITION_DELAY))
             end
         else 
@@ -102,7 +102,7 @@ class LogStashAutoResizeBuffer
         average_document_size = documents_byte_size / amount_of_documents
         # If window is full we need to increase it 
         # "amount_of_documents" can be greater since buffer is not synchronized meaning 
-        # that flush can occure after limit was reached.
+        # that flush can occur after limit was reached.
         if  amount_of_documents >= @logstashLoganalyticsConfiguration.max_items
             # if doubling the size wouldn't exceed the API limit
             if ((2 * @logstashLoganalyticsConfiguration.max_items) * average_document_size) < @logstashLoganalyticsConfiguration.MAX_SIZE_BYTES
