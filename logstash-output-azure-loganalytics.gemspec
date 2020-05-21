@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.summary = %q{Azure Sentinel provides a new output plugin for Logstash. Using this output plugin, you will be able to send any log you want using Logstash to the Azure Sentinel/Log Analytics workspace}
   s.description = s.summary
   s.homepage = "https://github.com/Azure/Azure-Sentinel"
-  s.licenses = ["Apache License (2.0)"]
+  s.licenses = []
   s.require_paths = ["lib"]
 
   # Files
@@ -22,6 +22,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "azure-loganalytics-datacollector-api", ">= 0.1.5"
   s.add_runtime_dependency "logstash-core-plugin-api", ">= 1.60", "<= 2.99"
   s.add_runtime_dependency "logstash-codec-plain"
-  
+
   s.add_development_dependency "logstash-devutils"
 end
