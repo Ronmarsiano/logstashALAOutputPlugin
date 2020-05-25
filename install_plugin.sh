@@ -7,7 +7,7 @@ sudo apt  install ruby
 
 echo "Remove old gem file"
 
-sudo rm logstash-output-azure-loganalytics-1.0.0.gem
+sudo rm microsoft-logstash-output-azure-loganalytics-1.0.0.gem
 
 echo "Pulling data from github"
 
@@ -15,7 +15,7 @@ git pull
 
 echo "Building new logstash plugin"
 
-gem build logstash-output-azure-loganalytics.gemspec
+gem build microsoft-logstash-output-azure-loganalytics.gemspec
 
 cwd=$(pwd)
 
@@ -29,7 +29,7 @@ cd ${cwd}
 
 echo "Install new plugin"
 
-sudo /usr/share/logstash/bin/logstash-plugin install logstash-output-azure-loganalytics-1.0.0.gem
+sudo /usr/share/logstash/bin/logstash-plugin microsoft-install logstash-output-azure-loganalytics-1.0.0.gem
 
 echo "Done"
 
