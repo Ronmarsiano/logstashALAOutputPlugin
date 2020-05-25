@@ -29,7 +29,7 @@ cd ${cwd}
 
 echo "Install new plugin"
 
-sudo /usr/share/logstash/bin/logstash-plugin microsoft-install logstash-output-azure-loganalytics-1.0.0.gem
+sudo /usr/share/logstash/bin/logstash-plugin install microsoft-logstash-output-azure-loganalytics-1.0.0.gem
 
 echo "Done"
 
